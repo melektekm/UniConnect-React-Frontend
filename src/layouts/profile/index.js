@@ -21,6 +21,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import { useNavigate } from "react-router-dom";
 import {
   EthDateTime,
@@ -30,7 +31,7 @@ import {
 import AdminNavbar from "../../examples/Navbars/AdminNavbar";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
-
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
