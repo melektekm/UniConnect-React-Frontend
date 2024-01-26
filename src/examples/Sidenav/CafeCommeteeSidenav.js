@@ -65,10 +65,9 @@ import {
 } from "@mui/material";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
-import colors from "../../assets/theme/base/colors"; 
+import colors from "../../assets/theme/base/colors";
 
 import MDButton from "../../components/MDButton";
-
 
 function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
@@ -84,8 +83,7 @@ function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
     setOpenLogoutDialog(true);
   };
   const iconStyle = {
-    
-    color: colors.badgeColors.primary.main, 
+    color: colors.badgeColors.primary.main,
   };
 
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
@@ -103,7 +101,6 @@ function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
       await ipcRenderer.invoke("clear-user");
       navigate("/authentication/sign-in");
     } catch (error) {
-    
     } finally {
       setOpenLogoutDialog(false);
     }
@@ -112,92 +109,172 @@ function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const routes = [
     {
       type: "collapse",
-      name: "ዳሽቦርድ",
+      name: "dashboard",
       key: "dashboard",
-      icon: <DashboardIcon fontSize="small" style={iconStyle} />,
+      icon: <DashboardIcon fontSize="small" />,
       route: "/dashboard",
       component: <Dashboard />,
     },
     {
       type: "collapse",
-      name: "የምግብ ዝርዝር",
+      name: "orders",
+      key: "orders",
+      icon: <TableViewOutlinedIcon fontSize="small" />,
+      route: "/tables",
+      component: <Tables />,
+    },
+    {
+      type: "collapse",
+      name: "ent_Approval",
+      key: "Ingredient_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/showIngredientApproval",
+      component: <ShowApproval />,
+    },
+    {
+      type: "collapse",
+      name: "stock_Approval",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/showApprovedStock",
+      component: <StockApproval />,
+    },
+    {
+      type: "collapse",
+      name: "food menu",
       key: "food_menu",
-      icon: <FastfoodIcon fontSize="small"style={iconStyle} />,
+      icon: <FastfoodIcon fontSize="small" />,
       route: "/food_menu",
       component: <FoodMenu />,
     },
     {
       type: "collapse",
-      name: "ሜኑ ማስገቢያ",
-      key: "addfood",
-      icon: <RestaurantMenuIcon fontSize="small" style={iconStyle}/>,
+      name: "menu entry",
+      key: "add_food",
+      icon: <RestaurantMenuIcon fontSize="small" />,
       route: "/addfood",
       component: <AddMenuItem />,
     },
     {
       type: "collapse",
-      name: "የገባው የእቃ ዝርዝር",
-      key: "showInventory",
-      icon: <ShoppingCartIcon fontSize="small" style={iconStyle}/>,
+      name: "buy food",
+      key: "buy_food",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/buyFood",
+      component: <BuyFood />,
+    },
+    {
+      type: "collapse",
+      name: "dept but food",
+      key: "buy_food_department",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/buyFoodDepartment",
+      component: <BuyFoodDepartment />,
+    },
+    {
+      type: "collapse",
+      name: "Inventory",
+      key: "inventory",
+      icon: <InventoryIcon fontSize="small" />,
+      route: "/inventory",
+      component: <InventoryEntry />,
+    },
+    {
+      type: "collapse",
+      name: "showInventory",
+      key: "list",
+      icon: <ShoppingCartIcon fontSize="small" />,
       route: "/showInventory",
       component: <InventoryList />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "ከስቶር ማውጫ ፎርም",
-    //   key: "stockRequest",
-    //   icon: <ShoppingCartIcon fontSize="small" />,
-    //   route: "/stockRequest",
-    //   component: <StockRequest />,
-    // },
     {
       type: "collapse",
-      name: "ከስቶረ ማውጫ መፍቀጃ",
-      key: "stockApproval",
-      icon: <AssignmentTurnedInIcon fontSize="small" style={iconStyle}/>,
-      route: "/stockApproval",
-      component: <Approval />,
+      name: "stock_request",
+      key: "stock_request",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/stockRequest",
+      component: <StockRequest />,
     },
     // {
     //   type: "collapse",
-    //   name: "ግዢ ማስፈቀጃ ፎርም",
-    //   key: "ingredientRequest",
-    //   icon: <KitchenIcon fontSize="small" />,
-    //   route: "/ingredientRequest",
-    //   component: <IngredientRequest />,
+    //   name: "Stock Approval",
+    //   key: "stock_Approval",
+    //   icon: <Icon fontSize="small" />,
+    //   route: "/stockApproval",
+    //   component: <Approval />,
     // },
     {
       type: "collapse",
-      name: "ገደብ",
-      key: "constraint",
-      icon: <ManageAccountsIcon fontSize="small" style={iconStyle}/>,
-      route: "/constraint",
-      component: <Constraint />,
+      name: "ingredient_Request",
+      key: "ingredient_Request",
+      icon: <KitchenIcon fontSize="small" />,
+      route: "/ingredientRequest",
+      component: <IngredientRequest />,
     },
     {
       type: "collapse",
-      name: "ግዢ መፍቀጃ ",
-      key: "ingredientApproval",
-      icon: <AssignmentTurnedInIcon fontSize="small" style={iconStyle}/>,
+      name: "ingredient_Approval",
+      key: "ingredient_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
       route: "/ingredientApproval",
       component: <IngredientApproval />,
     },
     {
       type: "collapse",
-      name: "ሪፖርት ",
-      key: "report",
-      icon: <AssessmentIcon fontSize="small" style={iconStyle}/>,
-      route: "/report",
-      component: <ReportList />,
+      name: "Add-employee",
+      key: "Add-employee",
+      icon: <AddIcon fontSize="small" />,
+      route: "/addEmployee",
+      component: <AddEmployee />,
     },
     {
       type: "collapse",
-      name: "የመተግበሪያ ገጽታ",
-      key: "stock_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" style={iconStyle} />,
-      route: "/showApprovedStock",
-      component: <StockApproval />,
+      name: " guest billing",
+      key: "billing",
+      icon: <ReceiptLongIcon fontSize="small" />,
+      route: "/billing",
+      component: <Billing />,
     },
+    {
+      type: "collapse",
+      name: "employee list",
+      key: "profile",
+      icon: <PersonIcon fontSize="small" />,
+      route: "/profile",
+      component: <EmployeeList />,
+    },
+    {
+      type: "collapse",
+      name: "report",
+      key: "report",
+      icon: <AssessmentIcon fontSize="small" />,
+      route: "/report",
+      component: <ReportList />,
+    },
+    // {
+    //   type: "collapse",
+    //   name: "ገደቦች",
+    //   key: "constraint",
+    //   icon: <ManageAccountsIcon fontSize="small" />,
+    //   route: "/constraint",
+    //   component: <Constraint />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "የመተግበሪያ ገጽታ",
+    //   key: "stock_Approval",
+    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
+    //   route: "/showApprovedStock",
+    //   component: <StockApproval />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "የገንዘብ አያያዝ",
+    //   key: "deposit",
+    //   icon: <AttachMoneyIcon fontSize="small" />,
+    //   route: "/deposit",
+    //   component: <Deposit />,
+    // },
   ];
 
   let textColor = "white";
@@ -340,7 +417,11 @@ function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
       <Link to="#" onClick={handleOpenLogoutDialog}>
         <SidenavCollapse
           name="ውጣ"
-          icon={<LogoutIcon fontSize="small" style={iconStyle}>person</LogoutIcon>}
+          icon={
+            <LogoutIcon fontSize="small" style={iconStyle}>
+              person
+            </LogoutIcon>
+          }
         />
       </Link>
       <Dialog
@@ -348,7 +429,7 @@ function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
         onClose={handleCloseLogoutDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        PaperProps={{ style: { padding: "15px"} }}
+        PaperProps={{ style: { padding: "15px" } }}
       >
         <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
         <DialogContent>
@@ -356,11 +437,19 @@ function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
             እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
           </DialogContentText>
         </DialogContent>
-        <DialogActions style={{justifyContent: "space-between"}}>
-          <MDButton onClick={handleCloseLogoutDialog} color="info" style={{borderRadius: "15%"}}>
+        <DialogActions style={{ justifyContent: "space-between" }}>
+          <MDButton
+            onClick={handleCloseLogoutDialog}
+            color="info"
+            style={{ borderRadius: "15%" }}
+          >
             አይ
           </MDButton>
-          <MDButton onClick={handleLogoutConfirmed} color="error" style={{borderRadius: "15%"}}>
+          <MDButton
+            onClick={handleLogoutConfirmed}
+            color="error"
+            style={{ borderRadius: "15%" }}
+          >
             ውጣ
           </MDButton>
         </DialogActions>

@@ -26,9 +26,9 @@ import MDTypography from "../../components/MDTypography";
 import Link from "@mui/material/Link";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
 import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDButton from "../../components/MDButton";
 import {
@@ -147,7 +147,7 @@ function Approval() {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "student" ? (
+      {/* {userData.user.role == "student" ? (
         <NavbarForCommette />
       ) : userData.user.role == "dean" ? (
         <CafeManagerDashboardNavbar />
@@ -169,8 +169,9 @@ function Approval() {
         />
       ) : (
         <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" />
-      )}
-
+      )} */}
+      <DashboardNavbar />
+      <Sidenav />
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <MDBox

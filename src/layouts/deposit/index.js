@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { Button } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import CashierSidenav from "../../examples/Sidenav/CashierSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import EmployeeInfo from "./employeeInfo";
 function MoneyTransaction() {
   const electron = window.require("electron");
@@ -213,12 +213,13 @@ function MoneyTransaction() {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "coordinator" ? (
-        <DashboardNavbar />
-      ) : (
+      {/* {userData.user.role == "coordinator" ? ( */}
+      <DashboardNavbar />
+      <Sidenav />
+      {/* ) : (
         <NavbarForCommette />
       )}
-      <CashierSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" />
+      <CashierSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" /> */}
       <MDBox
         mx={2}
         mt={2}

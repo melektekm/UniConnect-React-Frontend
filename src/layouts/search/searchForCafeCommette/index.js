@@ -112,11 +112,8 @@ function SearchMenuForInvnetory() {
         setCurrentPage(response.data.current_page);
         setLastPage(response.data.last_page); // Set the total number of pages
       } else {
-     
       }
-    } catch (error) {
-   
-    }
+    } catch (error) {}
   };
 
   const [searchInput, setSearchInput] = useState("");
@@ -134,16 +131,10 @@ function SearchMenuForInvnetory() {
         });
         if (response.data) {
           setFoodMenu(response.data);
-      
         } else {
-        
         }
-      } catch (error) {
-      
-      }
+      } catch (error) {}
     }
-
-  
   };
   function handleUpdateMenu(updatedMenu) {
     if (!selectedMenu) {
@@ -181,12 +172,9 @@ function SearchMenuForInvnetory() {
       // Update the local state to remove the deleted menu item
       setFoodMenu(foodMenu.filter((item) => item.id !== menuId));
       setDeleteDialogOpen(false);
-    } catch (error) {
-    
-    }
+    } catch (error) {}
   };
   const onSet = async (updatedMenuItem, availableAmount) => {
-   
     try {
       // Send a request to update the menu item's available amount in the database
       await axios.post(
@@ -208,9 +196,7 @@ function SearchMenuForInvnetory() {
       });
 
       setFoodMenu(updatedFoodMenu);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
   const handlePageChange = (event, page) => {
     setCurrentPage(page); // Update the current page when the user clicks a new page
@@ -218,8 +204,10 @@ function SearchMenuForInvnetory() {
 
   return (
     <DashboardLayout>
-      <NavbarForCommette />
-      <CafeCommetteDashboard />
+      {/* <NavbarForCommette />
+      <CafeCommetteDashboard /> */}
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox
         mx={2}
         mt={1}
@@ -240,7 +228,7 @@ function SearchMenuForInvnetory() {
         />
 
         <MDButton variant="gradient" onClick={handleSearch} color={"secondary"}>
-        ፈልግ
+          ፈልግ
         </MDButton>
         <Select
           value={searchType}

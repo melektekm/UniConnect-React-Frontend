@@ -225,12 +225,14 @@ function SearchMenu() {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "coordinator" ? (
+      {/* {userData.user.role == "coordinator" ? (
         <DashboardNavbar />
       ) : (
         <NavbarForCommette />
       )}
-      <CashierDashboard />
+      <CashierDashboard /> */}
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox
         mx={2}
         mt={1}

@@ -39,12 +39,14 @@ function ShowApproval() {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "coordinator" ? (
+      {/* {userData.user.role == "coordinator" ? (
         <DashboardNavbar absolute isMini />
       ) : (
         <NavbarForCommette />
       )}
-      <CafeCommetteDashboard />
+      <CafeCommetteDashboard /> */}
+      <DashboardNavbar />
+      <Sidenav />
       <TableContainer component={Paper} elevation={3} style={{ marginTop: 20 }}>
         <Table>
           <TableBody>

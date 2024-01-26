@@ -16,10 +16,10 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
-import CashierSidenav from "../../examples/Sidenav/CashierSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 
 const AddMenuItem = () => {
   const location = useLocation();
@@ -199,7 +199,7 @@ const AddMenuItem = () => {
 
   return (
     <DashboardLayout>
-      {userData.user.role === "student" ? (
+      {/* {userData.user.role === "student" ? (
         <NavbarForCommette />
       ) : userData.user.role === "dean" ? (
         <CafeManagerDashboardNavbar />
@@ -224,8 +224,9 @@ const AddMenuItem = () => {
           brand=""
           brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ"
         />
-      )}
-
+      )} */}
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox
         mx={2}
         mt={1}

@@ -36,6 +36,7 @@ import StockApproval from "./layouts/showApprovedStock";
 import CashierOrder from "./layouts/tables/CashierOrderView";
 import SearchMenuForCashier from "./layouts/search/searchForCashier";
 import storeKeeperDashboard from "./layouts/dashboard/storeKeeperDashboard";
+import Sidenav from "./examples/Sidenav/AdminSidenav";
 import Department from "./layouts/departmentList";
 import StockAmountTable from "./layouts/stokeAmount";
 

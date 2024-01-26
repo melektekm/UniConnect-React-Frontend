@@ -6,13 +6,13 @@ import MDTypography from "../../components/MDTypography";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
 import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
 import { ChromePicker } from "react-color";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MDButton from "../../components/MDButton";
 import Grid from "@mui/material/Grid";
-import CashierSidenav from "../../examples/Sidenav/CashierSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MainDashboard from "../MainDashboard";
 import { Select, MenuItem } from "@mui/material";
 import {
@@ -175,7 +175,9 @@ function StockApproval() {
   const [handleCheck, setHandleCheck] = useState(true);
   return (
     <DashboardLayout>
-      {userData.user.role === "student" ? (
+      <DashboardNavbar />
+      <Sidenav />
+      {/* {userData.user.role === "student" ? (
         <NavbarForCommette />
       ) : userData.user.role === "dean" ? (
         <CafeManagerDashboardNavbar />
@@ -205,7 +207,7 @@ function StockApproval() {
         <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" />
       ) : (
         <MainDashboard />
-      )}
+      )} */}
 
       <Grid container spacing={6}>
         <Grid item xs={12}>

@@ -25,9 +25,9 @@ import {
   Pagination,
 } from "@mui/material";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Link from "@mui/material/Link";
 
 function StockAmountTable() {
@@ -79,7 +79,7 @@ function StockAmountTable() {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "student" ? (
+      {/* {userData.user.role == "student" ? (
         <NavbarForCommette />
       ) : userData.user.role == "dean" ? (
         <CafeManagerDashboardNavbar />
@@ -100,7 +100,9 @@ function StockAmountTable() {
         />
       ) : (
         <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" />
-      )}
+      )} */}
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox
         mx={2}
         mt={2}

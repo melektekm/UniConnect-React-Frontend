@@ -64,16 +64,17 @@ function CommetteDashboard() {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "coordinator" ? (
-        <DashboardNavbar />
-      ) : (
+      {/* {userData.user.role == "coordinator" ? ( */}
+      <DashboardNavbar />
+      <Sidenav />
+      {/* ) : (
         <NavbarForCommette />
       )}
       {userData.user.role == "coordinator" ? (
         <CashierDashboard />
       ) : (
         <CafeCommetteDashboard />
-      )}
+      )} */}
       <MDBox py={3}>
         <div style={{ display: "flex" }}>
           <label htmlFor="timeRange" style={{ marginTop: 8 }}>
