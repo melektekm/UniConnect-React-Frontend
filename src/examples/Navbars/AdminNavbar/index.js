@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import React, { useState, useEffect } from "react";
 
 // react-router components
-import {useLocation, Link, useNavigate} from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -53,12 +53,15 @@ import {
   setOpenConfigurator,
 } from "../../../context";
 import MDButton from "../../../components/MDButton";
-
+import MDTypography from "../../../components/MDTypography";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import routes from "../../../routes";
 
 function AdminNavbar({ absolute, light, isMini }) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
-  const userData = ipcRenderer.sendSync('get-user');
+  const userData = ipcRenderer.sendSync("get-user");
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -73,6 +76,13 @@ function AdminNavbar({ absolute, light, isMini }) {
 
   const navigate = useNavigate();
   const location = useLocation();
+  let routeName = "";
+
+  routes.forEach((route) => {
+    if (useLocation().pathname === route.route) {
+      routeName = route.name;
+    }
+  });
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -107,9 +117,33 @@ function AdminNavbar({ absolute, light, isMini }) {
     setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
- 
 
+  const handleLogout = async () => {
+    try {
+      await ipcRenderer.invoke("clear-user");
+      navigate("/authentication/sign-in");
+    } catch (error) {}
+  };
 
+  const renderMenu = () => (
+    <Menu
+      anchorEl={openMenu}
+      anchorReference={null}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      open={Boolean(openMenu)}
+      onClose={handleCloseMenu}
+      sx={{ mt: 2 }}
+    >
+      <NotificationItem
+        onClick={handleLogout}
+        icon={<ExitToAppIcon>Logout</ExitToAppIcon>}
+        title="Log out"
+      />
+    </Menu>
+  );
 
   // Render the notifications menu
   // Styles for the navbar icons
@@ -127,13 +161,13 @@ function AdminNavbar({ absolute, light, isMini }) {
       return colorValue;
     },
   });
-  function handleRoute(){
-    if(userData.user.role == 'admin'){
-      return '/mainDashboard'
-    }else if(userData.user.role == 'cashier'){
-      return '/cashierdashboard'
-    }else if(userData.user.role == 'communittee_admin'){
-      return '/cafeCommetteDashboard'
+  function handleRoute() {
+    if (userData.user.role == "admin") {
+      return "/mainDashboard";
+    } else if (userData.user.role == "coordinator") {
+      return "/cashierdashboard";
+    } else if (userData.user.role == "student") {
+      return "/cafeCommetteDashboard";
     }
   }
 
@@ -153,7 +187,7 @@ function AdminNavbar({ absolute, light, isMini }) {
         >
           <Breadcrumbs
             icon="home"
-            title={route[route.length - 1]}
+            title={routeName}
             route={route}
             light={light}
           />
@@ -161,34 +195,35 @@ function AdminNavbar({ absolute, light, isMini }) {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox pr={1}>
-              <MDButton variant="gradient" color="secondary" 
-        
-              onClick={async () => {
-                const currentRoute = location.pathname; // Get the current route
-        
-                sessionStorage.setItem("previousRoute", currentRoute);
-                navigate('/search');
-              }}>
-                Search
+              <MDButton
+                color="secondary"
+                onClick={async () => {
+                  const currentRoute = location.pathname; // Get the current route
+
+                  sessionStorage.setItem("previousRoute", currentRoute);
+                  navigate("/searchForAdmin");
+                }}
+              >
+                ፈልግ
               </MDButton>
             </MDBox>
-            <MDBox color={light ? "white" : "inherit"}>
-              <Link to={handleRoute}>
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-              </Link>
+            <MDBox color={light ? "white" : "dark"} textAlign="center">
               <IconButton
                 size="small"
                 disableRipple
                 color="inherit"
-                sx={navbarMobileMenu}
-                onClick={handleMiniSidenav}
+                sx={navbarIconButton}
+                aria-controls="notification-menu"
+                aria-haspopup="true"
+                variant="contained"
+                onClick={handleOpenMenu}
               >
-                <Icon sx={iconsStyle} fontSize="medium">
-                  {miniSidenav ? "menu_open" : "menu"}
-                </Icon>
+                <AccountCircleIcon sx={iconsStyle} />
               </IconButton>
+              {renderMenu()}
+              <MDTypography style={{ fontSize: "0.67em" }}>
+                ስላም {userData.user.name}
+              </MDTypography>
             </MDBox>
           </MDBox>
         )}

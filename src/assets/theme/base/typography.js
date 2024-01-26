@@ -1,17 +1,17 @@
 /**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
+ =========================================================
+ * Material Dashboard 2 React - v2.2.0
+ =========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+ * Product Page: https://www.creative-tim.com/product/material-dashboard-react
+ * Copyright 2023 Creative Tim (https://www.creative-tim.com)
 
-Coded by www.creative-tim.com
+ Coded by www.creative-tim.com
 
  =========================================================
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ */
 
 /**
  * The base typography styles for the Material Dashboard 2 React.
@@ -20,6 +20,7 @@ Coded by www.creative-tim.com
  */
 
 // Material Dashboard 2 React Base Styles
+
 import colors from "../base/colors";
 
 // Material Dashboard 2 React Helper Functions
@@ -28,20 +29,20 @@ import pxToRem from "../functions/pxToRem";
 const { dark } = colors;
 
 const baseProperties = {
-  fontFamily: `hkgrotesk`,
-  fontWeightLighter: 100,
+  fontFamily: 'Nokia Pure Headline',
+  fontWeightLighter: 200,
   fontWeightLight: 300,
   fontWeightRegular: 400,
-  fontWeightMedium: 600,
-  fontWeightBold: 700,
-  fontSizeXXS: pxToRem(10.4),
-  fontSizeXS: pxToRem(12),
-  fontSizeSM: pxToRem(14),
-  fontSizeMD: pxToRem(16),
-  fontSizeLG: pxToRem(18),
-  fontSizeXL: pxToRem(20),
-  fontSize2XL: pxToRem(24),
-  fontSize3XL: pxToRem(30),
+  fontWeightMedium: 500,
+  fontWeightBold: 600,
+  fontSizeXXS: pxToRem(13.4),
+  fontSizeXS: pxToRem(15),
+  fontSizeSM: pxToRem(17),
+  fontSizeMD: pxToRem(19),
+  fontSizeLG: pxToRem(20),
+  fontSizeXL: pxToRem(23),
+  fontSize2XL: pxToRem(27),
+  fontSize3XL: pxToRem(29),
 };
 
 const baseHeadingProperties = {

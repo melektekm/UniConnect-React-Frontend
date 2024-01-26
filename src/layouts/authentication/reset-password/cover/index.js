@@ -34,7 +34,7 @@ function Cover() {
       <Card>
         <MDBox
           variant="gradient"
-          bgColor="info"
+          bgColor="dark"
           borderRadius="lg"
           coloredShadow="success"
           mx={2}

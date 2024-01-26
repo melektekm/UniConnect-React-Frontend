@@ -32,7 +32,7 @@ export default styled(Badge)(({ theme, ownerState }) => {
     xs: "0.45em 0.775em",
     sm: "0.55em 0.9em",
     md: "0.65em 1em",
-    lg: "0.85em 1.375em",
+    lg: "2em 4em",
   };
 
   // fontSize value

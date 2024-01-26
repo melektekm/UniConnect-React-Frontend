@@ -5,14 +5,10 @@ import CssBaseline from "@mui/material/CssBaseline";
 import CashierSidenav from "../examples/Sidenav/CashierSidenav";
 
 import theme from "../assets/theme";
+import Dashboard from "./dashboard";
 
 export default function CashierDashboard({ selectedMenu }) {
   return (
-    <CashierSidenav
-      color="dark"
-      brand=""
-      brandName="MinT Cafe Admin App"
-      selectedMenu={selectedMenu}
-    />
+    <Dashboard />
   );
 }

@@ -41,6 +41,8 @@ function DashboardLayout({ children }) {
       sx={({ breakpoints, transitions, functions: { pxToRem } }) => ({
         p: 3,
         position: "relative",
+        minWidth: "1000px", 
+        margin: "0 auto", 
 
         [breakpoints.up("xl")]: {
           marginLeft: miniSidenav ? pxToRem(120) : pxToRem(274),

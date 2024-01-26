@@ -13,22 +13,23 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
 import OrderTables from "../../layouts/tables/ordertables";
 import CashierDashboard from "../CashierDashboard";
-// Data
-import authorsTableData from "./data/authorsTableData";
-import projectsTableData from "./data/projectsTableData";
+import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
+import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
 
 function Tables() {
-  const { columns, rows } = authorsTableData();
-  const { columns: pColumns, rows: pRows } = projectsTableData();
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
   return (
     <DashboardLayout>
-      {userData.user.role == 'cashier' ? <DashboardNavbar /> : <NavbarForCommette /> }
-      <CashierDashboard />
+      <CafeManagerDashboardNavbar />
+      <CafeManagerSidenav
+      color="dark"
+      brand=""
+      brandName="የሚንት ካፌ መተግበሪያ"
+       />
       <MDBox pt={6} pb={3}>
-        <OrderTables />
+        <OrderTables showEditColumn={true} />
       </MDBox>
       <Footer />
     </DashboardLayout>

@@ -1,11 +1,11 @@
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
 const electron= require("electron")
-
 const {app, BrowserWindow, screen, shell} = electron;
 const path = require('path')
 const isdev = !app.isPackaged
 const { ipcMain } = require('electron');
 const Store = require('electron-store');
+const fs = require('fs');
 const store = new Store();
 
 ipcMain.on('save-user', (event, user) => {
@@ -45,11 +45,25 @@ function createWindow(){
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            preload: path.join(__dirname, 'preload.js')
-        }
+           // preload: path.join(__dirname, 'preload.js')
+        },
+        icon: path.join(__dirname, './src/assets/images/icon.png')
     })
 
     win.loadFile(path.join(__dirname, 'public', 'index.html'))
+
+    const colorsFilePath = path.join(__dirname, 'src', 'assets', 'theme', 'base','colors.js');
+     
+  
+    fs.watchFile(colorsFilePath, (curr, prev) => {
+
+        try {
+            const colors = JSON.parse(fs.readFileSync(colorsFilePath, 'utf8'));
+            win.webContents.send('update-colors', colors);
+        } catch (error) {
+            console.error('Error reading or parsing colors.json:', error);
+        }
+    });
 
 }
 if(isdev){

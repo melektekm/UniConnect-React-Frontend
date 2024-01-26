@@ -21,8 +21,11 @@ import InventoryEntry from "../../layouts/inventory";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
 import { Icon } from "semantic-ui-react";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import AddDepartment from "../../layouts/addDepartment";
+import Department from "../../layouts/departmentList";
+import colors from "../../assets/theme/base/colors"; 
 import {
   Dashboard as DashboardIcon,
   Add as AddIcon,
@@ -36,6 +39,15 @@ import {
   Fastfood as FastfoodIcon,
   Assessment as AssessmentIcon,
 } from "@mui/icons-material";
+import BusinessIcon from "@mui/icons-material/Business";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import {
   useMaterialUIController,
   setMiniSidenav,
@@ -43,15 +55,7 @@ import {
   setWhiteSidenav,
 } from "../../context";
 import ReportList from "../../layouts/report";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-  CircularProgress,
-} from "@mui/material";
+import MDButton from "../../components/MDButton";
 
 function AdminSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
@@ -62,6 +66,10 @@ function AdminSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const collapseName = location.pathname.replace("/", "");
+  const iconStyle = {
+    
+    color: colors.badgeColors.primary.main, 
+  };
 
   const handleLogout = () => {
     setOpenLogoutDialog(true);
@@ -76,37 +84,51 @@ function AdminSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const handleCloseLogoutDialog = () => {
     setOpenLogoutDialog(false);
   };
-
   const handleLogoutConfirmed = async () => {
     try {
       await ipcRenderer.invoke("clear-user");
       navigate("/authentication/sign-in");
     } catch (error) {
-      console.error("Failed to clear user model:", error);
-    } finally {
-      setOpenLogoutDialog(false); // Close the dialog after logout
+    
     }
   };
 
   const routes = [
     {
       type: "collapse",
-      name: "Add Employee",
-      key: "Add-employee",
-      icon: <AddIcon fontSize="small" />,
+      name: "ሰራተኛ ማስገቢያ",
+      key: "addEmployee",
+      icon: <AddIcon fontSize="small" style={iconStyle}/>,
       route: "/addEmployee",
       component: <AddEmployee />,
     },
-   
+
     {
       type: "collapse",
-      name: "Employee list",
+      name: "ዲፓርትመንት ማስገቢያ ",
+      key: "addDepartment",
+      icon: <AddIcon fontSize="small" style={iconStyle}>login</AddIcon>,
+      route: "/addDepartment",
+      component: <AddDepartment />,
+    },
+
+    {
+      type: "collapse",
+      name: "ዲፓርትመንት ዝርዝር",
+      key: "departmentList",
+      icon: <BusinessIcon fontSize="small" style={iconStyle}>login</BusinessIcon>,
+      route: "/departmentList",
+      component: <Department />,
+    },
+
+    {
+      type: "collapse",
+      name: "ሰራተኛ  ዝርዝር",
       key: "profile",
-      icon: <PersonIcon fontSize="small" />,
+      icon: <PersonIcon fontSize="small" style={iconStyle}/>,
       route: "/profile",
       component: <EmployeeList />,
     },
-    
   ];
 
   let textColor = "white";
@@ -260,10 +282,10 @@ function AdminSidenav({ brand, brandName, selectedMenu, ...rest }) {
         }
       />
       <List>{renderRoutes}</List>
-      <Link to="#" onClick={handleLogout}>
+      <Link to="/" onClick={handleLogout}>
         <SidenavCollapse
-          name="Logout"
-          icon={<LogoutIcon fontSize="small">person</LogoutIcon>}
+          name="ውጣ"
+          icon={<LogoutIcon fontSize="small" style={iconStyle}>person</LogoutIcon>}
         />
       </Link>
       <Dialog
@@ -271,20 +293,21 @@ function AdminSidenav({ brand, brandName, selectedMenu, ...rest }) {
         onClose={handleCloseLogoutDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{ style: { padding: "15px"} }}
       >
-        <DialogTitle id="alert-dialog-title">Confirm Logout</DialogTitle>
+        <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to logout?
+            እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseLogoutDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleLogoutConfirmed} color="primary" autoFocus>
-            Logout
-          </Button>
+        <DialogActions style={{justifyContent: "space-between"}}>
+          <MDButton onClick={handleCloseLogoutDialog} color="info" style={{borderRadius: "15%"}}>
+            አይ
+          </MDButton>
+          <MDButton onClick={handleLogoutConfirmed} color="error" style={{borderRadius: "15%"}}>
+            ውጣ
+          </MDButton>
         </DialogActions>
       </Dialog>
     </SidenavRoot>

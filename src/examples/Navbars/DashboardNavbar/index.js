@@ -1,22 +1,7 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import React, { useState, useEffect } from "react";
 
 // react-router components
-import {useLocation, Link, useNavigate} from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -27,10 +12,11 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
-
+import colors from "../../../assets/theme/base/colors";
 // Material Dashboard 2 React components
 import MDBox from "../../../components/MDBox";
 import MDInput from "../../../components/MDInput";
+import MDTypography from "../../../components/MDTypography";
 
 // Material Dashboard 2 React example components
 import Breadcrumbs from "../../../examples/Breadcrumbs";
@@ -53,14 +39,58 @@ import {
   setOpenConfigurator,
 } from "../../../context";
 import MDButton from "../../../components/MDButton";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import { connect } from "react-redux";
+import {
+  setNewOrderCount,
+  selectNewOrderCount,
+} from "../../../stateManagment/OrderSlice";
+import { Badge } from "@mui/material";
+import routes from "../../../routes";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 
-
-function DashboardNavbar({ absolute, light, isMini }) {
+function DashboardNavbar({
+  absolute,
+  light,
+  isMini,
+  newOrderCount,
+  setNewOrderCount,
+}) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
-  const userData = ipcRenderer.sendSync('get-user');
+  const userData = ipcRenderer.sendSync("get-user");
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
+  const handleOpenAccountMenu = (event) =>
+    setAccountMenuOpen(event.currentTarget);
+  const handleCloseAccountMenu = () => setAccountMenuOpen(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await ipcRenderer.invoke("clear-user");
+      navigate("/authentication/sign-in");
+    } catch (error) {
+     
+    }
+  };
+  const handleOpenLogoutDialog = () => {
+    setOpenLogoutDialog(true);
+  };
+  const handleCloseLogoutDialog = () => {
+    setOpenLogoutDialog(false);
+  };
+
   const {
     miniSidenav,
     transparentNavbar,
@@ -73,6 +103,13 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   const navigate = useNavigate();
   const location = useLocation();
+  let routeName = '';
+
+  routes.forEach((route) => {
+    if (useLocation().pathname === route.route) {
+      routeName = route.name;
+    }
+  });
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -105,11 +142,31 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () =>
     setOpenConfigurator(dispatch, !openConfigurator);
-  const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
+  const handleOpenMenu = (event) => {
+    setOpenMenu(event.currentTarget);
+    setNewOrderCount(0); // Reset the count when opening the menu
+  };
   const handleCloseMenu = () => setOpenMenu(false);
- 
 
-
+  const rendermain = () => (
+    <Menu
+      anchorEl={accountMenuOpen}
+      anchorReference={null}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      open={Boolean(accountMenuOpen)}
+      onClose={handleCloseAccountMenu}
+      sx={{ mt: 2 }}
+    >
+      <NotificationItem
+        onClick={handleOpenLogoutDialog}
+        icon={<ExitToAppIcon>ውጣ</ExitToAppIcon>}
+        title="Log out"
+      />
+    </Menu>
+  );
 
   // Render the notifications menu
   const renderMenu = () => (
@@ -124,7 +181,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem onClick={() => navigate('/tables')}icon={<Icon>email</Icon>} title="Check new orders" />
+      <NotificationItem
+        onClick={() => navigate("/cashierOrder")}
+        icon={<NotificationsActiveIcon />}
+        title="Check new orders"
+      />
     </Menu>
   );
   // Styles for the navbar icons
@@ -142,15 +203,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
       return colorValue;
     },
   });
-  function handleRoute(){
-    if(userData.user.role == 'admin'){
-      return '/mainDashboard'
-    }else if(userData.user.role == 'cashier'){
-      return '/cashierdashboard'
-    }else if(userData.user.role == 'communittee_admin'){
-      return '/cafeCommetteDashboard'
-    }
-  }
 
   return (
     <AppBar
@@ -168,7 +220,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
         >
           <Breadcrumbs
             icon="home"
-            title={route[route.length - 1]}
+            title={routeName}
             route={route}
             light={light}
           />
@@ -176,23 +228,33 @@ function DashboardNavbar({ absolute, light, isMini }) {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox pr={1}>
-              <MDButton variant="gradient" color="secondary" 
-        
-              onClick={async () => {
-                const currentRoute = location.pathname; // Get the current route
-        
-                sessionStorage.setItem("previousRoute", currentRoute);
-                navigate('/search');
-              }}>
-                Search
+              <MDButton
+                variant="gradient"
+                style={{ color: "blue !important" }}
+                onClick={async () => {
+                  const currentRoute = location.pathname; // Get the current route
+
+                  sessionStorage.setItem("previousRoute", currentRoute);
+                  navigate("/searchForCashier");
+                }}
+              >
+                ፈልግ
               </MDButton>
             </MDBox>
-            <MDBox color={light ? "white" : "inherit"}>
-              <Link to={handleRoute}>
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-              </Link>
+            <MDBox color={light ? "white" : "inherit"} textAlign="center">
+              <IconButton
+                size="small"
+                disableRipple
+                color="inherit"
+                sx={navbarIconButton}
+                aria-controls="account-menu"
+                aria-haspopup="true"
+                variant="contained"
+                onClick={handleOpenAccountMenu}
+              >
+                <AccountCircleIcon sx={iconsStyle} />
+              </IconButton>
+              {rendermain()}
               <IconButton
                 size="small"
                 disableRipple
@@ -214,13 +276,42 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 variant="contained"
                 onClick={handleOpenMenu}
               >
-                <Icon sx={iconsStyle}>notifications</Icon>
+                {newOrderCount > 0 ? (
+                  <Badge badgeContent={newOrderCount} color="error">
+                    <NotificationsActiveIcon sx={iconsStyle} />
+                  </Badge>
+                ) : (
+                  <NotificationsNoneIcon sx={iconsStyle} />
+                )}
               </IconButton>
               {renderMenu()}
+              <MDTypography style = {{fontSize: "0.67em"}}>ሰላም {userData.user.name}</MDTypography>
             </MDBox>
           </MDBox>
         )}
       </Toolbar>
+      <Dialog
+  open={openLogoutDialog}
+  onClose={handleCloseLogoutDialog}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+  PaperProps={{ style: { padding: "15px" } }}
+>
+  <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions style={{ justifyContent: "space-between" }}>
+    <MDButton onClick={handleCloseLogoutDialog} color="info" style={{ borderRadius: "15%" }}>
+      አይ
+    </MDButton>
+    <MDButton onClick={handleLogout} color="error" style={{ borderRadius: "15%" }}>
+      ውጣ
+    </MDButton>
+  </DialogActions>
+</Dialog>
     </AppBar>
   );
 }
@@ -239,4 +330,12 @@ DashboardNavbar.propTypes = {
   isMini: PropTypes.bool,
 };
 
-export default DashboardNavbar;
+const mapStateToProps = (state) => ({
+  newOrderCount: selectNewOrderCount(state),
+});
+
+const mapDispatchToProps = {
+  setNewOrderCount,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardNavbar);

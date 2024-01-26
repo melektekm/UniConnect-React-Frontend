@@ -26,6 +26,10 @@ import IngredientApproval from "../../layouts/ingredientApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
 import InventoryList from "../../layouts/showInventory";
+import ShowApproval from "../../layouts/showIngredientApproval";
+import StockApproval from "../../layouts/showApprovedStock";
+import BuyFoodDepartment from "../../layouts/buyFood/buyFoodDepartment";
+
 import { Icon } from "semantic-ui-react";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -49,6 +53,8 @@ import {
   setWhiteSidenav,
 } from "../../context";
 import ReportList from "../../layouts/report";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import KitchenIcon from "@mui/icons-material/Kitchen";
 
 function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
@@ -59,18 +65,20 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const collapseName = location.pathname.replace("/", "");
+
+
   const handleLogout = async () => {
     try {
       await ipcRenderer.invoke("clear-user");
       navigate("/authentication/sign-in");
     } catch (error) {
-      console.error("Failed to clear token:", error);
+   
     }
   };
   const routes = [
     {
       type: "collapse",
-      name: "Dashboard",
+      name: "ዳሽቦርድ",
       key: "dashboard",
       icon: <DashboardIcon fontSize="small" />,
       route: "/dashboard",
@@ -78,24 +86,39 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Orders",
+      name: "ትዕዛዞች",
       key: "orders",
       icon: <TableViewOutlinedIcon fontSize="small" />,
       route: "/tables",
       component: <Tables />,
     },
-
     {
       type: "collapse",
-      name: "Food Menu",
+      name: "ግዢ መፍቀጃ",
+      key: "Ingredient_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/showIngredientApproval",
+      component: <ShowApproval />,
+    },
+    {
+      type: "collapse",
+      name: "ከስቶረ ማውጫ መፍቀጃ",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small"  />,
+      route: "/showApprovedStock",
+      component: <StockApproval />,
+    },
+    {
+      type: "collapse",
+      name: "የምግብ ዝርዝር",
       key: "food_menu",
       icon: <FastfoodIcon fontSize="small" />,
-      route: "/foodMenu",
+      route: "/food_menu",
       component: <FoodMenu />,
     },
     {
       type: "collapse",
-      name: "Menu Entry",
+      name: "ሜኑ ማስገቢያ",
       key: "add_food",
       icon: <RestaurantMenuIcon fontSize="small" />,
       route: "/addfood",
@@ -103,11 +126,19 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Buy Food",
+      name: "ምግብ መግዣ",
       key: "buy_food",
       icon: <ShoppingCartIcon fontSize="small" />,
       route: "/buyFood",
       component: <BuyFood />,
+    },
+    {
+      type: "collapse",
+      name: "ለዲፓርትመንት ምግብ መግዣ",
+      key: "buy_food_department",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/buyFoodDepartment",
+      component: <BuyFoodDepartment />,
     },
     {
       type: "collapse",
@@ -119,7 +150,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Inventory list",
+      name: "የገባው የእቃ ዝርዝር",
       key: "list",
       icon: <ShoppingCartIcon fontSize="small" />,
       route: "/showInventory",
@@ -127,39 +158,39 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Stock Request",
+      name: "ከስቶር ማውጫ ፎርም",
       key: "stock_request",
-      icon: <Icon fontSize="small" />,
+      icon: <ShoppingCartIcon fontSize="small"  />,
       route: "/stockRequest",
       component: <StockRequest />,
     },
+    // {
+    //   type: "collapse",
+    //   name: "Stock Approval",
+    //   key: "stock_Approval",
+    //   icon: <Icon fontSize="small" />,
+    //   route: "/stockApproval",
+    //   component: <Approval />,
+    // },
     {
       type: "collapse",
-      name: "Stock Approval",
-      key: "stock_Approval",
-      icon: <Icon fontSize="small"/>,
-      route: "/stockApproval",
-      component: <Approval />,
-    },
-    {
-      type: "collapse",
-      name: "Ingredient Request",
+      name: "ግዢ ማስፈቀጃ ፎርም",
       key: "ingredient_Request",
-      icon: <Icon fontSize="small"/>,
+      icon: <KitchenIcon fontSize="small" />,
       route: "/ingredientRequest",
       component: <IngredientRequest />,
     },
     {
       type: "collapse",
-      name: "Ingredient Approval",
+      name: "ግዢ መፍቀጃ ",
       key: "ingredient_Approval",
-      icon: <Icon fontSize="small"/>,
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
       route: "/ingredientApproval",
       component: <IngredientApproval />,
     },
     {
       type: "collapse",
-      name: "Add Employee",
+      name: "ሰራተኛ ማስገቢያ",
       key: "Add-employee",
       icon: <AddIcon fontSize="small" />,
       route: "/addEmployee",
@@ -167,7 +198,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Billing",
+      name: "ለእንግዳ ደረሰኝ",
       key: "billing",
       icon: <ReceiptLongIcon fontSize="small" />,
       route: "/billing",
@@ -175,15 +206,15 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Employee list",
+      name: "ሰራተኛ  ዝርዝር",
       key: "profile",
-      icon: <PersonIcon fontSize="small" />,
+      icon: <PersonIcon fontSize="small"  />,
       route: "/profile",
       component: <EmployeeList />,
     },
     {
       type: "collapse",
-      name: "Report",
+      name: "ሪፖርት",
       key: "report",
       icon: <AssessmentIcon fontSize="small" />,
       route: "/report",
@@ -191,7 +222,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Constraint",
+      name: "ገደቦች",
       key: "constraint",
       icon: <ManageAccountsIcon fontSize="small" />,
       route: "/constraint",
@@ -199,7 +230,15 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Deposit",
+      name: "የመተግበሪያ ገጽታ",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/showApprovedStock",
+      component: <StockApproval />,
+    },
+    {
+      type: "collapse",
+      name: "የገንዘብ አያያዝ",
       key: "deposit",
       icon: <AttachMoneyIcon fontSize="small" />,
       route: "/deposit",

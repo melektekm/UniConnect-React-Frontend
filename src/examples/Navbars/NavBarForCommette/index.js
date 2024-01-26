@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import React, { useState, useEffect } from "react";
 
 // react-router components
-import {useLocation, Link, useNavigate} from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -27,6 +27,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
+import MDButton from "../../../components/MDButton";
 
 // Material Dashboard 2 React components
 import MDBox from "../../../components/MDBox";
@@ -52,15 +53,27 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "../../../context";
-import MDButton from "../../../components/MDButton";
+import MDTypography from "../../../components/MDTypography";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import routes from "../../../routes";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 
 
 function NavbarForCommette({ absolute, light, isMini }) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
-  const userData = ipcRenderer.sendSync('get-user');
+  const userData = ipcRenderer.sendSync("get-user");
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
+  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
+
   const {
     miniSidenav,
     transparentNavbar,
@@ -72,8 +85,50 @@ function NavbarForCommette({ absolute, light, isMini }) {
   const route = useLocation().pathname.split("/").slice(1);
   const navigate = useNavigate();
 
+
+  const handleLogout = async () => {
+    try {
+      await ipcRenderer.invoke("clear-user");
+      navigate("/authentication/sign-in");
+    } catch (error) {
+    
+    }
+  };
+ 
+  const handleCloseLogoutDialog = () => {
+    setOpenLogoutDialog(false);
+  };
+  const handleOpenLogoutDialog = () => {
+    setOpenLogoutDialog(true);
+  };
+
+  const renderMenu = () => (
+    <Menu
+      anchorEl={openMenu}
+      anchorReference={null}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      open={Boolean(openMenu)}
+      onClose={handleCloseMenu}
+      sx={{ mt: 2 }}
+    >
+      <NotificationItem
+        onClick={handleOpenLogoutDialog}
+        icon={<ExitToAppIcon>Logout</ExitToAppIcon>}
+        title="Log out"
+      />
+    </Menu>
+  );
+  let routeName = '';
+
+  routes.forEach((route) => {
+    if (useLocation().pathname === route.route) {
+      routeName = route.name;
+    }
+  });
   useEffect(() => {
-    // Setting the navbar type
     if (fixedNavbar) {
       setNavbarType("sticky");
     } else {
@@ -108,7 +163,7 @@ function NavbarForCommette({ absolute, light, isMini }) {
   const handleCloseMenu = () => setOpenMenu(false);
 
   // Render the notifications menu
-  
+
   // Styles for the navbar icons
   const iconsStyle = ({
     palette: { dark, white, text },
@@ -124,15 +179,6 @@ function NavbarForCommette({ absolute, light, isMini }) {
       return colorValue;
     },
   });
-  function handleRoute(){
-    if(userData.user.role == 'admin'){
-      return '/mainDashboard'
-    }else if(userData.user.role == 'cashier'){
-      return '/cashierdashboard'
-    }else if(userData.user.role == 'communittee_admin'){
-      return '/cafeCommetteDashboard'
-    }
-  }
 
   return (
     <AppBar
@@ -150,19 +196,46 @@ function NavbarForCommette({ absolute, light, isMini }) {
         >
           <Breadcrumbs
             icon="home"
-            title={route[route.length - 1]}
+            title={routeName}
             route={route}
             light={light}
           />
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox color={light ? "white" : "inherit"}>
-              <Link to={handleRoute}>
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-              </Link>
+            {userData.user.role == "chief_admin" ?? (
+              <MDBox pr={1}>
+                <MDButton
+                  variant="gradient"
+                  color="secondary"
+                  onClick={async () => {
+                    const currentRoute = location.pathname; // Get the current route
+
+                    sessionStorage.setItem("previousRoute", currentRoute);
+                    navigate("/searchForInventory");
+                  }}
+                >
+                  Search
+                </MDButton>
+              </MDBox>
+            )}
+
+            <MDBox color={light ? "white" : "inherit"} textAlign="center">
+              <IconButton
+                size="small"
+                disableRipple
+                color="inherit"
+                sx={navbarIconButton}
+                aria-controls="notification-menu"
+                aria-haspopup="true"
+                variant="contained"
+                onClick={handleOpenMenu}
+              >
+                <AccountCircleIcon sx={iconsStyle} />
+              </IconButton>
+              {renderMenu()}
+
+              <MDTypography style = {{fontSize: "0.67em"}}>ሰላም {userData.user.name}</MDTypography>
               <IconButton
                 size="small"
                 disableRipple
@@ -178,7 +251,30 @@ function NavbarForCommette({ absolute, light, isMini }) {
           </MDBox>
         )}
       </Toolbar>
+      <Dialog
+  open={openLogoutDialog}
+  onClose={handleCloseLogoutDialog}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+  PaperProps={{ style: { padding: "15px" } }}
+>
+  <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions style={{ justifyContent: "space-between" }}>
+    <MDButton onClick={handleCloseLogoutDialog} color="info" style={{ borderRadius: "15%" }}>
+      አይ
+    </MDButton>
+    <MDButton onClick={handleLogout} color="error" style={{ borderRadius: "15%" }}>
+      ውጣ
+    </MDButton>
+  </DialogActions>
+</Dialog>
     </AppBar>
+    
   );
 }
 

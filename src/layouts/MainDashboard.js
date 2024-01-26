@@ -11,7 +11,7 @@ export default function MainDashboard({ selectedMenu }) {
     <AdminSidenav
       color="dark"
       brand=""
-      brandName="MinT Cafe Admin App"
+      brandName="የሚንት ካፌ መተግበሪያ"
       selectedMenu={selectedMenu}
     />
   );

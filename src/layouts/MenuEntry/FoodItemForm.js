@@ -2,16 +2,45 @@ import React from "react";
 import MDBox from "../../components/MDBox";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
+import MDTypography from "../../components/MDTypography";
+import colors from "../../assets/theme/base/colors";
+const FoodItemForm = ({
+  values,
+  errorMessages,
+  loading,
+  handleImageUpload,
+  inputHandler,
+  handleAddToMenu,
+   selectedMenu,
+  file,
+}) => {
+  const lettersOnlyRegex = /^[\u1200-\u137F\s]*$/;
 
-    const FoodItemForm = ({
-    values,
-    errorMessages,
-    loading,
-    handleImageUpload,
-    inputHandler,
-    handleAddToMenu,
-    selectedMenu,
-    }) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    // if (name === "name" || name === "description") {
+    //   if (value === "" || lettersOnlyRegex.test(value)) {
+    //     // Only update the state if the input is empty or contains only letters
+    //     inputHandler(e);
+    //   }
+    // } else {
+    // Update the state directly for other fields
+    inputHandler(e);
+    // }
+  };
+  const fileInputStyle = {
+    display: "inline-block",
+    cursor: "pointer",
+    padding: "10px 20px",
+    backgroundColor: colors.dark.main, 
+    color: "white",
+    borderRadius: "5px",
+    border: "1px solid #007bff",
+    zIndex: 1000
+
+
+  };
   return (
     <MDBox
       variant="gradient"
@@ -22,15 +51,16 @@ import MDButton from "../../components/MDButton";
       py={2}
       component="form"
       role="form"
+      style={{ border: "3px solid #206A5D" }}
     >
       <MDBox mb={2}>
         <MDInput
           type="text"
-          label="Food Item Name"
+          label="የምግብ ስም"
           variant="outlined"
           fullWidth
           value={values.name}
-          onChange={inputHandler}
+          onChange={handleInputChange}
           name="name"
         />
         {errorMessages.name && (
@@ -40,18 +70,18 @@ import MDButton from "../../components/MDButton";
       <MDBox mb={2}>
         <MDInput
           type="text"
-          label="Description"
+          label="መግለጫ"
           variant="outlined"
           fullWidth
           value={values.description}
-          onChange={inputHandler}
+          onChange={handleInputChange}
           name="description"
         />
       </MDBox>
       <MDBox mb={2}>
         <MDInput
           type="number"
-          label="Price for Employee"
+          label="የሰራተኛ ዋጋ"
           variant="outlined"
           fullWidth
           value={values.price_for_employee}
@@ -65,7 +95,7 @@ import MDButton from "../../components/MDButton";
       <MDBox mb={2}>
         <MDInput
           type="number"
-          label="Price for Guest"
+          label="ለእንግዳ ዋጋ"
           variant="outlined"
           fullWidth
           value={values.price_for_guest}
@@ -79,7 +109,7 @@ import MDButton from "../../components/MDButton";
       <MDBox mb={2}>
         <select
           value={values.meal_type}
-          label="Meal type"
+          label="የምግብ አይነት"
           onChange={inputHandler}
           name="meal_type"
           style={{
@@ -87,14 +117,14 @@ import MDButton from "../../components/MDButton";
             padding: "8px", // Adjust the padding value as needed
           }}
         >
-          <option value="lunch">Lunch</option>
-          <option value="breakfast">Breakfast</option>
-          <option value="drink">Drink</option>
+          <option value="lunch">ምሳ</option>
+          <option value="breakfast">ቁርስ</option>
+          <option value="drink">መጠጥ</option>
         </select>
       </MDBox>
       <MDBox mb={2}>
         <select
-          value={values.is_fasting}
+          value={values.is_fasting ? "1" : "0"}
           onChange={inputHandler}
           name="is_fasting"
           style={{
@@ -102,31 +132,47 @@ import MDButton from "../../components/MDButton";
             padding: "8px", // Adjust the padding value as needed
           }}
         >
-          <option value={1}>Fasting</option>
-          <option value={0}>Non-Fasting</option>
+          <option value="1">የጾም</option>
+          <option value="0">የፍስክ </option>
         </select>
       </MDBox>
       <MDBox mb={2}>
-        <label htmlFor="imageUpload">Upload Image:</label>
         <MDInput
-          type="file"
-          id="imageUpload"
-          accept="image/*"
-          onChange={handleImageUpload}
-          name="imageUrl"
+          type="number"
+          label="የሚገኝ መጠን"
+          variant="outlined"
+          fullWidth
+          value={values.available_amount}
+          onChange={inputHandler}
+          name="available_amount"
         />
-        {errorMessages.imageUrl && (
-          <p style={{ color: "red" }}>{errorMessages.imageUrl}</p>
-        )}
       </MDBox>
+     
+      <MDBox mb={2} style={{ display: 'flex', alignItems: 'center' }}>
+  <label htmlFor="imageUpload" style={fileInputStyle}>
+    <input
+      type="file"
+      id="imageUpload"
+      accept="image/*"
+      name="imageUrl"
+      onChange={handleImageUpload} 
+      style={{ display: "none" }}
+    />
+    <span>&#128206; {file ? file.name : "የፎቶ ማስገቢያ:"}</span>
+  </label>
+  <MDTypography variant="body2" ml={1}>
+    ከ 1 MB ያልበለጠ ፤  jpeg, jpg, png
+  </MDTypography>
+</MDBox>
       <div style={{ textAlign: "center" }}>
         <MDButton
-          variant="gradient"
-          color="info"
+          variant="contained"
+          color="primary"
+          style={{ border: "3px solid #07689F" }}
           onClick={handleAddToMenu}
           disabled={loading} // Disable the button while loading
         >
-          {loading ? "Adding..." : selectedMenu ? "Update Menu" : "Add to Menu"}
+          {loading ? "በሒደት ላይ..." : selectedMenu ? "ሜኑን ቀይር" : "ወደ ሜኑ አስገባ"}
         </MDButton>
       </div>
     </MDBox>
