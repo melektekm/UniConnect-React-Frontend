@@ -196,14 +196,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/addEmployee",
       component: <AddEmployee />,
     },
-    {
-      type: "collapse",
-      name: "ለእንግዳ ደረሰኝ",
-      key: "billing",
-      icon: <ReceiptLongIcon fontSize="small" />,
-      route: "/billing",
-      component: <Billing />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "ለእንግዳ ደረሰኝ",
+    //   key: "billing",
+    //   icon: <ReceiptLongIcon fontSize="small" />,
+    //   route: "/billing",
+    //   component: <Billing />,
+    // },
     {
       type: "collapse",
       name: "ሰራተኛ  ዝርዝር",

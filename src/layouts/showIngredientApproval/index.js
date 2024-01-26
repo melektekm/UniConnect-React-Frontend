@@ -14,6 +14,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import CafeCommetteDashboard from "../CafeCommetteDashboard";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 
 function ShowApproval() {
   const [inventoryList, setInventoryList] = useState([]); // Initialize as an empty array

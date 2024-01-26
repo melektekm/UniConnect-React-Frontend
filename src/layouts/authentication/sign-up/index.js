@@ -29,11 +29,12 @@ import { BASE_URL } from "../../../appconfig";
 function Cover() {
   const [name, setName] = useState("");
   const [loadingSign, setLoadingSign] = useState(false);
-  const [role, setRole] = useState(0);
+  const [role, setRole] = useState('');
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const[roleError, setRoleError] = useState("");
 
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -77,7 +78,7 @@ function Cover() {
       if (response.data.user.role == "coordinator") {
         navigate("/cashierDashboard");
       } else if (response.data.user.role == "admin") {
-        navigate("/Dashboard");
+        navigate("/mainDashboard");
       } else if (response.data.user.role == "student") {
         navigate("/cafeCommetteDashboard");
       } else if (response.data.user.role == "dean") {
@@ -174,23 +175,25 @@ function Cover() {
               />
             </MDBox>
             <MDBox mb={2}>
+              <FormControl fullWidth error={!!roleError} margin="normal">
               <FormControl fullWidth margin="normal">
                 <Select
-                  label="role"
+                  label="Role"
                   variant="standard"
                   fullWidth
                   value={role}
                   name="role"
                   onChange={(e) => setRole(e.target.value)}
                 >
-                  <MenuItem value={0}>Select Role</MenuItem>
-                  <MenuItem value={1}>Admin</MenuItem>
-                  <MenuItem value={2}>coordinator</MenuItem>
-                  <MenuItem value={3}>Student</MenuItem>
-                  <MenuItem value={4}>Dean</MenuItem>
-                  <MenuItem value={5}>Instructor</MenuItem>
+                  <MenuItem value="coordinator">Coordinator</MenuItem>
+                  <MenuItem value="admin">Admin</MenuItem>
+                  <MenuItem value="student">Student</MenuItem>
+                  <MenuItem value="dean">Dean</MenuItem>
+                  <MenuItem value="instructor">Instructor</MenuItem>
                 </Select>
+                {roleError && <FormHelperText>{roleError}</FormHelperText>}
                 {/* <FormHelperText>{passwordError}</FormHelperText> */}
+              </FormControl>
               </FormControl>
             </MDBox>
             <MDBox mb={2}>
@@ -233,13 +236,13 @@ function Cover() {
                   fullWidth
                   onClick={handleregister}
                 >
-                  signup
+                  ተመዝገቡ
                 </MDButton>
               )}
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                already have an account{" "}
+                አስቀድመው መለያ አለህ?{" "}
                 <MDTypography
                   onClick={() => navigate("/authentication/sign-in")}
                   variant="button"
@@ -248,7 +251,7 @@ function Cover() {
                   textGradient
                   style={{ cursor: "pointer" }}
                 >
-                  login
+                  ይግቡ
                 </MDTypography>
               </MDTypography>
             </MDBox>
