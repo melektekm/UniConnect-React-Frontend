@@ -5,18 +5,16 @@ import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import MainDashboard from "../../layouts/MainDashboard";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import AdminNavbar from "../../examples/Navbars/AdminNavbar";
 import Footer from "../../examples/Footer";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
-import AdminNavbar from "../../examples/Navbars/AdminNavbar";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 import Icon from "@mui/material/Icon";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-
 import {
   Dialog,
   DialogActions,
@@ -32,15 +30,32 @@ import { Button } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useLocation, useNavigate } from "react-router-dom";
 
-function AddEmployee() {
+function AddEmployee({ selectedEmployee }) {
   const [name, setName] = useState("");
   const [role, setRole] = useState(0);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessages, setErrorMessages] = useState({
+    name: "",
+    email: "",
+    role: "",
+  });
+
+  const electron = window.require("electron");
+  const ipcRenderer = electron.ipcRenderer;
+  const CircularLoader = () => <CircularProgress size={24} color="inherit" />;
+
+  const [formValues, setFormValues] = useState({
+    name: selectedEmployee ? selectedEmployee.name : "",
+    email: selectedEmployee ? selectedEmployee.email : "",
+    role: selectedEmployee ? selectedEmployee.role : 0,
+  });
+
+  const userData = ipcRenderer.sendSync("get-user");
+  const accessToken = userData.accessToken;
   const [open, setOpen] = useState(false);
-  const [errorMessages, setErrorMessages] = useState({});
 
   const handleRegister = async () => {
     const newErrorMessages = {
@@ -69,21 +84,17 @@ function AddEmployee() {
         `${BASE_URL}/auth/admin/addEmployee`,
         requestData,
         {
-          "Content-Type": "application/json",
-        },
-        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
           },
         }
       );
 
       if (response.data) {
         resetState();
-
-        setErrorMessage({});
+        setErrorMessage("");
         setSuccessMessage("Employee registered successfully");
-
         setOpen(true);
       } else {
         setErrorMessage("No response");
