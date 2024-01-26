@@ -14,7 +14,7 @@ import Footer from "../../examples/Footer";
 import OrderTables from "../../layouts/tables/ordertables";
 import CashierDashboard from "../CashierDashboard";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 
 function Tables() {
   const electron = window.require("electron");
@@ -22,12 +22,10 @@ function Tables() {
   const userData = ipcRenderer.sendSync("get-user");
   return (
     <DashboardLayout>
-      <CafeManagerDashboardNavbar />
-      <CafeManagerSidenav
-      color="dark"
-      brand=""
-      brandName="የሚንት ካፌ መተግበሪያ"
-       />
+      {/* <CafeManagerDashboardNavbar />
+      <CafeManagerSidenav color="dark" brand="" brandName="የሚንት ካፌ መተግበሪያ" /> */}
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox pt={6} pb={3}>
         <OrderTables showEditColumn={true} />
       </MDBox>

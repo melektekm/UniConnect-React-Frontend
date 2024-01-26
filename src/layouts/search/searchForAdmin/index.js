@@ -15,7 +15,7 @@ import MainDashboard from "../../MainDashboard";
 import AdminNavbar from "../../../examples/Navbars/AdminNavbar";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { EthDateTime } from "ethiopian-calendar-date-converter";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 import {
   CardContent,
@@ -33,7 +33,7 @@ function SearchMenuForAdmin() {
 
   const [selectedAction, setSelectedAction] = useState("add_to_employee_edit"); // Default value
   const [searchType, setSearchType] = useState("employee");
-  const [isSearched,   setIsSearched] = useState(false);
+  const [isSearched, setIsSearched] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
@@ -50,7 +50,6 @@ function SearchMenuForAdmin() {
   const [editedEmployee, setEditedEmployee] = useState(null);
   const [loading, setLoading] = useState(false);
   // const selectedEmployee = location.state?.selectedEmployee;
-  
 
   useEffect(() => {
     // Retrieve the previous route from sessionStorage
@@ -66,17 +65,14 @@ function SearchMenuForAdmin() {
 
   const handleSearchInputChange = (e) => {
     setSearchType(e.target.value);
-    setIsSearched(false); 
-   
+    setIsSearched(false);
   };
 
   const handleMenuClick = async (employee) => {
     if (selectedAction === "add_to_buy_food") {
       if (employee && employee.id !== undefined) {
-        const employeeId = employee.id.toString(); 
-        
+        const employeeId = employee.id.toString();
       } else {
-      
       }
     } else if (selectedAction === "add_to_employee_edit") {
       setTimeout(() => {
@@ -88,7 +84,7 @@ function SearchMenuForAdmin() {
   const [searchInput, setSearchInput] = useState("");
 
   const handleSearch = async () => {
-    setLoading(true)
+    setLoading(true);
     if (searchType === "employee") {
       try {
         const response = await axios.get(`${BASE_URL}/searchEmployeeByname`, {
@@ -102,13 +98,10 @@ function SearchMenuForAdmin() {
         if (response.data) {
           setEmployeeList(response.data);
         } else {
-      
         }
-      } catch (error) {
-   
-      }
+      } catch (error) {}
     }
-    setLoading(false)
+    setLoading(false);
   };
   useEffect(() => {
     fetchEmployees();
@@ -137,11 +130,8 @@ function SearchMenuForAdmin() {
         setCurrentPage(response.data.current_page);
         setLastPage(response.data.last_page);
       } else {
-    
       }
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
   const handleDeleteDialogOpen = (employeeId) => {
     const employee = employees.find((employee) => employee.id === employeeId);
@@ -166,9 +156,7 @@ function SearchMenuForAdmin() {
 
       setEmployees(employees.filter((employee) => employee.id !== employeeId));
       setDeleteDialogOpen(false);
-    } catch (error) {
-     
-    }
+    } catch (error) {}
   };
   function handleEdit(updatedEmployee) {
     if (!selectedEmployee) {
@@ -187,26 +175,33 @@ function SearchMenuForAdmin() {
     const parsedDate = new Date(inputDate);
 
     if (!isNaN(parsedDate.getTime())) {
+      const ethDateTime = EthDateTime.fromEuropeanDate(parsedDate);
+      const dayOfWeek = ethDateTime.getDay();
+      const dayOfWeekStrings = [
+        "እሁድ",
+        "ሰኞ",
+        "ማክሰኞ",
+        "ረቡእ",
+        "ሐሙስ",
+        "አርብ",
+        "ቅዳሜ",
+      ];
+      const dayName = dayOfWeekStrings[dayOfWeek];
 
-        const ethDateTime = EthDateTime.fromEuropeanDate(parsedDate);
-        const dayOfWeek = ethDateTime.getDay();
-        const dayOfWeekStrings = ['እሁድ', 'ሰኞ', 'ማክሰኞ', 'ረቡእ', 'ሐሙስ', 'አርብ', 'ቅዳሜ'];
-        const dayName = dayOfWeekStrings[dayOfWeek];
+      const ethiopianDateStr = `${dayName}, ${ethDateTime.toDateString()}`;
 
-        const ethiopianDateStr = `${dayName}, ${ethDateTime.toDateString()}`;
-
-        return `${ethiopianDateStr}`;
+      return `${ethiopianDateStr}`;
     } else {
-
-        return 'Invalid Date';
+      return "Invalid Date";
     }
-}
-  
+  }
 
   return (
     <DashboardLayout>
-      <AdminNavbar />
-      <MainDashboard />
+      <DashboardNavbar />
+      <Sidenav />
+      {/* <AdminNavbar />
+      <MainDashboard /> */}
       <MDBox
         mx={2}
         mt={1}
@@ -217,54 +212,63 @@ function SearchMenuForAdmin() {
         bgColor="dark"
         borderRadius="lg"
         coloredShadow="info"
-     
         textAlign="center"
-        style={{display: "flex", gap: "10px" }}
+        style={{ display: "flex", gap: "10px" }}
       >
         <MDBox
-      bgColor="white"
-      style={{
-        marginRight: "20px",
-        marginLeft: "100px",
-        width: "300px",
-        display: "flex",  // Ensure flex display to align items vertically
-        alignItems: "center",  // Center items vertically
-        border: "1px solid #ccc",  // Add a border for consistent appearance
-        borderRadius: "4px",  // Apply border radius to match the input field
-        padding: "2px",  // Add padding for better spacing
-      }}
-    >
-      <MDInput
-        placeholder=" እዚህ ይጻፉ..."
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        style={{
-          width: "100%",
-          border: "none",  // Remove border from input field to match the container
-          outline: "none",  // Remove outline on focus for better appearance
-          
-        }}
-      />
-    </MDBox>
-      
+          bgColor="white"
+          style={{
+            marginRight: "20px",
+            marginLeft: "100px",
+            width: "300px",
+            display: "flex", // Ensure flex display to align items vertically
+            alignItems: "center", // Center items vertically
+            border: "1px solid #ccc", // Add a border for consistent appearance
+            borderRadius: "4px", // Apply border radius to match the input field
+            padding: "2px", // Add padding for better spacing
+          }}
+        >
+          <MDInput
+            placeholder=" እዚህ ይጻፉ..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            style={{
+              width: "100%",
+              border: "none", // Remove border from input field to match the container
+              outline: "none", // Remove outline on focus for better appearance
+            }}
+          />
+        </MDBox>
 
-    {loading ? (
+        {loading ? (
           <MDBox textAlign="center">
-          <CircularProgress color="white" />
+            <CircularProgress color="white" />
           </MDBox>
         ) : (
-          <MDButton variant="contained" onClick={handleSearch} color="primary" style= {{borderRadius: "20%",height:"50px" , marginTop: "10px"}}>
-          ፈልግ
-        </MDButton>
+          <MDButton
+            variant="contained"
+            onClick={handleSearch}
+            color="primary"
+            style={{ borderRadius: "20%", height: "50px", marginTop: "10px" }}
+          >
+            ፈልግ
+          </MDButton>
         )}
-        
+
         <Select
-     
           value={searchType}
-          onChange={handleSearchInputChange} 
-          style={{ marginRight: "10px", width: "100px", height:"50px" ,color: "blue" , marginTop: "10px"}}
+          onChange={handleSearchInputChange}
+          style={{
+            marginRight: "10px",
+            width: "100px",
+            height: "50px",
+            color: "blue",
+            marginTop: "10px",
+          }}
         >
-          <MenuItem value="employee"><p style={{ color: "white" }}>ሰራተኛ</p></MenuItem>
+          <MenuItem value="employee">
+            <p style={{ color: "white" }}>ሰራተኛ</p>
+          </MenuItem>
         </Select>
       </MDBox>
       <MDBox py={3}>{searchType === "employee" && renderEmployeeBody()}</MDBox>
@@ -274,10 +278,10 @@ function SearchMenuForAdmin() {
   );
   function renderEmployeeBody() {
     if (employeeList.length === 0) {
-      if(!isSearched){
-        return
+      if (!isSearched) {
+        return;
       }
-      
+
       return (
         <Typography variant="h6" align="center">
           ምንም ሰራተኛ አልተገኘም።
@@ -286,50 +290,52 @@ function SearchMenuForAdmin() {
     }
     return (
       <>
-      {employeeList.length === 0 ? (
-        <Typography variant="body1" color="textSecondary">
-          ምንም ሰራተኞች አልተገኙም።
-        </Typography>
-      ) : (
-        <TableContainer>
-          <Table>
-            <TableRow>
-              <TableCell>
-                <strong>መታወቂያ</strong>
-              </TableCell>
-              <TableCell>
-                <strong>ስም</strong>
-              </TableCell>
-              <TableCell>
-                <strong>ኢሜይል</strong>
-              </TableCell>
-              <TableCell>
-                <strong>ዲፓርትመንት</strong>
-              </TableCell>
-              <TableCell>
-                <strong>ዋና የሥራ ክፍል</strong>
-              </TableCell>
-              <TableCell>
-                <strong>የሚቀረው የገንዘብ መጠን</strong>
-              </TableCell>
-              <TableCell>
-                <strong>የገባበት ቀን</strong>
-              </TableCell>
-              <TableCell>
-                <strong>ድርጊት</strong>
-              </TableCell>
-            </TableRow>
+        {employeeList.length === 0 ? (
+          <Typography variant="body1" color="textSecondary">
+            ምንም ሰራተኞች አልተገኙም።
+          </Typography>
+        ) : (
+          <TableContainer>
+            <Table>
+              <TableRow>
+                <TableCell>
+                  <strong>መታወቂያ</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>ስም</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>ኢሜይል</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>ዲፓርትመንት</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>ዋና የሥራ ክፍል</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>የሚቀረው የገንዘብ መጠን</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>የገባበት ቀን</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>ድርጊት</strong>
+                </TableCell>
+              </TableRow>
 
-            {employeeList.map((employee) => (
-              <TableRow key={employee.id}>
-                <TableCell>{employee.id}</TableCell>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.email}</TableCell>
-                <TableCell>{employee.department}</TableCell>
-                <TableCell>{employee.position}</TableCell>
-                <TableCell>{employee.balance}</TableCell>
-                <TableCell>{convertToEthiopianDate(employee.created_at)}</TableCell>
-                <TableCell align={"center"}>
+              {employeeList.map((employee) => (
+                <TableRow key={employee.id}>
+                  <TableCell>{employee.id}</TableCell>
+                  <TableCell>{employee.name}</TableCell>
+                  <TableCell>{employee.email}</TableCell>
+                  <TableCell>{employee.department}</TableCell>
+                  <TableCell>{employee.position}</TableCell>
+                  <TableCell>{employee.balance}</TableCell>
+                  <TableCell>
+                    {convertToEthiopianDate(employee.created_at)}
+                  </TableCell>
+                  <TableCell align={"center"}>
                     <IconButton onClick={() => handleEdit(employee)}>
                       <EditIcon color="primary" />
                     </IconButton>
@@ -339,12 +345,11 @@ function SearchMenuForAdmin() {
                       <DeleteIcon color="error" />
                     </IconButton>
                   </TableCell>
-              </TableRow>
-            ))}
-          </Table>
-        </TableContainer>
-        
-      )}
+                </TableRow>
+              ))}
+            </Table>
+          </TableContainer>
+        )}
       </>
     );
   }

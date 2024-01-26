@@ -25,12 +25,11 @@ import Icon from "@mui/material/Icon";
 import Typography from "@mui/material/Typography";
 import { Select, MenuItem } from "@mui/material";
 import CashierSidenav from "../../../examples/Sidenav/CashierSidenav";
-import AddIcon from '@mui/icons-material/Add';
-import MenuItemCard from "../../foodMenu/MenuItemCard"
+import AddIcon from "@mui/icons-material/Add";
+import MenuItemCard from "../../foodMenu/MenuItemCard";
 
 import { EthDateTime } from "ethiopian-calendar-date-converter";
-import CircularProgress from '@mui/material/CircularProgress';
-
+import CircularProgress from "@mui/material/CircularProgress";
 
 import {
   CardContent,
@@ -44,17 +43,13 @@ import {
 } from "@mui/material";
 import CashierDashboard from "../../CashierDashboard";
 
-
-
 function SearchMenuForCashier() {
   const [foodMenu, setFoodMenu] = useState([]);
   const [employeeList, setEmployeeList] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
 
-
   const [selectedAction, setSelectedAction] = useState([]);
   const [searchType, setSearchType] = useState("");
-
 
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -63,34 +58,37 @@ function SearchMenuForCashier() {
 
   const accessToken = userData.accessToken;
   const [loading, setLoading] = useState(false);
-  const [isSearched,   setIsSearched] = useState(false);
- 
+  const [isSearched, setIsSearched] = useState(false);
 
   function convertToEthiopianDate(inputDate) {
     const parsedDate = new Date(inputDate);
 
     if (!isNaN(parsedDate.getTime())) {
+      const ethDateTime = EthDateTime.fromEuropeanDate(parsedDate);
+      const dayOfWeek = ethDateTime.getDay();
+      const dayOfWeekStrings = [
+        "እሁድ",
+        "ሰኞ",
+        "ማክሰኞ",
+        "ረቡእ",
+        "ሐሙስ",
+        "አርብ",
+        "ቅዳሜ",
+      ];
+      const dayName = dayOfWeekStrings[dayOfWeek];
 
-        const ethDateTime = EthDateTime.fromEuropeanDate(parsedDate);
-        const dayOfWeek = ethDateTime.getDay();
-        const dayOfWeekStrings = ['እሁድ', 'ሰኞ', 'ማክሰኞ', 'ረቡእ', 'ሐሙስ', 'አርብ', 'ቅዳሜ'];
-        const dayName = dayOfWeekStrings[dayOfWeek];
+      const ethiopianDateStr = `${dayName}, ${ethDateTime.toDateString()}`;
 
-        const ethiopianDateStr = `${dayName}, ${ethDateTime.toDateString()}`;
-
-        return `${ethiopianDateStr}`;
+      return `${ethiopianDateStr}`;
     } else {
-
-        return 'Invalid Date';
+      return "Invalid Date";
     }
-}
+  }
 
   function handleUpdateMenu(updatedMenu) {
     if (!selectedMenu) {
-     
       setFoodMenu([...foodMenu, updatedMenu]);
     } else {
-     
       setFoodMenu(
         foodMenu.map((menu) =>
           menu.id === updatedMenu.id ? updatedMenu : menu
@@ -101,15 +99,11 @@ function SearchMenuForCashier() {
     navigate("/addFood", { state: { selectedMenu: updatedMenu } });
   }
 
-
-
   useEffect(() => {
     // Retrieve the previous route from sessionStorage
     const previousRoute = sessionStorage.getItem("previousRoute");
 
     if (previousRoute) {
-   
-
       // Check the value of previousRoute and set searchType accordingly
       if (previousRoute === "/addEmployee") {
         setSearchType("employee");
@@ -127,12 +121,10 @@ function SearchMenuForCashier() {
   }, []);
 
   const handleMenuClick = async (employee) => {
-  
     if (selectedAction === "add_to_buy_food") {
       if (employee && employee.id !== undefined) {
         const employeeId = employee.id.toString(); // Convert to a string
 
-     
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Store data in sessionStorage
@@ -141,31 +133,25 @@ function SearchMenuForCashier() {
         // Navigate to the /buyFood route
         navigate("/buyFood");
       }
-    } 
+    }
     if (selectedAction === "add_to_deposit") {
-   
       if (employee && employee.id !== undefined) {
-        const employeeId = employee.id.toString(); 
-       
+        const employeeId = employee.id.toString();
 
-       
-
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         sessionStorage.setItem("previous Search", employeeId);
-      
+
         navigate(`/deposit`);
-      } 
-    } 
-    
+      }
+    }
   };
 
   const [searchInput, setSearchInput] = useState("");
 
   const handleSearch = async () => {
-    setLoading(true)
+    setLoading(true);
     if (searchType === "menuitem") {
       try {
-        
         const response = await axios.get(`${BASE_URL}/search`, {
           params: {
             term: searchInput,
@@ -176,17 +162,12 @@ function SearchMenuForCashier() {
         });
         if (response.data) {
           setFoodMenu(response.data);
-       
         } else {
-     
         }
-      } catch (error) {
-       
-      }
+      } catch (error) {}
     }
     if (searchType === "employee") {
       try {
-        
         const response = await axios.get(`${BASE_URL}/searchEmployeeByname`, {
           params: {
             term: searchInput,
@@ -197,17 +178,12 @@ function SearchMenuForCashier() {
         });
         if (response.data) {
           setEmployeeList(response.data);
-     
-     
         } else {
-      
         }
-      } catch (error) {
-      
-      }
+      } catch (error) {}
     }
-    setIsSearched(true)
-    setLoading(false)
+    setIsSearched(true);
+    setLoading(false);
   };
   function handleUpdateMenu(updatedMenu) {
     if (!selectedMenu) {
@@ -254,20 +230,19 @@ function SearchMenuForCashier() {
       });
 
       setFoodMenu(updatedFoodMenu);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
   const handleSearchInputChange = (e) => {
     setSearchType(e.target.value);
-    setIsSearched(false); 
-   
+    setIsSearched(false);
   };
 
   return (
     <DashboardLayout>
+      {/* <DashboardNavbar />
+      <CashierSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" /> */}
       <DashboardNavbar />
-      <CashierSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" />
+      <Sidenav />
       <MDBox
         mx={2}
         mt={1}
@@ -278,54 +253,67 @@ function SearchMenuForCashier() {
         bgColor="dark"
         borderRadius="lg"
         coloredShadow="info"
-     
         textAlign="center"
-        style={{display: "flex", gap: "10px" }}
+        style={{ display: "flex", gap: "10px" }}
       >
         <MDBox
-      bgColor="white"
-      style={{
-        marginRight: "20px",
-        marginLeft: "100px",
-        width: "300px",
-        display: "flex",  // Ensure flex display to align items vertically
-        alignItems: "center",  // Center items vertically
-        border: "1px solid #ccc",  // Add a border for consistent appearance
-        borderRadius: "4px",  // Apply border radius to match the input field
-        padding: "8px",  // Add padding for better spacing
-      }}
-    >
-      <MDInput
-        placeholder=" እዚህ ይጻፉ..."
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        style={{
-          width: "100%",
-          border: "none",  // Remove border from input field to match the container
-          outline: "none",  // Remove outline on focus for better appearance
-        }}
-      />
-    </MDBox>
-    
+          bgColor="white"
+          style={{
+            marginRight: "20px",
+            marginLeft: "100px",
+            width: "300px",
+            display: "flex", // Ensure flex display to align items vertically
+            alignItems: "center", // Center items vertically
+            border: "1px solid #ccc", // Add a border for consistent appearance
+            borderRadius: "4px", // Apply border radius to match the input field
+            padding: "8px", // Add padding for better spacing
+          }}
+        >
+          <MDInput
+            placeholder=" እዚህ ይጻፉ..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            style={{
+              width: "100%",
+              border: "none", // Remove border from input field to match the container
+              outline: "none", // Remove outline on focus for better appearance
+            }}
+          />
+        </MDBox>
+
         {loading ? (
           <MDBox textAlign="center">
-          <CircularProgress color="white" />
+            <CircularProgress color="white" />
           </MDBox>
         ) : (
-          <MDButton variant="contained" onClick={handleSearch} color="primary" style= {{borderRadius: "10%", marginTop: "10px"}}>
-          ፈልግ
-        </MDButton>
+          <MDButton
+            variant="contained"
+            onClick={handleSearch}
+            color="primary"
+            style={{ borderRadius: "10%", marginTop: "10px" }}
+          >
+            ፈልግ
+          </MDButton>
         )}
-       
+
         <Select
           value={searchType}
-          onChange={handleSearchInputChange} 
-          style={{ borderRadius: "10%",marginRight: "10px", width: "100px", height:"50px" ,color: "white" , marginTop: "10px" ,}}
-
+          onChange={handleSearchInputChange}
+          style={{
+            borderRadius: "10%",
+            marginRight: "10px",
+            width: "100px",
+            height: "50px",
+            color: "white",
+            marginTop: "10px",
+          }}
         >
-          <MenuItem value="employee"><h4 style={{color:"#000000"}}>ሰራተኛ</h4></MenuItem>
-          <MenuItem value="menuitem"><h4 style={{color:"#000000"}}>ሜኑ እቃ</h4> </MenuItem>
-       
+          <MenuItem value="employee">
+            <h4 style={{ color: "#000000" }}>ሰራተኛ</h4>
+          </MenuItem>
+          <MenuItem value="menuitem">
+            <h4 style={{ color: "#000000" }}>ሜኑ እቃ</h4>{" "}
+          </MenuItem>
         </Select>
       </MDBox>
       <MDBox py={3}>
@@ -339,11 +327,11 @@ function SearchMenuForCashier() {
   );
 
   function renderFoodMenu() {
-    if (foodMenu.length === 0 ) {
-      if(!isSearched){
-        return
+    if (foodMenu.length === 0) {
+      if (!isSearched) {
+        return;
       }
-      
+
       return (
         <Typography variant="h6" align="center">
           ምንም ሜኑ አልተገኘም።
@@ -353,25 +341,25 @@ function SearchMenuForCashier() {
 
     return (
       <Grid container spacing={6}>
-          {foodMenu.map((foodItem) => (
-            <Grid item xs={12} sm={6} md={4} key={foodItem.id}>
-              <MenuItemCard
-                item={foodItem}
-                onEdit={handleUpdateMenu}
-                onDelete={handleDeleteDialogOpen}
-                onSet={onSet}
-                userData = {userData}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        {foodMenu.map((foodItem) => (
+          <Grid item xs={12} sm={6} md={4} key={foodItem.id}>
+            <MenuItemCard
+              item={foodItem}
+              onEdit={handleUpdateMenu}
+              onDelete={handleDeleteDialogOpen}
+              onSet={onSet}
+              userData={userData}
+            />
+          </Grid>
+        ))}
+      </Grid>
     );
   }
 
   function renderEmployeeBody() {
-    if (employeeList.length === 0 ) {
-      if(!isSearched){
-        return
+    if (employeeList.length === 0) {
+      if (!isSearched) {
+        return;
       }
       return (
         <Typography variant="h6" align="center">
@@ -380,17 +368,21 @@ function SearchMenuForCashier() {
       );
     }
     return (
-      <Card style={{padding: "10px"}}>
-        
-          <Typography variant="h5" component="div" gutterBottom textAlign="center">
-            የሰራተኞች ዝርዝር
+      <Card style={{ padding: "10px" }}>
+        <Typography
+          variant="h5"
+          component="div"
+          gutterBottom
+          textAlign="center"
+        >
+          የሰራተኞች ዝርዝር
+        </Typography>
+        {employeeList.length === 0 && isSearched ? (
+          <Typography variant="body1" color="textSecondary">
+            ምንም ሰራተኞች አልተገኙም።
           </Typography>
-          {(employeeList.length === 0 && isSearched) ? (
-            <Typography variant="body1" color="textSecondary">
-              ምንም ሰራተኞች አልተገኙም።
-            </Typography>
-          ) : (
-            <TableContainer>
+        ) : (
+          <TableContainer>
             <Table>
               <TableRow>
                 <TableCell>
@@ -427,32 +419,31 @@ function SearchMenuForCashier() {
                   <TableCell>{employee.department}</TableCell>
                   <TableCell>{employee.position}</TableCell>
                   <TableCell>{employee.balance}</TableCell>
-                  <TableCell>{ convertToEthiopianDate(employee.created_at)}</TableCell>
-                    <TableCell style={{display:"flex"}}>
-                      <IconButton onClick={(e) => handleMenuClick(employee, e)}>
-                        <AddIcon color="primary" />
-                      </IconButton>
-                      <Select
-                        value={selectedAction}
-                        onChange={(e) => setSelectedAction(e.target.value)}
-                        style={{ width: "100px" }}
-                      >
-                        <MenuItem value="add_to_buy_food">
-                          <h4 style={{color:"#000000"}}>ምግብ ግዢ</h4>
-
-                        </MenuItem>
-                        <MenuItem value="add_to_deposit">
-                          <h4 style={{color:"#000000"}}>ገንዘብ አያያዝ</h4>
-                          
-                        </MenuItem>
-                      </Select>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </Table>
-            </TableContainer>
-          )}
-        
+                  <TableCell>
+                    {convertToEthiopianDate(employee.created_at)}
+                  </TableCell>
+                  <TableCell style={{ display: "flex" }}>
+                    <IconButton onClick={(e) => handleMenuClick(employee, e)}>
+                      <AddIcon color="primary" />
+                    </IconButton>
+                    <Select
+                      value={selectedAction}
+                      onChange={(e) => setSelectedAction(e.target.value)}
+                      style={{ width: "100px" }}
+                    >
+                      <MenuItem value="add_to_buy_food">
+                        <h4 style={{ color: "#000000" }}>ምግብ ግዢ</h4>
+                      </MenuItem>
+                      <MenuItem value="add_to_deposit">
+                        <h4 style={{ color: "#000000" }}>ገንዘብ አያያዝ</h4>
+                      </MenuItem>
+                    </Select>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </Table>
+          </TableContainer>
+        )}
       </Card>
     );
   }

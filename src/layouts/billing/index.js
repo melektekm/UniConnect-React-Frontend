@@ -11,9 +11,9 @@ import MDButton from "../../components/MDButton";
 import Box from "@mui/material/Box";
 import { MenuItem, Pagination } from "@mui/material";
 import Link from "@mui/material/Link";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CashierSidenav from "../../examples/Sidenav/CashierSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import { EditIcon } from "@chakra-ui/icons";
 import IconButton from "@mui/material/IconButton";
 import MDBadge from "../../components/MDBadge";
@@ -200,9 +200,9 @@ function Billing({ showEditColumn }) {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "coordinator" ? (
-        <DashboardNavbar />
-      ) : (
+      <Sidenav />
+      <DashboardNavbar />
+      {/* ) : (
         <CafeManagerDashboardNavbar />
       )}
       {userData.user.role == "coordinator" ? (
@@ -217,7 +217,7 @@ function Billing({ showEditColumn }) {
           brand=""
           brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
         />
-      )}
+      )} */}
       <MDBox
         mx={0}
         mt={2}

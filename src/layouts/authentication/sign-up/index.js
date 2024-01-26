@@ -77,7 +77,7 @@ function Cover() {
       if (response.data.user.role == "coordinator") {
         navigate("/cashierDashboard");
       } else if (response.data.user.role == "admin") {
-        navigate("/mainDashboard");
+        navigate("/Dashboard");
       } else if (response.data.user.role == "student") {
         navigate("/cafeCommetteDashboard");
       } else if (response.data.user.role == "dean") {
@@ -174,7 +174,7 @@ function Cover() {
               />
             </MDBox>
             <MDBox mb={2}>
-              <FormControl fullWidth error={!!passwordError} margin="normal">
+              <FormControl fullWidth margin="normal">
                 <Select
                   label="role"
                   variant="standard"
@@ -183,13 +183,14 @@ function Cover() {
                   name="role"
                   onChange={(e) => setRole(e.target.value)}
                 >
-                  <MenuItem value="coordinator">Coordinator</MenuItem>
-                  <MenuItem value="admin">Admin</MenuItem>
-                  <MenuItem value="student">Student</MenuItem>
-                  <MenuItem value="dean">Dean</MenuItem>
-                  <MenuItem value="instructor">Instructor</MenuItem>
+                  <MenuItem value={0}>Select Role</MenuItem>
+                  <MenuItem value={1}>Admin</MenuItem>
+                  <MenuItem value={2}>coordinator</MenuItem>
+                  <MenuItem value={3}>Student</MenuItem>
+                  <MenuItem value={4}>Dean</MenuItem>
+                  <MenuItem value={5}>Instructor</MenuItem>
                 </Select>
-                <FormHelperText>{passwordError}</FormHelperText>
+                {/* <FormHelperText>{passwordError}</FormHelperText> */}
               </FormControl>
             </MDBox>
             <MDBox mb={2}>
@@ -232,13 +233,13 @@ function Cover() {
                   fullWidth
                   onClick={handleregister}
                 >
-                  ተመዝገቡ
+                  signup
                 </MDButton>
               )}
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                አስቀድመው መለያ አለህ?{" "}
+                already have an account{" "}
                 <MDTypography
                   onClick={() => navigate("/authentication/sign-in")}
                   variant="button"
@@ -247,7 +248,7 @@ function Cover() {
                   textGradient
                   style={{ cursor: "pointer" }}
                 >
-                  ይግቡ
+                  login
                 </MDTypography>
               </MDTypography>
             </MDBox>

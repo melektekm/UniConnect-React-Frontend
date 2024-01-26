@@ -110,9 +110,9 @@ function DepartmentBilling() {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "coordinator" ? (
-        <DashboardNavbar />
-      ) : (
+      {/* {userData.user.role == "coordinator" ? ( */}
+      <DashboardNavbar />
+      {/* ) : (
         <CafeManagerDashboardNavbar />
       )}
       {userData.user.role == "coordinator" ? (
@@ -127,7 +127,8 @@ function DepartmentBilling() {
           brand=""
           brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
         />
-      )}
+      )} */}
+      <Sidenav />
       <MDBox
         mx={2}
         mt={2}
