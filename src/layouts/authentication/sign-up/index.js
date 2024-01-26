@@ -29,11 +29,12 @@ import { BASE_URL } from "../../../appconfig";
 function Cover() {
   const [name, setName] = useState("");
   const [loadingSign, setLoadingSign] = useState(false);
-  const [role, setRole] = useState(0);
+  const [role, setRole] = useState('');
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const[roleError, setRoleError] = useState("");
 
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -174,9 +175,9 @@ function Cover() {
               />
             </MDBox>
             <MDBox mb={2}>
-              <FormControl fullWidth error={!!passwordError} margin="normal">
+              <FormControl fullWidth error={!!roleError} margin="normal">
                 <Select
-                  label="role"
+                  label="Role"
                   variant="standard"
                   fullWidth
                   value={role}
@@ -189,7 +190,7 @@ function Cover() {
                   <MenuItem value="dean">Dean</MenuItem>
                   <MenuItem value="instructor">Instructor</MenuItem>
                 </Select>
-                <FormHelperText>{passwordError}</FormHelperText>
+                {roleError && <FormHelperText>{roleError}</FormHelperText>}
               </FormControl>
             </MDBox>
             <MDBox mb={2}>

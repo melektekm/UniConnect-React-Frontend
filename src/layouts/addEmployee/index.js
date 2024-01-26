@@ -5,19 +5,12 @@ import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import MainDashboard from "../../layouts/MainDashboard";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import AdminNavbar from "../../examples/Navbars/AdminNavbar";
 import Footer from "../../examples/Footer";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
-import AdminNavbar from "../../examples/Navbars/AdminNavbar";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
-import Icon from "@mui/material/Icon";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
-
 import {
   Dialog,
   DialogActions,
@@ -41,248 +34,48 @@ function AddEmployee() {
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({
     name: "",
-    department: "",
-    position: "",
     email: "",
+    role: "",
   });
 
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const [loading, setLoading] = useState(false);
   const CircularLoader = () => <CircularProgress size={24} color="inherit" />;
-  const [departments, setDepartments] = useState([]);
-  const [expandedDepartments, setExpandedDepartments] = useState([]);
-  const [parentId, setParentId] = useState("");
-  const [parentIdHolder, setParentIdHolder] = useState("1");
-  const [parentNameHolder, setParentnameHolder] = useState("");
-  const [department, setDepartment] = useState(
-    selectedEmployee ? selectedEmployee.department : null
-  );
 
-  // ...
+  const [formValues, setFormValues] = useState({
+    name: selectedEmployee ? selectedEmployee.name : "",
+    email: selectedEmployee ? selectedEmployee.email : "",
+    role: selectedEmployee ? selectedEmployee.role : "",
+  });
 
-  // Get the access token
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
 
-  const handleExpandCollapse = (departmentId) => {
-    if (expandedDepartments.includes(departmentId)) {
-      setExpandedDepartments((prevState) =>
-        prevState.filter((id) => id !== departmentId)
-      );
-    } else {
-      setExpandedDepartments((prevState) => [...prevState, departmentId]);
-    }
-  };
-  // const handleDepartmentClick = (selectedDepartmentId, departmentName) => {
-  //   setParentIdHolder(selectedDepartmentId);
-  //   setParentnameHolder(departmentName);
-  //   setParentId(selectedDepartmentId);
-  //   setDepartment(parseInt(parentId));
-  // };
-  const handleDepartmentClick = ({ update, selectedDepartmentId, departmentName }) => {
-  
-    setDepartment(selectedDepartmentId)
-    setParentIdHolder(selectedDepartmentId);
-    setParentnameHolder(departmentName);
-    setParentId(selectedDepartmentId);
-  
- 
-   if(update === "true"){
-
-  setFormValues({
-    ...formValues,
-    department: selectedEmployee.departmentID,
-    name: selectedEmployee.name,
-    position: selectedEmployee.position,
-    email: selectedEmployee.email,
-  });
-  
- 
-   }
-    
-  };
-
-  async function getDepartments() {
-    try {
-      setLoading(true);
-      const response = await axios.get(`${BASE_URL}/get-all-departments`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (response.data) {
-        setDepartments(response.data.departments);
-      } else {
-        setErrorMessage("የምዝገባ ምላሽ ምንም አልያዘም።");
-        setOpen(true);
-      }
-    } catch (error) {
-      if (error.response && error.response.data) {
-        // Parse the error messages from the server's response
-        const serverErrorMessages = error.response.data.errors;
-        let errorMessage = "ምዝገባው አልተሳካም:";
-
-        for (const [key, value] of Object.entries(serverErrorMessages)) {
-          errorMessage += `${key}: ${value[0]}, `;
-        }
-
-        setErrorMessage(errorMessage);
-      } else {
-        setErrorMessage("ምዝገባው አልተሳካም: " + error);
-      }
-      setOpen(true);
-    } finally {
-      setLoading(false);
-    }
-  }
-  useEffect(() => {
-    getDepartments();
-    // handleDepartmentClick("1");
-  }, []);
-
-  const renderDepartments = (
-    departmentsToRender,
-    parentIdNum = null,
-    nestingLevel = 0
-  ) => {
-    if (!Array.isArray(departmentsToRender)) {
-      return null;
-    }
-
-    const departmentItems = [];
-
-    departmentsToRender.forEach((department) => {
-      const isRootDepartment = department.parent_id === 1;
-      const hasSubDepartments = departments.some(
-        (dep) => dep.parent_id === department.id
-      );
-
-      if (parentIdNum === department.parent_id) {
-        const menuItem = (
-          <div
-            key={department.id}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              paddingRight: "1px",
-            }}
-          >
-            <MenuItem
-              value={"1"}
-              key={department.id}
-              style={{
-                paddingLeft: parentIdNum ? `${20 + nestingLevel * 15}px` : "0",
-                minWidth: `${department.name.length * 10}px`, // Adjust the factor as needed
-              }}
-              onClick={() => {
-                handleDepartmentClick(
-                  {
-                    selectedDepartmentId: department.id,
-                    departmentName:department.name
-                  } );
-                  
-                setFormValues({
-                  ...formValues,
-                  department: e.target.value,
-                });
-              }}
-              
-            >
-              {department.name}
-            </MenuItem>
-            {hasSubDepartments && (
-              <span
-                onClick={() => handleExpandCollapse(department.id)}
-                style={{
-                  cursor: "pointer",
-                  marginLeft: "5px",
-
-                  fontWeight: "bold",
-                  fontSize: "1.2em",
-                }}
-              >
-                {expandedDepartments.includes(department.id) ? (
-                  <Icon style={{ fontSize: "44px", color: "red" }}>
-     <ArrowDropDownIcon />
-                  </Icon> // Replace with the collapse icon
-                ) : (
-                  <Icon style={{ fontSize: "24px" }}><ChevronRightIcon /></Icon> // Replace with the expand icon
-                )}
-              </span>
-            )}
-          </div>
-        );
-
-        departmentItems.push(menuItem);
-
-        if (expandedDepartments.includes(department.id)) {
-          const childDepartments = departments.filter(
-            (dep) => dep.parent_id === department.id
-          );
-
-          const childItems = renderDepartments(
-            childDepartments,
-            department.id,
-            nestingLevel + 1
-          );
-          departmentItems.push(...childItems);
-        }
-      }
-    });
-
-    return departmentItems;
-  };
-
-  const [formValues, setFormValues] = useState({});
-
-
-
-  useEffect(() => {
-    if (selectedEmployee) {
-      setFormValues(selectedEmployee);
-      setDepartment(selectedEmployee.departmentId);
-      setParentIdHolder(selectedEmployee.departmentId);
-      setParentId(selectedEmployee.departmentId);
-
-      handleDepartmentClick({
-        update:"true",
-        selectedDepartmentId: selectedEmployee.departmentId,
-        departmentName:selectedEmployee.department
-      });
-    }
-  }, [selectedEmployee]);
-
   const handleRegister = async () => {
-  
-    formValues.department = parentId;
-
     const newErrorMessages = {
-      name: formValues.name ? "" : "ስም ያስፈልጋል።",
-      department: formValues.department ? "" : "ዲፓርትመንት ያስፈልጋል",
-      position: formValues.position ? "" : "ሥራ ቦታ ያስፈልጋል።",
-      email: formValues.email ? "" : "ኢሜል ያስፈልጋል።",
+      name: formValues.name ? "" : "Name is required",
+      email: formValues.email ? "" : "Email is required",
+      role: formValues.role ? "" : "Role is required",
     };
     setErrorMessages(newErrorMessages);
+
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
-      setErrorMessage("እባክዎ ሁሉንም መስኮች ይሙሉ።");
+      setErrorMessage("Please fill all fiedls!!");
       setOpen(true);
       return;
     }
 
     setLoading(true);
+
     try {
       let response;
       const formData = new FormData();
       formData.append("name", formValues.name);
       formData.append("email", formValues.email);
-      formData.append("department", formValues.department);
-      formData.append("position", formValues.position);
+      formData.append("role", formValues.role);
 
       if (selectedEmployee) {
-      
-     
         response = await axios.post(
           `${BASE_URL}/auth/admin/updateEmployee/${selectedEmployee.id}`,
           formData,
@@ -294,7 +87,6 @@ function AddEmployee() {
           }
         );
       } else {
-        // Use the API endpoint for adding a new employee
         response = await axios.post(
           `${BASE_URL}/auth/admin/addEmployee`,
           formData,
@@ -306,54 +98,32 @@ function AddEmployee() {
           }
         );
       }
+
       if (response.data) {
         resetState();
-
         setErrorMessage({});
         setSuccessMessage(
           ` ሰራተኛውን በተሳካ ሁኔታ! ${selectedEmployee ? " ተስተካክሏል" : "ገብቷል"}`
         );
-
         setOpen(true);
       } else {
         setErrorMessage("ምላሽ ምንም አልያዘም።");
         setOpen(true);
       }
     } catch (error) {
-      if (error.response && error.response.data) {
-        // Parse the error messages from the server's response
-        const serverErrorMessages = error.response.data.errors;
-        let errorMessage = "ምዝገባው አልተሳካም፦ ";
-
-        for (const [key, value] of Object.entries(serverErrorMessages)) {
-          errorMessage += `${key}: ${value[0]}, `;
-        }
-
-        setErrorMessage(errorMessage);
-      } else {
-        setErrorMessage("ምዝገባው አልተሳካም፦ " + error);
-      }
+      setErrorMessage("ምላሽ እትም አልተሳካም፦ " + error);
       setOpen(true);
     } finally {
-      // Reset loading state when registration finishes (whether it succeeded or failed)
       setLoading(false);
     }
   };
 
-
   const resetState = () => {
     setFormValues({
       name: "",
-      department: "",
-      position: "",
       email: "",
+      role: "",
     });
-    setParentId("");
-    setExpandedDepartments([]);
-    setParentId("")
-    setParentIdHolder("");
-    setParentnameHolder("");
-    setDepartment(null);
   };
 
   return (
@@ -425,77 +195,42 @@ function AddEmployee() {
                     />
                   </MDBox>
                   <MDBox mb={2}>
-                                    <FormControl variant="outlined" fullWidth style={{ marginTop: "16px" }}>
-                    <InputLabel htmlFor="parent-department">ዲፓርትመንት</InputLabel>
-                    <Select
-                      value={parentId}
-                   
-                      
-                      label="ዲፓርትመንት"
-                      inputProps={{
-                        name: "parentId",
-                        id: "parent-department",
-                      }}
-                      style={{ minHeight: "45px" }}
-                    >
-                      <MenuItem value={parentIdHolder}>
-                        የተመረጠ ዲፓርትመንት {parentNameHolder}
-                      </MenuItem>
-                      {renderDepartments(departments, null)}
-                    </Select>
-                    </FormControl>
-
-                  </MDBox>
-
-                  <MDBox mb={2}>
                     <MDInput
-                      type="text"
-                      label="ሥራ ቦታ"
+                      type="email"
+                      label="ኢሜይል"
+                      name="email"
                       variant="outlined"
-                      name="position"
                       fullWidth
-                      value={formValues.position}
+                      value={formValues.email}
                       onChange={(e) =>
-                        setFormValues({
-                          ...formValues,
-                          position: e.target.value,
-                        })
+                        setFormValues({ ...formValues, email: e.target.value })
                       }
                       margin="normal"
                       required
-                      error={!!errorMessages.position}
-                      helperText={errorMessages.position}
+                      error={!!errorMessages.email}
+                      helperText={errorMessages.email}
                     />
                   </MDBox>
-                  <MDInput
-                    type="email"
-                    label="ኢሜይል"
-                    name="email"
-                    variant="outlined"
-                    fullWidth
-                    value={formValues.email}
-                    onChange={(e) =>
-                      setFormValues({ ...formValues, email: e.target.value })
-                    }
-                    margin="normal"
-                    required
-                    error={!!errorMessages.email}
-                    helperText={errorMessages.email}
-                   
-                  />
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      label="እትም"
+                      name="role"
+                      variant="outlined"
+                      fullWidth
+                      value={formValues.role}
+                      onChange={(e) =>
+                        setFormValues({ ...formValues, role: e.target.value })
+                      }
+                      margin="normal"
+                      required
+                      error={!!errorMessages.role}
+                      helperText={errorMessages.role}
+                    />
+                  </MDBox>
                   <MDBox mt={4} mb={1} textAlign="center">
-                    <MDButton
-                   
-                      color="primary"
-                      onClick={handleRegister}
-                    >
-                      {loading ? (
-                        <CircularLoader />
-                      ) : selectedEmployee ? (
-                        "ቀይር"
-                      ) : (
-                        "ጨምር"
-                      )}
+                    <MDButton color="primary" onClick={handleRegister}>
+                      {loading ? <CircularLoader /> : "ጨምር"}
                     </MDButton>
                   </MDBox>
                 </MDBox>
