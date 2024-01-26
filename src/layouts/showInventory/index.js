@@ -1,488 +1,483 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { BASE_URL, D_File_URL } from "../../appconfig";
-import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/TableContainer";
-import CircularProgress from "@mui/material/CircularProgress";
+import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Paper from "@mui/material/Paper";
-
-import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
-
-import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
-// import Sidenav from "../../examples/Sidenav/AdminSidenav";
-import IngredientApproval from "../ingredientApproval/index";
-
-import MDBox from "../../components/MDBox";
-import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import Footer from "../../examples/Footer";
-
-import { Document, Page, Text, View, pdf } from "@react-pdf/renderer";
-import { FaFilePdf, FaImage } from "react-icons/fa";
-import {
-  EthDateTime,
-  dayOfWeekString,
-  limits,
-} from "ethiopian-calendar-date-converter";
-
-import { useLocation, useNavigate } from "react-router-dom";
-
-import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
-
-import Box from "@mui/material/Box";
-import Select from "@mui/material/Select";
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
 import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
-import Input from "@mui/material/Input";
-
-import Link from "@mui/material/Link";
-import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
+import CashierDashboard from "../CashierDashboard";
+import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
+import Footer from "../../examples/Footer";
+import axios from "axios";
+import { BASE_URL } from "../../appconfig";
+import MDBox from "../../components/MDBox";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import { Document, Page, Text, View, pdf, Font } from "@react-pdf/renderer";
+import MDButton from "../../components/MDButton";
+import { EthDateTime } from "ethiopian-calendar-date-converter";
+import CircularProgress from "@mui/material/CircularProgress";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 import MDTypography from "../../components/MDTypography";
 
-import colors from "../../assets/theme/base/colors";
-function InventoryList({ entryId }) {
-  const isHalf = entryId > 0;
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const [entryList, setEntryList] = useState();
-  const [selectedTimeRange, setSelectedTimeRange] = useState("today");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-
+function ReportList() {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
+  const [reportData, setReportData] = useState([]);
+  const [assignmentList, setAssignmentList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const userData = ipcRenderer.sendSync("get-user");
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [open, setOpen] = useState(false);
+
   const accessToken = userData.accessToken;
-  const perPage = 1;
 
-  const [hasRequest, setHasRequest] = useState(false);
-
-  const [showR, setShowR] = useState(false);
-
-  const [requestId, setRequestId] = useState(null);
-  const [reqId, setReqId] = useState(0);
+  const fetchReportData = async () => {
+    setLoading(true);
+    const response = await axios.get(`${BASE_URL}/getallassignments`, {
+      try {
+        const response = await axios.get(`${BASE_URL}/${api}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+  
+        setAssignmentList(response.data.data);
+      } catch (error) {
+        console.error("Error fetching assignments:", error);
+      }
+  
+      setLoading(false);
+    };
 
   useEffect(() => {
-    fetchData(currentPage);
+    fetchReportData();
   }, []);
+            <View
+              style={{
+                flexDirection: "row",
+                borderBottom: 1,
+                borderColor: "#000",
+                paddingBottom: 10,
+                paddingTop: 10,
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  marginRight: columnMargin,
+                  textAlign: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontFamily: "Nokia Pure Headline",
+                  }}
+                >
+                  Assignment Id
+                </Text>
+              </View>
+              <View style={{ flex: 1, marginRight: columnMargin }}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontFamily: "Nokia Pure Headline",
+                  }}
+                >
+                  Assignment Name
+                </Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  marginRight: columnMargin,
+                  fontFamily: "Nokia Pure Headline",
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontFamily: "Nokia Pure Headline",
+                  }}
+                >
+                 Couse Name
+                </Text>
+              </View>
 
-  const fetchData = async (page) => {
-    setLoading(true);
-    const api = isHalf
-      ? `getinventory/${entryId}`
-      : `getallinventory?page=${page}`;
+              <View style={{ flex: 1, marginRight: columnMargin }}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontFamily: "Nokia Pure Headline",
+                  }}
+                >
+                  Due Date
+                </Text>
+              </View>
+              <View style={{ flex: 1, marginRight: columnMargin }}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontFamily: "Nokia Pure Headline",
+                  }}
+                >
+                  Uploaded File
+                </Text>
+              </View>
+            {reportData.map((data) => (
+              <View
+                key={data.month}
+                style={{
+                  flexDirection: "row",
+                  paddingBottom: 10,
+                  paddingTop: 10,
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    marginRight: columnMargin,
+                    textAlign: "center",
+                  }}
+                >
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    marginRight: columnMargin,
+                    fontSize: "16pt",
+                  }}
+                >  
+              </View>
+            ))}
+          </View>
+        </Page>
+      </Document>
+    );
+  return (
+    <DashboardLayout>
+      {/* {userData.user.role == "coordinator" ? (
+        <CashierDashboard />
+      ) : userData.user.role == "dean" ? (
+        <CafeManagerSidenav
+          color="dark"
+          brand=""
+          brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
+        />
+      ) : (
+        <CafeCommetteeSidenav
+          color="dark"
+          brand=""
+          brandName="የኮሚቴ ክፍል መተገበሪያ"
+        />
+      )} */}
+      <DashboardNavbar />
+      <Sidenav />
+      <MDBox
+        mx={2}
+        mt={2}
+        mb={2}
+        py={3}
+        px={2}
+        variant="gradient"
+        bgColor="dark"
+        borderRadius="lg"
+        coloredShadow="info"
+        textAlign="center"
+        style={{ border: "3px solid #0779E4" }}
+      >
+        <Grid
+          container
+          alignItems="center"
+          justifyContent={"space-between"}
+          spacing={2}
+        >
+          <Grid
+            item
+            display={"flex"}
+            flexDirection={"row"}
+            alignItems={"center"}
+          >
+            <Typography
+              style={{ color: "white", marginRight: 25 }}
+              variant="h5"
+            >
+              Assignment List
+            </Typography>
+          </Grid>
+        </Grid>
+      </MDBox>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>{"ማስታወቂያ"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{errorMessage}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpen(false)}
+            color="light"
+            variant="contained"
+          >
+            ዝጋ
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <TableContainer
+        component={Paper}
+        elevation={3}
+        style={{ marginTop: 20, marginBottom: 20 }}
+      >
+        <Table>
+          <TableBody>
+            <TableRow sx={{ backgroundColor: "#    " }}>
+              <TableCell align={"center"}>
+                <strong>ወር</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>ጠቅላላ የሰራተኛ/የእንግዳ/የክፍል ትዕዛዞች</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>ጠቅላላ የሰራተኛ ገቢ</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>ጠቅላላ የእንግዳ ገቢ</strong>
+              </TableCell>
+              <TableCell>
+                <strong>ጠቅላላ የክፍል ገቢ</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>አጠቃላይ ገቢ</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>አጠቃላይ ወጪ</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>አጠቃላይ ትርፍ</strong>
+              </TableCell>
+            </TableRow>
+            {reportData.map((data) => (
+              <TableRow key={data.month}>
+                <TableCell align="center">
+                  {" "}
+                  <strong>{data.month}</strong>
+                  <br></br>
+                  <strong>
+                    (ከ{" "}
+                    {getEthiopianMonthIntervals(selectedTimeRange, data.month)}{" "}
+                    )
+                  </strong>
+                </TableCell>
+                <TableCell align="center" style={{ fontSize: "16pt" }}>
+                  {data.employee_total_orders} / {data.guest_total_orders} /{" "}
+                  {data.department_count}
+                </TableCell>
+                <TableCell align="center">
+                  {data.employee_total_revenue} ብር
+                </TableCell>
+                <TableCell align="center">
+                  {data.guest_total_revenue} ብር
+                </TableCell>
+                <TableCell align="center">
+                  {data.department_total_price} ብር
+                </TableCell>
+                <TableCell align="center">
+                  {Number(data.guest_total_revenue) +
+                    Number(data.employee_total_revenue) +
+                    Number(data.department_total_price)}{" "}
+                  ብር
+                </TableCell>
+                <TableCell align="center">{data.total_expense} ብር</TableCell>
+                <TableCell align="center">
+                  {Number(data.guest_total_revenue) +
+                    Number(data.employee_total_revenue) +
+                    Number(data.department_total_price) -
+                    Number(data.total_expense)}{" "}
+                  ብር
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-    try {
-      const response = await axios.get(`${BASE_URL}/${api}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-      if (isHalf) {
-        setEntryList(response.data.data);
-      } else {
-        if (response.data) {
-          const submittedStartId =
-            response.data.data.data[0].purchase_request_start_id;
-          setHasRequest(submittedStartId > 0);
-          setReqId(response.data.data.data[0].id);
-          setEntryList(response.data.data.data);
-          setCurrentPage(response.data.data.current_page);
-          setLastPage(response.data.data.last_page);
-        } else {
-        }
-      }
-    } catch (error) {}
-    setLoading(false);
-  };
+      <TableContainer
+        component={Paper}
+        sx={{
+          display: "block",
+          margin: "0 auto",
+          border: "3px solid #206A5D",
+          borderBottom: "2px solid #000",
+          width: "80%",
+          textAlign: "center",
+        }}
+      >
+        <div
+          align="center"
+          style={{ backgroundColor: "#158467", fontSize: "24px" }}
+        >
+          ሪፖርት አመንጪ
+        </div>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell
+                sx={{ paddingX: "20%" }}
+                align="center"
+                style={{ fontSize: "18px", fontWeight: "bold" }}
+              >
+                <MDBox mb={2} sx={{ display: "flex", alignItems: "center" }}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="የመጀመሪያ ቀን"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                  {startDate && (
+                    <MDTypography variant="body2" sx={{ marginLeft: 2 }}>
+                      {convertToEthiopianDate(startDate)}
+                    </MDTypography>
+                  )}
+                </MDBox>
+                <MDBox mb={2} sx={{ display: "flex", alignItems: "center" }}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="የመጨረሻ ቀን"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                  {endDate && (
+                    <MDTypography variant="body2" sx={{ marginLeft: 2 }}>
+                      {convertToEthiopianDate(endDate)}
+                    </MDTypography>
+                  )}
+                </MDBox>
+                <MDButton
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={handleSubmit} // Replace with your function
+                >
+                  ሪፖርት አምጣ
+                </MDButton>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-  const handlePageChange = (event, page) => {
-    if (showR) {
-      setShowR(!showR);
-    }
-    setCurrentPage(page);
-
-    fetchData(page);
-  };
-
-  const handleViewChange = (requestID) => {
-    setShowR(!showR);
-  };
-
-  function convertToEthiopianDate(inputDate) {
-    const parsedDate = new Date(inputDate);
-
-    if (!isNaN(parsedDate.getTime())) {
-      const ethDateTime = EthDateTime.fromEuropeanDate(parsedDate);
-      const dayOfWeek = ethDateTime.getDay();
-      const dayOfWeekStrings = [
-        "እሁድ",
-        "ሰኞ",
-        "ማክሰኞ",
-        "ረቡእ",
-        "ሐሙስ",
-        "አርብ",
-        "ቅዳሜ",
-      ];
-      const dayName = dayOfWeekStrings[dayOfWeek];
-
-      const ethiopianDateStr = `${dayName}, ${ethDateTime.toDateString()}`;
-
-      return `${ethiopianDateStr}`;
-    } else {
-      return "Invalid Date";
-    }
-  }
-
-  const renderSubPart = () => {
-    if (loading) {
-      return (
+      {customReportData.length > 0 ? (
+        <TableContainer
+          component={Paper}
+          elevation={3}
+          style={{ marginTop: 20, marginBottom: 20 }}
+        >
+          <Table>
+            <TableBody>
+              <TableRow sx={{ backgroundColor: "#    " }}>
+                <TableCell align={"center"}>
+                  <strong>የጊዜ ገደብ</strong>
+                </TableCell>
+                <TableCell align="center">
+                  <strong>ጠቅላላ የሰራተኛ/የእንግዳ/የክፍል ትዕዛዞች</strong>
+                </TableCell>
+                <TableCell align="center">
+                  <strong>ጠቅላላ የሰራተኛ ገቢ</strong>
+                </TableCell>
+                <TableCell align="center">
+                  <strong>ጠቅላላ የእንግዳ ገቢ</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>ጠቅላላ የክፍል ገቢ</strong>
+                </TableCell>
+                <TableCell align="center">
+                  <strong>አጠቃላይ ገቢ</strong>
+                </TableCell>
+                <TableCell align="center">
+                  <strong>አጠቃላይ ወጪ</strong>
+                </TableCell>
+                <TableCell align="center">
+                  <strong>አጠቃላይ ትርፍ</strong>
+                </TableCell>
+              </TableRow>
+              {customReportData.map((data) => (
+                <TableRow>
+                  <TableCell align="center">
+                    {" "}
+                    <strong>
+                      {" "}
+                      {convertToEthiopianDate(data.start_date)} -{" "}
+                      {convertToEthiopianDate(data.end_date)}
+                    </strong>
+                    <br></br>
+                  </TableCell>
+                  <TableCell align="center" style={{ fontSize: "16pt" }}>
+                    {data.employee_total_orders} / {data.guest_total_orders} /{" "}
+                    {data.department_count}
+                  </TableCell>
+                  <TableCell align="center">
+                    {data.employee_total_revenue} ብር
+                  </TableCell>
+                  <TableCell align="center">
+                    {data.guest_total_revenue} ብር
+                  </TableCell>
+                  <TableCell align="center">
+                    {data.department_total_price} ብር
+                  </TableCell>
+                  <TableCell align="center">
+                    {Number(data.guest_total_revenue) +
+                      Number(data.employee_total_revenue) +
+                      Number(data.department_total_price)}{" "}
+                    ብር
+                  </TableCell>
+                  <TableCell align="center">{data.total_expense} ብር</TableCell>
+                  <TableCell align="center">
+                    {Number(data.guest_total_revenue) +
+                      Number(data.employee_total_revenue) +
+                      Number(data.department_total_price) -
+                      Number(data.total_expense)}{" "}
+                    ብር
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        ""
+      )}
+      {loading ? (
         <MDBox textAlign="center">
           <CircularProgress color="primary" />
         </MDBox>
-      );
-    }
-    if (!entryList || entryList.length === 0) {
-      return null; // Return null or handle the case when approvalRequests is empty
-    }
-    return (
-      <>
-        <TableContainer style={{ width: "100%" }}>
-          <Box
-            sx={{
-              backgroundColor: colors.white.main,
-              overflow: "scroll",
-              maxHeight: "600px",
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-            }}
-          >
-            <Table>
-              <TableBody>
-                <TableRow
-                  sx={{
-                    backgroundColor: colors.light.main,
-                    position: "sticky",
-                    top: 0,
-                    zIndex: 1,
-                  }}
-                >
-                  <TableCell>
-                    <strong>ተራ ቁጥር </strong>
-                  </TableCell>
-                  <TableCell>
-                    <strong>የእቃው አይነት</strong>
-                  </TableCell>
-                  <TableCell>
-                    <strong>ብዛት</strong>
-                  </TableCell>
-                  <TableCell>
-                    <strong>መለኪያ</strong>
-                  </TableCell>
-                  <TableCell>
-                    <strong>የአንዱ ዋጋ</strong>
-                  </TableCell>
-                  <TableCell>
-                    <strong>ጠቅላላ ዋጋ ብር</strong>
-                  </TableCell>
-                  <TableCell>
-                    <strong>የጠቅላላ ዋጋ በፊደል</strong>
-                  </TableCell>
-                </TableRow>
-
-                {entryList &&
-                  entryList.length > 0 &&
-                  entryList[0].related_requests.map((data, index) => (
-                    <TableRow key={data.id}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{data ? data.name : ""}</TableCell>
-                      <TableCell>{data ? data.quantity : ""}</TableCell>
-                      <TableCell>{data ? data.measured_in : ""}</TableCell>
-                      <TableCell>{data ? data.price_per_item : ""}</TableCell>
-                      <TableCell>
-                        {data && data.quantity && data.price_per_item
-                          ? parseFloat(data.quantity) *
-                            parseFloat(data.price_per_item)
-                          : ""}
-                      </TableCell>
-                      <TableCell>{data ? data.price_word : ""}</TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </Box>
-          <MDBox
-            variant="gradient"
-            style={{
-              backgroundColor: "#DEDDDB",
-              display: "block",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center !important",
-              width: "60%",
-              height: "100%",
-              margin: "10px auto",
-              padding: "10px",
-              color: "black",
-              border: "2px solid #000",
-              boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
-              borderRadius: "30px",
-            }}
-          >
-            <TableRow
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <TableCell style={{ border: "0px" }} colSpan={2}>
-                ጠቅላላ ዋጋ:
-              </TableCell>
-              <TableCell style={{ border: "0px" }} align="right">
-                {entryList[0].total_price_entry}
-              </TableCell>
-            </TableRow>
-
-            <TableRow
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <TableCell style={{ border: "0px" }} colSpan={2}>
-                ተመላሽ ብር:
-              </TableCell>
-              <TableCell style={{ border: "0px" }} align="right">
-                {entryList[0].returned_amount}
-              </TableCell>
-            </TableRow>
-
-            <TableRow
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <TableCell style={{ border: "0px" }} colSpan={2}>
-                የጠያቂው ስም:{" "}
-              </TableCell>
-              <TableCell style={{ border: "0px" }} align="right">
-                {entryList[0].entry_approved_by.name}
-              </TableCell>
-            </TableRow>
-            <TableRow
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <TableCell style={{ border: "0px" }} colSpan={2}>
-                ቀን፡{" "}
-              </TableCell>
-              <TableCell style={{ border: "0px" }} align="right">
-                {convertToEthiopianDate(entryList[0].formatted_created_at)}
-              </TableCell>
-            </TableRow>
-            <TableRow
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <TableCell style={{ border: "0px" }} colSpan={2}>
-                የደረሰኝ ፋይል:{" "}
-              </TableCell>
-              <TableCell style={{ border: "0px" }} align="right">
-                {entryList[0].file_path ? (
-                  entryList[0].file_path.toLowerCase().endsWith(".pdf") ? (
-                    <div
-                      onClick={() => {
-                        const newWindow = window.open(
-                          "",
-                          "_blank",
-                          `width=${window.innerWidth * 0.6},height=${
-                            window.innerHeight * 0.8
-                          }`
-                        );
-                        newWindow.document.write(
-                          '<iframe width="100%" height="100%" src="data:application/pdf;base64,' +
-                            entryList[0].file_data +
-                            '"></iframe>'
-                        );
-                        newWindow.resizeTo(
-                          window.innerWidth * 0.6,
-                          window.innerHeight * 0.8
-                        );
-                      }}
-                    >
-                      <FaFilePdf cursor="pointer" size={50} />
-                      <MDTypography style={{ marginLeft: "10px" }}>
-                        {" "}
-                        ፋይሉን ለማየት ምልክቱን ይጫኑ
-                      </MDTypography>
-                    </div>
-                  ) : (
-                    <div
-                      onClick={() => {
-                        const newWindow = window.open(
-                          "",
-                          "_blank",
-                          `width=${window.innerWidth * 0.6},height=${
-                            window.innerHeight * 0.8
-                          }`
-                        );
-                        newWindow.document.write(
-                          '<img src="data:image;base64,' +
-                            entryList[0].file_data +
-                            '" style="width:100%;height:100%;" />'
-                        );
-                        newWindow.resizeTo(
-                          window.innerWidth * 0.6,
-                          window.innerHeight * 0.8
-                        );
-                      }}
-                    >
-                      <FaImage size={50} />
-                      <MDTypography style={{ marginLeft: "10px" }}>
-                        {" "}
-                        ፋይሉን ለማየት ምልክቱን ይጫኑ
-                      </MDTypography>
-                    </div>
-                  )
-                ) : (
-                  "ምንም ፋይል አልተገኘም"
-                )}
-              </TableCell>
-            </TableRow>
-          </MDBox>
-        </TableContainer>
-        {entryList && entryList.length > 0 && (
-          <MDBox mt={2}>
-            {hasRequest && !isHalf ? (
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: showR
-                    ? "rgb(204, 4, 17)"
-                    : "rgb(12, 56, 71)",
-                  color: "white",
-                }}
-                onClick={() => handleViewChange(requestId)}
-              >
-                {showR ? "ወደ በፊቱ ተመለስ" : "ተያያዥ የግዥ ጥያቄ"}
-              </Button>
-            ) : isHalf ? null : (
-              <Typography mt={2} color="red">
-                ግዥው ተያያዥ ጥያቄ የለውም!
-              </Typography>
-            )}
-          </MDBox>
-        )}
-      </>
-    );
-  };
-
-  const renderFullUi = () => {
-    return (
-      <DashboardLayout>
-        {/* {userData.user.role == "student" ? (
-          <NavbarForCommette />
-        ) : userData.user.role == "dean" ? (
-          <CafeManagerDashboardNavbar />
-        ) : (
-          <NavbarForCommette />
-        )}
-
-        {userData.user.role == "student" ? (
-          <CafeCommetteeSidenav
-            color="dark"
-            brand=""
-            brandName="የኮሚቴ ክፍል መተገበሪያ"
-          />
-        ) : userData.user.role == "dean" ? (
-          <CafeManagerSidenav
-            color="dark"
-            brand=""
-            brandName="የምግብ ዝግጅት ክፍል መተገበሪያ"
-          />
-        ) : (
-          <storeKeeperSidenav
-            color="dark"
-            brand=""
-            brandName="የስቶር ክፍል መተግበሪያ"
-          />
-        )} */}
-        <DashboardNavbar />
-        <Sidenav />
-        <MDBox pt={6} pb={3}>
-          <Grid container spacing={6}>
-            <Grid item xs={12} md={showR ? 6 : 12}>
-              <Card style={{ border: "3px solid #206A5D", padding: "20px" }}>
-                <MDBox
-                  mx={2}
-                  mt={-6}
-                  mb={2}
-                  py={3}
-                  px={2}
-                  variant="gradient"
-                  bgColor="dark"
-                  borderRadius="lg"
-                  coloredShadow="info"
-                  textAlign="center"
-                  style={{ border: "3px solid #0779E4" }}
-                >
-                  <Grid container alignItems="center" spacing={2}>
-                    <Grid item>
-                      <Typography style={{ color: "white" }} variant="h6">
-                        የተፈጸመ ግዢ ዝርዝር
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </MDBox>
-
-                {renderSubPart()}
-              </Card>
-            </Grid>
-            {showR && (
-              <Grid item xs={12} md={6}>
-                <IngredientApproval reqId={reqId} />
-              </Grid>
-            )}
-          </Grid>
-        </MDBox>
-        <Box mt={2} display="flex" justifyContent="center">
-          <Pagination
-            component={Link}
-            count={lastPage}
-            onChange={handlePageChange}
-            variant="outlined"
-            shape="rounded"
-            color="primary"
-          />
-        </Box>
-
-        <Footer />
-      </DashboardLayout>
-    );
-  };
-
-  return isHalf ? renderSubPart() : renderFullUi();
+      ) : (
+        ""
+      )}
+      <Footer />
+    </DashboardLayout>
+  );
 }
 
-export default InventoryList;
+export default ReportList;
