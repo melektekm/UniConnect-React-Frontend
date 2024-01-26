@@ -31,7 +31,7 @@ function BuyFoodDepartment() {
         style={{ display: "flex", justifyContent: "space-between" }}
       >
         <MDTypography variant="h4" color="white">
-          {"የዲፓርትመንት ምግብ ግዥ"}
+          {"Upload Assignment"}
         </MDTypography>
       </MDBox>
 
