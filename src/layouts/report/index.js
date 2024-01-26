@@ -16,8 +16,8 @@ import Footer from "../../examples/Footer";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import { Document, Page, Text, View, pdf, Font } from "@react-pdf/renderer";
 import MDButton from "../../components/MDButton";
 import { EthDateTime } from "ethiopian-calendar-date-converter";
@@ -412,7 +412,7 @@ function ReportList() {
   };
   return (
     <DashboardLayout>
-      {userData.user.role == "coordinator" ? (
+      {/* {userData.user.role == "coordinator" ? (
         <CashierDashboard />
       ) : userData.user.role == "dean" ? (
         <CafeManagerSidenav
@@ -426,7 +426,9 @@ function ReportList() {
           brand=""
           brandName="የኮሚቴ ክፍል መተገበሪያ"
         />
-      )}
+      )} */}
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox
         mx={2}
         mt={2}

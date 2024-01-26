@@ -8,8 +8,7 @@ import OrderSummary from "./buyFoodUi";
 import { Select, MenuItem } from "@mui/material";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
-import CashierSidenav from "../../examples/Sidenav/CashierSidenav";
-
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 
 function BuyFood() {
   const electron = window.require("electron");
@@ -22,7 +21,7 @@ function BuyFood() {
   const [inputValues, setInputValues] = useState({});
   const [employeeInfo, setEmployeeInfo] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
-  const [loadingBuy, setLoadingBuy] = useState(false)
+  const [loadingBuy, setLoadingBuy] = useState(false);
 
   const [selectedItems, setSelectedItems] = useState([]);
   const initialData = {
@@ -173,7 +172,7 @@ function BuyFood() {
   };
 
   const handleOrder = async () => {
-    setLoadingBuy(true)
+    setLoadingBuy(true);
     let isGuest;
 
     {
@@ -199,7 +198,6 @@ function BuyFood() {
       };
 
       try {
-    
         const response = await axios.post(
           `${BASE_URL}/order`,
           updatedFormData,
@@ -216,17 +214,14 @@ function BuyFood() {
           setErrorMessage(`ማዘዝ ተሳክቷል!`);
           setOpen(true);
         } else {
-        
         }
       } catch (e) {
         if (e.response) {
           setErrorMessage(e.response.data.message);
           setOpen(true);
-         
         } else {
           setErrorMessage(e.message);
           setOpen(true);
-          
         }
       }
     } else {
@@ -235,7 +230,6 @@ function BuyFood() {
         ...guestFormData,
         menu_items: selectedItems,
       };
-  
 
       try {
         const guestResponse = await axios.post(
@@ -255,26 +249,23 @@ function BuyFood() {
         } else {
           setErrorMessage(`ትእዛዙን መፈጸም አልተቻለም`);
           setOpen(true);
-        
         }
       } catch (e) {
         if (e.response) {
           setErrorMessage("ትእዛዙን መፈጸም አልተቻለም");
           setOpen(true);
-         
         } else {
           setErrorMessage("ትእዛዙን መፈጸም አልተቻለም");
           setOpen(true);
-       
         }
       }
     }
-    setLoadingBuy(false)
+    setLoadingBuy(false);
   };
   const handleFindEmployee = async () => {
     try {
-      setIsSearching(true)
-    
+      setIsSearching(true);
+
       const responseEmployee = await axios.get(
         `${BASE_URL}/getEmployeeById/${formData.employee_id}`,
         {
@@ -312,21 +303,18 @@ function BuyFood() {
         setEmployeeInfo(null);
       }
     } catch (error) {
-
       setEmployeeInfo(null);
     }
-    setIsSearching(false)
+    setIsSearching(false);
   };
 
   const handleBlur = (index, inputValue) => {
-
     if (inputValue > 0) {
       return;
     } else {
       const updatedItems = [...selectedItems];
 
       let total = updatedItems.reduce((acc, item, i) => {
-     
         if (i !== index) {
           const price = isEmployee
             ? item.price_for_employee
@@ -383,7 +371,8 @@ function BuyFood() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <CashierSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" />
+      {/* <CashierSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" /> */}
+      <Sidenav />
       <MDBox
         mx={2}
         mt={2}
@@ -398,7 +387,7 @@ function BuyFood() {
         style={{ display: "flex", justifyContent: "space-between" }}
       >
         <MDTypography variant="h4" color="white">
-          {"የ" + (isEmployee ? "ሰራተኛ " : "እንግዳ ")+ "ምግብ ግዥ"}
+          {"የ" + (isEmployee ? "ሰራተኛ " : "እንግዳ ") + "ምግብ ግዥ"}
         </MDTypography>
         <label>
           <Select

@@ -27,9 +27,9 @@ import Input from "@mui/material/Input";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
 import InventoryList from "../showInventory/index";
 import Link from "@mui/material/Link";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
 import {
   EthDateTime,
@@ -467,7 +467,8 @@ function IngredientApproval({ reqId }) {
   const renderFullUI = () => {
     return (
       <DashboardLayout>
-        {userData.user.role == "student" ? (
+        <DashboardNavbar />
+        {/* {userData.user.role == "student" ? (
           <NavbarForCommette />
         ) : userData.user.role == "dean" ? (
           <CafeManagerDashboardNavbar />
@@ -493,8 +494,8 @@ function IngredientApproval({ reqId }) {
             brand=""
             brandName=" የስቶር ክፍል መተግበሪያ"
           />
-        )}
-
+        )} */}
+        <Sidenav />
         <Grid container spacing={6}>
           <Grid item xs={12} md={showE ? 6 : 12}>
             <Card

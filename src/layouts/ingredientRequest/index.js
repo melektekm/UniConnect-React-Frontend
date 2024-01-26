@@ -34,9 +34,9 @@ import { Button, TextField } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function IngredientRequest() {
@@ -349,7 +349,7 @@ function IngredientRequest() {
           </MDButton>
         </DialogActions>
       </Dialog>
-      {userData.user.role == "student" ? (
+      {/* {userData.user.role == "student" ? (
         <NavbarForCommette />
       ) : userData.user.role == "dean" ? (
         <CafeManagerDashboardNavbar />
@@ -370,8 +370,9 @@ function IngredientRequest() {
         />
       ) : (
         <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" />
-      )}
-
+      )} */}
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>

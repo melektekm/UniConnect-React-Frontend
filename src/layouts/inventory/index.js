@@ -169,8 +169,10 @@ function InventoryEntry() {
           </Button>
         </DialogActions>
       </Dialog>
-      <NavbarForCommette />
-      <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" />
+      <DashboardNavbar />
+      <Sidenav />
+      {/* <NavbarForCommette />
+      <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" /> */}
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>

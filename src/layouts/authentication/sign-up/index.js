@@ -176,6 +176,7 @@ function Cover() {
             </MDBox>
             <MDBox mb={2}>
               <FormControl fullWidth error={!!roleError} margin="normal">
+              <FormControl fullWidth margin="normal">
                 <Select
                   label="Role"
                   variant="standard"
@@ -191,6 +192,7 @@ function Cover() {
                   <MenuItem value="instructor">Instructor</MenuItem>
                 </Select>
                 {roleError && <FormHelperText>{roleError}</FormHelperText>}
+                {/* <FormHelperText>{passwordError}</FormHelperText> */}
               </FormControl>
             </MDBox>
             <MDBox mb={2}>

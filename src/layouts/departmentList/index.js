@@ -61,11 +61,14 @@ function Department() {
 
   const getDepartments = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/get-all-paginated-departments?page=${currentPage}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/get-all-paginated-departments?page=${currentPage}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       if (response.data) {
         setDepartment(response.data["data"]);
@@ -104,8 +107,6 @@ function Department() {
   const handleDelete = async (departmentId) => {
     if (!departmentId) return;
 
-
-
     try {
       await axios.post(`${BASE_URL}/delete-department/${departmentId}`, {
         headers: {
@@ -120,7 +121,6 @@ function Department() {
 
       setDeleteDialogOpen(false); // Close the dialog
     } catch (error) {
-   
       // Handle the error, e.g., display an error message to the user
     }
   };
@@ -148,6 +148,7 @@ function Department() {
   return (
     <DashboardLayout>
       <AdminNavbar />
+      <Sidenav />
       <MainDashboard />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
@@ -195,9 +196,9 @@ function Department() {
                               <TableCell>{dept.name}</TableCell>
                               <TableCell>{dept.parent_id}</TableCell>
                               <TableCell>
-                              <IconButton onClick={() => handleEdit(dept)}>
-                                        <EditIcon color="primary" />
-                              </IconButton>
+                                <IconButton onClick={() => handleEdit(dept)}>
+                                  <EditIcon color="primary" />
+                                </IconButton>
                                 <IconButton
                                   onClick={() =>
                                     handleDeleteDialogOpen(dept.id)

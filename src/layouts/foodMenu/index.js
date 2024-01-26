@@ -22,11 +22,11 @@ import CashierDashboard from "../CashierDashboard";
 import menuItem from "../../examples/Items/NotificationItem/styles";
 import CafeCommetteDashboard from "../CafeCommetteDashboard";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
-import CashierSidenav from "../../examples/Sidenav/CashierSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDTypography from "../../components/MDTypography";
 
@@ -178,33 +178,8 @@ function FoodMenu() {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "student" ? (
-        <NavbarForCommette />
-      ) : userData.user.role == "dean" ? (
-        <CafeManagerDashboardNavbar />
-      ) : (
-        <DashboardNavbar />
-      )}
-      {userData.user.role == "student" ? (
-        <CafeCommetteeSidenav
-          color="dark"
-          brand=""
-          brandName="የኮሚቴ ክፍል መተገበሪያ"
-        />
-      ) : userData.user.role == "dean" ? (
-        <CafeManagerSidenav
-          color="dark"
-          brand=""
-          brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
-        />
-      ) : (
-        <CashierSidenav
-          color="dark"
-          brand=""
-          brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ"
-        />
-      )}
-
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox
         mx={2}
         mt={1}

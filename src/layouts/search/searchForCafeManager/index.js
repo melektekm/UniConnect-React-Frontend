@@ -8,7 +8,7 @@ import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout"
 import Footer from "../../../examples/Footer";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import {  useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { Select, MenuItem } from "@mui/material";
 import NavbarForCommette from "../../../examples/Navbars/NavBarForCommette";
@@ -27,38 +27,33 @@ import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import CafeManagerDashboardNavbar from "../../../examples/Navbars/CafeManagerNavbar";
 import CafeManagerSidenav from "../../../examples/Sidenav/CafeManagerSidenav";
 import MDTypography from "../../../components/MDTypography";
-import CircularProgress from '@mui/material/CircularProgress';
-
-
-
-
+import CircularProgress from "@mui/material/CircularProgress";
 
 function SearchMenuForInvnetory() {
-  
-  const [searchType, setSearchType] = useState('menuitem');
+  const [searchType, setSearchType] = useState("menuitem");
   const location = useLocation();
   const { pathname } = location;
   const [foodMenu, setFoodMenu] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [selectedMenuType, setSelectedMenuType] = useState("all");
-  const electron = window.require('electron');
-  const ipcRenderer  = electron.ipcRenderer;
-  const userData = ipcRenderer.sendSync('get-user');
+  const electron = window.require("electron");
+  const ipcRenderer = electron.ipcRenderer;
+  const userData = ipcRenderer.sendSync("get-user");
   const navigate = useNavigate();
-  const [deleteDialogOpen , setDeleteDialogOpen] = useState(false)
-  const [itemToDelete , setItemToDelete] = useState(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
   // Pagination state
   const itemsPerPage = 20; // Set the number of items to display per page
   const [current_page, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1); 
-  const accessToken = userData.accessToken
+  const [lastPage, setLastPage] = useState(1);
+  const accessToken = userData.accessToken;
   const [loading, setLoading] = useState(false);
-  const [isSearched,   setIsSearched] = useState(false);
+  const [isSearched, setIsSearched] = useState(false);
 
   function getFilteredAndSlicedMenuItems() {
     // Filter the menu items based on the selected menu type
     let filteredItems = [];
-  
+
     if (selectedMenuType === "fasting") {
       // Filter fasting menu items
       filteredItems = foodMenu.filter((item) => item.is_fasting === 1);
@@ -71,20 +66,19 @@ function SearchMenuForInvnetory() {
     } else if (selectedMenuType === "lunch") {
       // Filter lunch menu items
       filteredItems = foodMenu.filter((item) => item.meal_type === "lunch");
-    }else if (selectedMenuType === "drink") {
+    } else if (selectedMenuType === "drink") {
       // Filter lunch menu items
       filteredItems = foodMenu.filter((item) => item.is_drink === 1);
-    }
-     else if (selectedMenuType === "all") {
+    } else if (selectedMenuType === "all") {
       // Show all menu items
       filteredItems = foodMenu;
     }
-  
+
     // Slice the filtered menu items based on the current page
     // const startIndex = (current_page - 1) * itemsPerPage;
     // const endIndex = startIndex + itemsPerPage;
     // const slicedItems = filteredItems.slice(startIndex, endIndex);
-  
+
     return filteredItems;
   }
 
@@ -106,42 +100,29 @@ function SearchMenuForInvnetory() {
     navigate("/addFood", { state: { selectedMenu: updatedMenu } });
   }
 
- 
-
-
-
-
-  
-  
-  
   const [searchInput, setSearchInput] = useState("");
 
   const handleSearch = async () => {
-    setLoading(true)
-    if(searchType === 'menuitem'){
-    try {
-      const response = await axios.get(`${BASE_URL}/search`, {
-        params: {
-          term: searchInput,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      if (response.data) {
-        setFoodMenu(response.data);
-        
-      } else {
-   
-      }
-    } catch (error) {
-    
+    setLoading(true);
+    if (searchType === "menuitem") {
+      try {
+        const response = await axios.get(`${BASE_URL}/search`, {
+          params: {
+            term: searchInput,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (response.data) {
+          setFoodMenu(response.data);
+        } else {
+        }
+      } catch (error) {}
     }
-  }
-  setIsSearched(true)
+    setIsSearched(true);
 
-  setLoading(false)
-    
+    setLoading(false);
   };
   function handleUpdateMenu(updatedMenu) {
     if (!selectedMenu) {
@@ -179,12 +160,9 @@ function SearchMenuForInvnetory() {
       // Update the local state to remove the deleted menu item
       setFoodMenu(foodMenu.filter((item) => item.id !== menuId));
       setDeleteDialogOpen(false);
-    } catch (error) {
-   
-    }
+    } catch (error) {}
   };
   const onSet = async (updatedMenuItem, availableAmount) => {
-  
     try {
       // Send a request to update the menu item's available amount in the database
       await axios.post(
@@ -206,10 +184,7 @@ function SearchMenuForInvnetory() {
       });
 
       setFoodMenu(updatedFoodMenu);
-    
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
   const handlePageChange = (event, page) => {
     setCurrentPage(page); // Update the current page when the user clicks a new page
@@ -217,18 +192,19 @@ function SearchMenuForInvnetory() {
 
   const handleSearchInputChange = (e) => {
     setSearchType(e.target.value);
-    setIsSearched(false); 
-   
+    setIsSearched(false);
   };
 
   return (
     <DashboardLayout>
-       <CafeManagerDashboardNavbar />
+      {/* <CafeManagerDashboardNavbar />
        <CafeManagerSidenav 
       color="dark"
       brand=""
       brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
-       /> 
+       />  */}
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox
         mx={2}
         mt={1}
@@ -239,131 +215,126 @@ function SearchMenuForInvnetory() {
         bgColor="dark"
         borderRadius="lg"
         coloredShadow="info"
-
         textAlign="center"
-        style={{display: "flex", gap: "10px" }}
+        style={{ display: "flex", gap: "10px" }}
       >
-         <MDBox
-      bgColor="white"
-      style={{
-        marginRight: "20px",
-        marginLeft: "100px",
-        width: "300px",
-        display: "flex",  // Ensure flex display to align items vertically
-        alignItems: "center",  // Center items vertically
-        border: "1px solid #ccc",  // Add a border for consistent appearance
-        borderRadius: "4px",  // Apply border radius to match the input field
-        padding: "8px",  // Add padding for better spacing
-      }}
-    >
-       
-
-      <MDInput
-        placeholder=" እዚህ ይጻፉ..."
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        style={{
-          width: "100%",
-          border: "none",  // Remove border from input field to match the container
-          outline: "none",  // Remove outline on focus for better appearance
-        }}
-      />
-    </MDBox>
-     
+        <MDBox
+          bgColor="white"
+          style={{
+            marginRight: "20px",
+            marginLeft: "100px",
+            width: "300px",
+            display: "flex", // Ensure flex display to align items vertically
+            alignItems: "center", // Center items vertically
+            border: "1px solid #ccc", // Add a border for consistent appearance
+            borderRadius: "4px", // Apply border radius to match the input field
+            padding: "8px", // Add padding for better spacing
+          }}
+        >
+          <MDInput
+            placeholder=" እዚህ ይጻፉ..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            style={{
+              width: "100%",
+              border: "none", // Remove border from input field to match the container
+              outline: "none", // Remove outline on focus for better appearance
+            }}
+          />
+        </MDBox>
 
         {loading ? (
           <MDBox textAlign="center">
-          <CircularProgress color="white" />
+            <CircularProgress color="white" />
           </MDBox>
         ) : (
-          <MDButton variant="contained" onClick={handleSearch} color="primary" style= {{borderRadius: "10%", marginTop: "10px"}}>
-          ፈልግ
-        </MDButton>
+          <MDButton
+            variant="contained"
+            onClick={handleSearch}
+            color="primary"
+            style={{ borderRadius: "10%", marginTop: "10px" }}
+          >
+            ፈልግ
+          </MDButton>
         )}
-         <Select
+        <Select
           value={searchType}
-          onChange={handleSearchInputChange} 
-          style={{ borderRadius: "10%",marginRight: "10px", width: "100px", height:"50px" ,color: "white" , marginTop: "10px" ,}}
-
+          onChange={handleSearchInputChange}
+          style={{
+            borderRadius: "10%",
+            marginRight: "10px",
+            width: "100px",
+            height: "50px",
+            color: "white",
+            marginTop: "10px",
+          }}
         >
-          <MenuItem value="menuitem"><h4 style={{color:"#000000"}}>ሜኑ እቃ</h4> </MenuItem>
-       
+          <MenuItem value="menuitem">
+            <h4 style={{ color: "#000000" }}>ሜኑ እቃ</h4>{" "}
+          </MenuItem>
         </Select>
-       
-    
-
       </MDBox>
-      <MDBox py={3}>
-      
-      {searchType === 'menuitem' && renderFoodMenu()}
-      
+      <MDBox py={3}>{searchType === "menuitem" && renderFoodMenu()}</MDBox>
 
-      </MDBox>
-        
       <Footer />
     </DashboardLayout>
   );
 
   function renderFoodMenu() {
-    if (foodMenu.length === 0 ) {
-      if(!isSearched){
-        return
+    if (foodMenu.length === 0) {
+      if (!isSearched) {
+        return;
       }
-      
+
       return (
         <Typography variant="h6" align="center">
           ምንም ሜኑ አልተገኘም።
         </Typography>
       );
     }
-  
+
     return (
-        <>
-<MDBox py={3}>
-        <Grid container spacing={6}>
-          {getFilteredAndSlicedMenuItems().map((foodItem) => (
-            <Grid item xs={12} sm={6} md={4} key={foodItem.id}>
-              <MenuItemCard
-                item={foodItem}
-                onEdit={handleUpdateMenu}
-                onDelete={handleDeleteDialogOpen}
-                onSet={onSet}
-                userData={userData}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </MDBox>
+      <>
+        <MDBox py={3}>
+          <Grid container spacing={6}>
+            {getFilteredAndSlicedMenuItems().map((foodItem) => (
+              <Grid item xs={12} sm={6} md={4} key={foodItem.id}>
+                <MenuItemCard
+                  item={foodItem}
+                  onEdit={handleUpdateMenu}
+                  onDelete={handleDeleteDialogOpen}
+                  onSet={onSet}
+                  userData={userData}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </MDBox>
 
-
-      
-      <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
-        <DialogTitle>ስረዛን ያረጋግጡ</DialogTitle>
-        <DialogContent>
-          {itemToDelete && (
-            <p>
-             እርግጠኛ ነዎት የምግብ ንጥሉን መሰረዝ ይፈልጋሉ{" "}
-              <strong>"{itemToDelete.name}"</strong>?
-            </p>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteDialogClose}>አይ</Button>
-          <Button
-            onClick={() => HandleDelete(itemToDelete ? itemToDelete.id : null)}
-          >
-             ሰርዝ
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
+          <DialogTitle>ስረዛን ያረጋግጡ</DialogTitle>
+          <DialogContent>
+            {itemToDelete && (
+              <p>
+                እርግጠኛ ነዎት የምግብ ንጥሉን መሰረዝ ይፈልጋሉ{" "}
+                <strong>"{itemToDelete.name}"</strong>?
+              </p>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteDialogClose}>አይ</Button>
+            <Button
+              onClick={() =>
+                HandleDelete(itemToDelete ? itemToDelete.id : null)
+              }
+            >
+              ሰርዝ
+            </Button>
+          </DialogActions>
+        </Dialog>
       </>
-    )
+    );
   }
-
-  
-
-
-
 }
 
 export default SearchMenuForInvnetory;

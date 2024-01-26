@@ -11,6 +11,11 @@ import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
+import Icon from "@mui/material/Icon";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
 import {
   Dialog,
   DialogActions,
@@ -27,9 +32,11 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function AddEmployee() {
-  const location = useLocation();
-  const selectedEmployee = location.state?.selectedEmployee;
-  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [role, setRole] = useState(0);
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({
@@ -51,17 +58,19 @@ function AddEmployee() {
 
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
+  const [open, setOpen] = useState(false);
+  const [errorMessages, setErrorMessages] = useState({});
 
   const handleRegister = async () => {
     const newErrorMessages = {
-      name: formValues.name ? "" : "Name is required",
-      email: formValues.email ? "" : "Email is required",
-      role: formValues.role ? "" : "Role is required",
+      name: name ? "" : "name is required",
+      role: role ? "" : "role is required",
+      email: email ? "" : "email is required",
     };
     setErrorMessages(newErrorMessages);
 
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
-      setErrorMessage("Please fill all fiedls!!");
+      setErrorMessage("Please fill in all fields");
       setOpen(true);
       return;
     }
@@ -69,49 +78,48 @@ function AddEmployee() {
     setLoading(true);
 
     try {
-      let response;
-      const formData = new FormData();
-      formData.append("name", formValues.name);
-      formData.append("email", formValues.email);
-      formData.append("role", formValues.role);
+      const requestData = {
+        name: name,
+        email: email,
+        role: role,
+      };
 
-      if (selectedEmployee) {
-        response = await axios.post(
-          `${BASE_URL}/auth/admin/updateEmployee/${selectedEmployee.id}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      } else {
-        response = await axios.post(
-          `${BASE_URL}/auth/admin/addEmployee`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      }
+      const response = await axios.post(
+        `${BASE_URL}/auth/admin/addEmployee`,
+        requestData,
+        {
+          "Content-Type": "application/json",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       if (response.data) {
         resetState();
         setErrorMessage({});
-        setSuccessMessage(
-          ` ሰራተኛውን በተሳካ ሁኔታ! ${selectedEmployee ? " ተስተካክሏል" : "ገብቷል"}`
-        );
+        setSuccessMessage("Employee registered successfully");
+
         setOpen(true);
       } else {
-        setErrorMessage("ምላሽ ምንም አልያዘም።");
+        setErrorMessage("No response");
         setOpen(true);
       }
     } catch (error) {
-      setErrorMessage("ምላሽ እትም አልተሳካም፦ " + error);
+      if (error.response && error.response.data) {
+        const serverErrorMessages = error.response.data.errors;
+        let errorMessage = "Employee not registered";
+
+        for (const [key, value] of Object.entries(serverErrorMessages)) {
+          errorMessage += `${key}: ${value[0]}, `;
+        }
+
+        setErrorMessage(errorMessage);
+      } else {
+        setErrorMessage("Employee not registered: " + error);
+      }
       setOpen(true);
     } finally {
       setLoading(false);
@@ -119,13 +127,10 @@ function AddEmployee() {
   };
 
   const resetState = () => {
-    setFormValues({
-      name: "",
-      email: "",
-      role: "",
-    });
+    setName("");
+    setRole(0);
+    setEmail("");
   };
-
   return (
     <DashboardLayout>
       <Dialog
@@ -135,7 +140,7 @@ function AddEmployee() {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {successMessage ? "ማረጋገጫ" : "ማስታወቂያ"}
+          {successMessage ? "notification" : "notification"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -151,11 +156,12 @@ function AddEmployee() {
             color="primary"
             autoFocus
           >
-            ዝጋ
+            close
           </Button>
         </DialogActions>
       </Dialog>
       <AdminNavbar />
+      <Sidenav />
       <MainDashboard />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
@@ -172,65 +178,58 @@ function AddEmployee() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  {selectedEmployee ? "የሰራተኛ መረጃን ቀይር" : "ሰራተኛን ጨምር"}
+                  add employee
                 </MDTypography>
               </MDBox>
               <MDBox pt={3} pb={3} px={2}>
                 <MDBox component="form" role="form">
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      name="name"
-                      label="ስም"
-                      variant="outlined"
-                      fullWidth
-                      value={formValues.name}
-                      onChange={(e) =>
-                        setFormValues({ ...formValues, name: e.target.value })
-                      }
-                      margin="normal"
-                      required
-                      error={!!errorMessages.name}
-                      helperText={errorMessages.name}
-                    />
-                  </MDBox>
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="email"
-                      label="ኢሜይል"
-                      name="email"
-                      variant="outlined"
-                      fullWidth
-                      value={formValues.email}
-                      onChange={(e) =>
-                        setFormValues({ ...formValues, email: e.target.value })
-                      }
-                      margin="normal"
-                      required
-                      error={!!errorMessages.email}
-                      helperText={errorMessages.email}
-                    />
-                  </MDBox>
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      label="እትም"
-                      name="role"
-                      variant="outlined"
-                      fullWidth
-                      value={formValues.role}
-                      onChange={(e) =>
-                        setFormValues({ ...formValues, role: e.target.value })
-                      }
-                      margin="normal"
-                      required
-                      error={!!errorMessages.role}
-                      helperText={errorMessages.role}
-                    />
-                  </MDBox>
+                  <MDInput
+                    type="text"
+                    name="name"
+                    label="Name"
+                    variant="outlined"
+                    fullWidth
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    margin="normal"
+                    required
+                    error={!!errorMessages.name}
+                    helperText={errorMessages.name}
+                  />
+
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel>Role</InputLabel>
+                    <Select
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                      label="Role"
+                    >
+                      <MenuItem value={0}>Select Role</MenuItem>
+                      <MenuItem value={1}>Admin</MenuItem>
+                      <MenuItem value={2}>Coordinator</MenuItem>
+                      <MenuItem value={3}>Student</MenuItem>
+                      <MenuItem value={4}>Dean</MenuItem>
+                      <MenuItem value={5}>Instructor</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <MDInput
+                    type="email"
+                    label="Email"
+                    name="email"
+                    variant="outlined"
+                    fullWidth
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    margin="normal"
+                    required
+                    error={!!errorMessages.email}
+                    helperText={errorMessages.email}
+                  />
+
                   <MDBox mt={4} mb={1} textAlign="center">
                     <MDButton color="primary" onClick={handleRegister}>
-                      {loading ? <CircularLoader /> : "ጨምር"}
+                      add
                     </MDButton>
                   </MDBox>
                 </MDBox>

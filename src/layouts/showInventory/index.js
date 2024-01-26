@@ -12,7 +12,7 @@ import Paper from "@mui/material/Paper";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
 
 import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import IngredientApproval from "../ingredientApproval/index";
 
 import MDBox from "../../components/MDBox";
@@ -44,7 +44,7 @@ import Input from "@mui/material/Input";
 
 import Link from "@mui/material/Link";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MDTypography from "../../components/MDTypography";
 
 import colors from "../../assets/theme/base/colors";
@@ -401,7 +401,7 @@ function InventoryList({ entryId }) {
   const renderFullUi = () => {
     return (
       <DashboardLayout>
-        {userData.user.role == "student" ? (
+        {/* {userData.user.role == "student" ? (
           <NavbarForCommette />
         ) : userData.user.role == "dean" ? (
           <CafeManagerDashboardNavbar />
@@ -427,7 +427,9 @@ function InventoryList({ entryId }) {
             brand=""
             brandName="የስቶር ክፍል መተግበሪያ"
           />
-        )}
+        )} */}
+        <DashboardNavbar />
+        <Sidenav />
         <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12} md={showR ? 6 : 12}>

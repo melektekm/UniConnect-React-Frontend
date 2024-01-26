@@ -14,6 +14,7 @@ import Footer from "../../../examples/Footer";
 import OrderTables from "../../../layouts/tables/ordertables";
 import CashierDashboard from "../../CashierDashboard";
 import CashierSidenav from "../../../examples/Sidenav/CashierSidenav";
+import Sidenav from "../../../examples/Sidenav/AdminSidenav";
 // Data
 
 import CafeManagerDashboardNavbar from "../../../examples/Navbars/CafeManagerNavbar";
@@ -26,15 +27,10 @@ function CashierOrder() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <CashierSidenav
-      color="dark"
-      brand=""
-      brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ"
-    />
+      {/* <CashierSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" /> */}
+      <Sidenav />
       <MDBox pt={6} pb={3}>
-        <OrderTables 
-        showEditColumn={false}
-         />
+        <OrderTables showEditColumn={false} />
       </MDBox>
       <Footer />
     </DashboardLayout>

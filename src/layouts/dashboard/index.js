@@ -15,9 +15,7 @@ import CashierDashboard from "../CashierDashboard";
 import CafeCommetteDashboard from "../CafeCommetteDashboard";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
-import CashierSidenav from "../../examples/Sidenav/CashierSidenav";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MDTypography from "../../components/MDTypography";
 import colors from "../../assets/theme/base/colors";
 import {
@@ -113,33 +111,8 @@ function Dashboard() {
 
   return (
     <DashboardLayout>
-      {userData.user.role === "coordinator" ? (
-        <DashboardNavbar />
-      ) : userData.user.role === "dean" ? (
-        <CafeManagerDashboardNavbar />
-      ) : (
-        <NavbarForCommette />
-      )}
-
-      {userData.user.role == "coordinator" ? (
-        <CashierSidenav
-          color="dark"
-          brand=""
-          brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ"
-        />
-      ) : userData.user.role == "dean" ? (
-        <CafeManagerSidenav
-          color="dark"
-          brand=""
-          brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
-        />
-      ) : (
-        <CafeCommetteeSidenav
-          color="dark"
-          brand=""
-          brandName="የኮሚቴ ክፍል መተገበሪያ"
-        />
-      )}
+      <DashboardNavbar />
+      <Sidenav />
       <MDBox
         mx={2}
         mt={2}

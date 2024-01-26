@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import List from "@mui/material/List";
@@ -18,14 +18,21 @@ import AddMenuItem from "../../layouts/menuEntry";
 import FoodMenu from "../../layouts/foodMenu";
 import BuyFood from "../../layouts/buyFood";
 import InventoryEntry from "../../layouts/inventory";
+// import InventoryList from "../../layouts/showInventory";
+import StockRequest from "../../layouts/stockRequest";
+import Approval from "../../layouts/stockApproval";
+import IngredientRequest from "../../layouts/ingredientRequest";
+import IngredientApproval from "../../layouts/ingredientApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
+import InventoryList from "../../layouts/showInventory";
+import ShowApproval from "../../layouts/showIngredientApproval";
+import StockApproval from "../../layouts/showApprovedStock";
+import BuyFoodDepartment from "../../layouts/buyFood/buyFoodDepartment";
+
 import { Icon } from "semantic-ui-react";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import AddDepartment from "../../layouts/addDepartment";
-import Department from "../../layouts/departmentList";
-import colors from "../../assets/theme/base/colors"; 
 import {
   Dashboard as DashboardIcon,
   Add as AddIcon,
@@ -39,15 +46,6 @@ import {
   Fastfood as FastfoodIcon,
   Assessment as AssessmentIcon,
 } from "@mui/icons-material";
-import BusinessIcon from "@mui/icons-material/Business";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button,
-} from "@mui/material";
 import {
   useMaterialUIController,
   setMiniSidenav,
@@ -55,9 +53,10 @@ import {
   setWhiteSidenav,
 } from "../../context";
 import ReportList from "../../layouts/report";
-import MDButton from "../../components/MDButton";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import KitchenIcon from "@mui/icons-material/Kitchen";
 
-function AdminSidenav({ brand, brandName, selectedMenu, ...rest }) {
+function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } =
@@ -66,69 +65,182 @@ function AdminSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const collapseName = location.pathname.replace("/", "");
-  const iconStyle = {
-    
-    color: colors.badgeColors.primary.main, 
-  };
 
-  const handleLogout = () => {
-    setOpenLogoutDialog(true);
-  };
-
-  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
-
-  const handleOpenLogoutDialog = () => {
-    setOpenLogoutDialog(true);
-  };
-
-  const handleCloseLogoutDialog = () => {
-    setOpenLogoutDialog(false);
-  };
-  const handleLogoutConfirmed = async () => {
+  const handleLogout = async () => {
     try {
       await ipcRenderer.invoke("clear-user");
       navigate("/authentication/sign-in");
-    } catch (error) {
-    
-    }
+    } catch (error) {}
   };
-
   const routes = [
     {
       type: "collapse",
-      name: "ሰራተኛ ማስገቢያ",
-      key: "addEmployee",
-      icon: <AddIcon fontSize="small" style={iconStyle}/>,
+      name: "dashboard",
+      key: "dashboard",
+      icon: <DashboardIcon fontSize="small" />,
+      route: "/dashboard",
+      component: <Dashboard />,
+    },
+    {
+      type: "collapse",
+      name: "orders",
+      key: "orders",
+      icon: <TableViewOutlinedIcon fontSize="small" />,
+      route: "/tables",
+      component: <Tables />,
+    },
+    {
+      type: "collapse",
+      name: "ent_Approval",
+      key: "Ingredient_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/showIngredientApproval",
+      component: <ShowApproval />,
+    },
+    {
+      type: "collapse",
+      name: "stock_Approval",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/showApprovedStock",
+      component: <StockApproval />,
+    },
+    {
+      type: "collapse",
+      name: "food menu",
+      key: "food_menu",
+      icon: <FastfoodIcon fontSize="small" />,
+      route: "/food_menu",
+      component: <FoodMenu />,
+    },
+    {
+      type: "collapse",
+      name: "menu entry",
+      key: "add_food",
+      icon: <RestaurantMenuIcon fontSize="small" />,
+      route: "/addfood",
+      component: <AddMenuItem />,
+    },
+    {
+      type: "collapse",
+      name: "buy food",
+      key: "buy_food",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/buyFood",
+      component: <BuyFood />,
+    },
+    {
+      type: "collapse",
+      name: "dept but food",
+      key: "buy_food_department",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/buyFoodDepartment",
+      component: <BuyFoodDepartment />,
+    },
+    {
+      type: "collapse",
+      name: "Inventory",
+      key: "inventory",
+      icon: <InventoryIcon fontSize="small" />,
+      route: "/inventory",
+      component: <InventoryEntry />,
+    },
+    {
+      type: "collapse",
+      name: "showInventory",
+      key: "list",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/showInventory",
+      component: <InventoryList />,
+    },
+    {
+      type: "collapse",
+      name: "stock_request",
+      key: "stock_request",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/stockRequest",
+      component: <StockRequest />,
+    },
+    // {
+    //   type: "collapse",
+    //   name: "Stock Approval",
+    //   key: "stock_Approval",
+    //   icon: <Icon fontSize="small" />,
+    //   route: "/stockApproval",
+    //   component: <Approval />,
+    // },
+    {
+      type: "collapse",
+      name: "ingredient_Request",
+      key: "ingredient_Request",
+      icon: <KitchenIcon fontSize="small" />,
+      route: "/ingredientRequest",
+      component: <IngredientRequest />,
+    },
+    {
+      type: "collapse",
+      name: "ingredient_Approval",
+      key: "ingredient_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/ingredientApproval",
+      component: <IngredientApproval />,
+    },
+    {
+      type: "collapse",
+      name: "Add-employee",
+      key: "Add-employee",
+      icon: <AddIcon fontSize="small" />,
       route: "/addEmployee",
       component: <AddEmployee />,
     },
-
     {
       type: "collapse",
-      name: "ዲፓርትመንት ማስገቢያ ",
-      key: "addDepartment",
-      icon: <AddIcon fontSize="small" style={iconStyle}>login</AddIcon>,
-      route: "/addDepartment",
-      component: <AddDepartment />,
+      name: " guest billing",
+      key: "billing",
+      icon: <ReceiptLongIcon fontSize="small" />,
+      route: "/billing",
+      component: <Billing />,
     },
-
     {
       type: "collapse",
-      name: "ዲፓርትመንት ዝርዝር",
-      key: "departmentList",
-      icon: <BusinessIcon fontSize="small" style={iconStyle}>login</BusinessIcon>,
-      route: "/departmentList",
-      component: <Department />,
-    },
-
-    {
-      type: "collapse",
-      name: "ሰራተኛ  ዝርዝር",
+      name: "employee list",
       key: "profile",
-      icon: <PersonIcon fontSize="small" style={iconStyle}/>,
+      icon: <PersonIcon fontSize="small" />,
       route: "/profile",
       component: <EmployeeList />,
     },
+    {
+      type: "collapse",
+      name: "report",
+      key: "report",
+      icon: <AssessmentIcon fontSize="small" />,
+      route: "/report",
+      component: <ReportList />,
+    },
+    // {
+    //   type: "collapse",
+    //   name: "ገደቦች",
+    //   key: "constraint",
+    //   icon: <ManageAccountsIcon fontSize="small" />,
+    //   route: "/constraint",
+    //   component: <Constraint />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "የመተግበሪያ ገጽታ",
+    //   key: "stock_Approval",
+    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
+    //   route: "/showApprovedStock",
+    //   component: <StockApproval />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "የገንዘብ አያያዝ",
+    //   key: "deposit",
+    //   icon: <AttachMoneyIcon fontSize="small" />,
+    //   route: "/deposit",
+    //   component: <Deposit />,
+    // },
   ];
 
   let textColor = "white";
@@ -284,44 +396,22 @@ function AdminSidenav({ brand, brandName, selectedMenu, ...rest }) {
       <List>{renderRoutes}</List>
       <Link to="/" onClick={handleLogout}>
         <SidenavCollapse
-          name="ውጣ"
-          icon={<LogoutIcon fontSize="small" style={iconStyle}>person</LogoutIcon>}
+          name="Logout"
+          icon={<LogoutIcon fontSize="small">person</LogoutIcon>}
         />
       </Link>
-      <Dialog
-        open={openLogoutDialog}
-        onClose={handleCloseLogoutDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        PaperProps={{ style: { padding: "15px"} }}
-      >
-        <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions style={{justifyContent: "space-between"}}>
-          <MDButton onClick={handleCloseLogoutDialog} color="info" style={{borderRadius: "15%"}}>
-            አይ
-          </MDButton>
-          <MDButton onClick={handleLogoutConfirmed} color="error" style={{borderRadius: "15%"}}>
-            ውጣ
-          </MDButton>
-        </DialogActions>
-      </Dialog>
     </SidenavRoot>
   );
 }
 
 // Setting default values for the props of Sidenav
-AdminSidenav.defaultProps = {
+Sidenav.defaultProps = {
   color: "info",
   brand: "",
 };
 
 // Typechecking props for the Sidenav
-AdminSidenav.propTypes = {
+Sidenav.propTypes = {
   color: PropTypes.oneOf([
     "primary",
     "secondary",
@@ -335,4 +425,4 @@ AdminSidenav.propTypes = {
   brandName: PropTypes.string.isRequired,
 };
 
-export default AdminSidenav;
+export default Sidenav;
