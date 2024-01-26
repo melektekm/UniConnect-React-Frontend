@@ -6,7 +6,6 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import MainDashboard from "../../layouts/MainDashboard";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
@@ -22,26 +21,35 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { EthDateTime,dayOfWeekString , limits } from 'ethiopian-calendar-date-converter';
 import AdminNavbar from "../../examples/Navbars/AdminNavbar";
+import MDBox from "../../components/MDBox";
+import MDTypography from "../../components/MDTypography";
 
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [lastPage, setLastPage] = useState(1);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
   const navigate = useNavigate();
   const [editedEmployee, setEditedEmployee] = useState(null);
+  // const selectedEmployee = location.state?.selectedEmployee;
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
-  const accessToken = userData.accessToken
+  const accessToken = userData.accessToken;
 
   useEffect(() => {
     fetchEmployees();
   }, [currentPage]);
-
+  useEffect(() => {
+    if (selectedEmployee) {
+      setFormValues(selectedEmployee);
+    }
+  }, [selectedEmployee]);
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
@@ -56,16 +64,15 @@ function EmployeeList() {
           },
         }
       );
-
       if (response.data) {
         setEmployees(response.data["data"]);
         setCurrentPage(response.data.current_page);
         setLastPage(response.data.last_page);
       } else {
-        console.log("Empty response");
+       
       }
     } catch (error) {
-      console.error("Failed to fetch employees:", error);
+  
     }
   };
 
@@ -83,7 +90,7 @@ function EmployeeList() {
     if (!employeeId) return;
 
     try {
-      await axios.delete(
+      await axios.post(
         `${BASE_URL}/auth/admin/deleteEmployee/${employeeId}`,
         {
           headers: {
@@ -91,73 +98,105 @@ function EmployeeList() {
           },
         }
       );
-
+         console.log("arge")
       setEmployees(employees.filter((employee) => employee.id !== employeeId));
       setDeleteDialogOpen(false);
     } catch (error) {
-      console.error("Failed to delete employee:", error);
+      console.log("argeergt")
+  
     }
   };
-  const handleEdit = (employeeId) => {
-    // Find the employee to edit
-    const employeeToEdit = employees.find(
-      (employee) => employee.id === employeeId
-    );
-    if (employeeToEdit) {
-      // Step 3: Set the edited employee data in state
-      setEditedEmployee(employeeToEdit);
-
-      // Step 4: Navigate to the "Add Employee" page with the edited employee data
-      navigate(`/addemployee?edit=true`, {
-        state: { employee: employeeToEdit },
-      });
+  function convertToEthiopianDate(inputDate) {
+    const parsedDate = new Date(inputDate);
+  
+    if (!isNaN(parsedDate.getTime())) {
+  
+      const ethDateTime = EthDateTime.fromEuropeanDate(parsedDate);
+      const dayOfWeek = ethDateTime.getDay();
+      const dayOfWeekStrings = ['እሁድ', 'ሰኞ', 'ማክሰኞ', 'ረቡእ', 'ሐሙስ', 'አርብ', 'ቅዳሜ'];
+      const dayName = dayOfWeekStrings[dayOfWeek];
+  
+      const ethiopianDateStr = `${dayName}, ${ethDateTime.toDateString()}`;
+    
+      return `${ethiopianDateStr}`;
+    } else {
+    
+      return 'Invalid Date';
     }
-  };
+  }
 
+  function handleEdit(updatedEmployee) {
+    if (!selectedEmployee) {
+      setEmployees([...employees, updatedEmployee]);
+    } else {
+      setEmployees(
+        employees.map((employee) =>
+          employee.id === updatedEmployee.id ? updatedEmployee : employee
+        )
+      );
+      setSelectedEmployee(null);
+    }
+    navigate("/addEmployee", { state: { selectedEmployee: updatedEmployee } });
+  }
   return (
     <DashboardLayout>
       <AdminNavbar />
       <MainDashboard />
-      <Paper elevation={3} sx={{ padding: "16px" }}>
-        <Typography variant="h5" gutterBottom>
-          Employee List
-        </Typography>
+      <MDBox
+                mx={2}
+                mt={3}
+                py={3}
+                mb={2}
+                
+                variant="gradient"
+                bgColor="dark"
+                borderRadius="lg"
+                coloredShadow="info"
+              >
+                <MDTypography variant="h6" color="white" textAlign = "center">
+                  የሰራተኛ  ዝርዝር
+                </MDTypography>
+              </MDBox>
         <TableContainer component={Box}>
           <Table>
             <TableBody>
               <TableRow>
-                <TableCell>
-                  <strong>ID</strong>
+                <TableCell align={"center"}>
+                  <strong>መታወቂያ</strong>
                 </TableCell>
-                <TableCell>
-                  <strong>Name</strong>
+                <TableCell align={"center"}>
+                  <strong>ስም</strong>
                 </TableCell>
-                <TableCell>
-                  <strong>Email</strong>
+                <TableCell align={"center"}>
+                  <strong>ኢሜይል</strong>
                 </TableCell>
-                <TableCell>
-                  <strong>Department</strong>
+                <TableCell align={"center"}>
+                  <strong>ዲፓርትመንት</strong>
                 </TableCell>
-                <TableCell>
-                  <strong>Position</strong>
+                <TableCell align={"center"}>
+                  <strong>ዋና የሥራ ክፍል</strong>
                 </TableCell>
-                <TableCell>
-                  <strong>Joined At</strong>
+                <TableCell align={"center"}>
+                  <strong>የሚቀረው የገንዘብ መጠን</strong>
                 </TableCell>
-                <TableCell>
-                  <strong>Actions</strong>
+                <TableCell align={"center"}>
+                  <strong>የገባበት ቀን</strong>
+                </TableCell>
+                <TableCell align={"center"}>
+                  <strong>ድርጊት</strong>
                 </TableCell>
               </TableRow>
               {employees.map((employee) => (
                 <TableRow key={employee.id}>
-                  <TableCell>{employee.id}</TableCell>
-                  <TableCell>{employee.name}</TableCell>
-                  <TableCell>{employee.email}</TableCell>
-                  <TableCell>{employee.department}</TableCell>
-                  <TableCell>{employee.position}</TableCell>
-                  <TableCell>{employee.createdAt}</TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => handleEdit(employee.id)}>
+                  <TableCell align={"center"}>{employee.id}</TableCell>
+                  <TableCell align={"center"}>{employee.name}</TableCell>
+                  <TableCell align={"center"}>{employee.email}</TableCell>
+                  <TableCell align={"center"}>{employee.department}</TableCell>
+                  <TableCell align={"center"}>{employee.position}</TableCell>
+                  <TableCell align={"center"}>{(employee.balance === null)? " - " : `${employee.balance} ብር`}</TableCell>
+                  <TableCell align={"center"}>{convertToEthiopianDate(employee.created_at)}</TableCell>
+                  <TableCell align={"center"}>
+                    <IconButton onClick={() => handleEdit(employee)}>
                       <EditIcon color="primary" />
                     </IconButton>
                     <IconButton
@@ -180,7 +219,7 @@ function EmployeeList() {
             color="primary"
           />
         </Box>
-      </Paper>
+      
       <Footer />
 
       {/* Delete Confirmation Dialog */}
@@ -190,16 +229,16 @@ function EmployeeList() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Confirm Deletion</DialogTitle>
+        <DialogTitle id="alert-dialog-title">ስረዛን ያረጋግጡ</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete the employee{" "}
+            እርግጠኛ ነህ ሰራተኛውን ማጥፋት ትፈልጋለህ{" "}
             {employeeToDelete ? `"${employeeToDelete.name}"` : ""}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="primary">
-            No
+            አይ
           </Button>
           <Button
             onClick={() =>
@@ -208,7 +247,7 @@ function EmployeeList() {
             color="secondary"
             autoFocus
           >
-            Yes
+            አዎ
           </Button>
         </DialogActions>
       </Dialog>

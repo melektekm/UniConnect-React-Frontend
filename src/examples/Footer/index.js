@@ -47,9 +47,6 @@ function Footer({ company, links }) {
   return (
     <MDBox
       width="100%"
-      display="flex"
-      flexDirection={{ xs: "column", lg: "row" }}
-      justifyContent="space-between"
       alignItems="center"
       px={1.5}
     >
@@ -61,28 +58,10 @@ function Footer({ company, links }) {
         color="text"
         fontSize={size.sm}
         px={1.5}
+        mt ={2}
       >
-        &copy; {new Date().getFullYear()}, made 
+        &copy; {new Date().getFullYear()}, Made 
         by MinT.
-      </MDBox>
-      <MDBox
-        component="ul"
-        sx={({ breakpoints }) => ({
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          listStyle: "none",
-          mt: 3,
-          mb: 0,
-          p: 0,
-
-          [breakpoints.up("lg")]: {
-            mt: 0,
-          },
-        })}
-      >
-        {renderLinks()}
       </MDBox>
     </MDBox>
   );
@@ -91,11 +70,7 @@ function Footer({ company, links }) {
 // Setting default values for the props of Footer
 Footer.defaultProps = {
   company: { href: "https://www.creative-tim.com/", name: "Creative Tim" },
-  links: [
-    
-    { href: "https://www.creative-tim.com/presentation", name: "About Us" },
-   
-  ],
+  
 };
 
 // Typechecking props for the Footer

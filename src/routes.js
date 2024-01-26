@@ -49,27 +49,39 @@ import AddEmployee from "./layouts/addEmployee";
 import AddMenuItem from "./layouts/menuEntry";
 import FoodMenu from "./layouts/foodMenu";
 import BuyFood from "./layouts/buyFood";
-import InventoryEntry from "./layouts/inventory";
 import Constraint from "./layouts/constraints";
 import Deposit from "./layouts/deposit";
 import CashierDashboard from "./layouts/CashierDashboard";
 import CafeCommetteDashboard from "./layouts/CafeCommetteDashboard";
 import CommetteDashboard from "./layouts/dashboard/cafeCommetteDashboard";
+import AddDepartment from "./layouts/addDepartment";
+import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
+import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
 import StockRequest from "./layouts/stockRequest";
 import Approval from "./layouts/stockApproval";
 import InventoryList from "./layouts/showInventory";
+import ShowApproval from "./layouts/showIngredientApproval";
+import StockApproval from "./layouts/showApprovedStock";
+import BuyFoodDepartment from "./layouts/buyFood/buyFoodDepartment";
+import Department from "./layouts/departmentList";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
-import SearchMenu from "./layouts/search";
+import SearchMenu from "./layouts/search/searchForCafeManager";
 import ReportList from "./layouts/report";
 import IngredientRequest from "./layouts/ingredientRequest";
 import IngredientApproval from "./layouts/ingredientApproval";
+import DepartmentBilling from "./layouts/billing/DepartmentBilling";
+import CafeManagerDashboard from "./layouts/dashboard/cafeManagerDashboard";
+import SearchMenuForCashier from "./layouts/search/searchForCashier";
+import CashierOrder from "./layouts/tables/CashierOrderView";
+import storeKeeperDashboard from "./layouts/dashboard/storeKeeperDashboard";
+import StockAmountTable from "./layouts/stokeAmount";
 
 const routes = [
   {
     type: "collapse",
-    name: "Main Dashboard",
+    name: "ዳሽቦርድ",
     key: "mainDashboard",
     icon: <Icon fontSize="small">Main dashboard</Icon>,
     route: "/mainDashboard",
@@ -77,15 +89,16 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Food Menu",
+    name: "የምግብ ዝርዝር",
     key: "food_menu",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/foodMenu",
+    route: "/food_menu",
     component: <FoodMenu />,
   },
+
   {
     type: "collapse",
-    name: "Constraint",
+    name: "ገደብ",
     key: "constraint",
     icon: <Icon fontSize="small" />,
     route: "/constraint",
@@ -93,7 +106,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Dashboard",
+    name: "ዳሽቦርድ",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
@@ -101,7 +114,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Dashboard",
+    name: "ዳሽቦርድ",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/commetteDashboard",
@@ -109,7 +122,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "CashierDashboard",
+    name: "ዳሽቦርድ",
     key: "cashierDashboard",
     icon: <Icon fontSize="small">Cashier dashboard</Icon>,
     route: "/cashierdashboard",
@@ -117,7 +130,15 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "CafeCommetteDashboard",
+    name: "ዳሽቦርድ",
+    key: "storeKeeperDashboard",
+    icon: <Icon fontSize="small">Cashier dashboard</Icon>,
+    route: "/storeKeeperdashboard",
+    component: <storeKeeperDashboard />,
+  },
+  {
+    type: "collapse",
+    name: "ዳሽቦርድ",
     key: "cafeCommetteDashboard",
     icon: <Icon fontSize="small">Cashier dashboard</Icon>,
     route: "/cafeCommetteDashboard",
@@ -125,7 +146,15 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Menu Entry",
+    name: "ዳሽቦርድ",
+    key: "cafeMangerDashboard",
+    icon: <Icon fontSize="small" />,
+    route: "/cafeManagerDashboard",
+    component: <CafeManagerDashboard />,
+  },
+  {
+    type: "collapse",
+    name: "ሜኑ ማስገቢያ",
     key: "add_food",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/addFood",
@@ -133,7 +162,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Orders",
+    name: "ትዕዛዞች",
     key: "orders",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",
@@ -141,7 +170,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Add Employee",
+    name: "ሰራተኛ ማስገቢያ",
     key: "Add-employee",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/addEmployee",
@@ -149,23 +178,39 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Buy Food",
-    key: "buy_food",
+    name: "ዲፓርትመንት ማስገቢያ ",
+    key: "Add-department",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/addDepartment",
+    component: <AddDepartment />,
+  },
+  {
+    type: "collapse",
+    name: "ዲፓርትመንት ዝርዝር",
+    key: "Department-List",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/departmentList",
+    component: <Department />,
+  },
+  {
+    type: "collapse",
+    name: "ምግብ መግዣ",
+    key: "buyFood",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/buyFood",
     component: <BuyFood />,
   },
   {
     type: "collapse",
-    name: "Inventory",
-    key: "inventory",
+    name: "ለዲፓርትመንት ምግብ መግዣ",
+    key: "buy_food_department",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/inventory",
-    component: <InventoryEntry />,
+    route: "/buyFoodDepartment",
+    component: <BuyFoodDepartment />,
   },
   {
     type: "collapse",
-    name: "Stock Request",
+    name: "ከስቶር ማውጫ ፎርም",
     key: "stock_request",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/stockRequest",
@@ -173,7 +218,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Stock Approval",
+    name: "ከስቶረ ማውጫ መፍቀጃ",
     key: "stock_Approval",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/stockApproval",
@@ -181,7 +226,27 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Ingredient Request",
+    name: "ግዢ መፍቀጃ",
+    key: "Ingredient_Approval",
+    icon: <Icon fontSize="small">AssignmentTurnedInIcon</Icon>,
+    route: "/showIngredientApproval",
+    component: <ShowApproval />,
+  },
+  {
+    type: "collapse",
+    name: "ከስቶረ ማውጫ መፍቀጃ",
+    key: "stock_Approval",
+    icon: (
+      <Icon fontSize="small" color="primary">
+        AssignmentTurnedInIcon
+      </Icon>
+    ),
+    route: "/showApprovedStock",
+    component: <StockApproval />,
+  },
+  {
+    type: "collapse",
+    name: "ግዢ ማስፈቀጃ ፎርም",
     key: "ingredient_Request",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/ingredientRequest",
@@ -189,7 +254,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Ingredient Approval",
+    name: "ግዢ መፍቀጃ ",
     key: "ingredient_Approval",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/ingredientApproval",
@@ -197,7 +262,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Inventory list",
+    name: "የገባው የእቃ ዝርዝር",
     key: "list",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/showInventory",
@@ -205,15 +270,41 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Billing",
+    name: "ለእንግዳ ደረሰኝ",
     key: "billing",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
-    component: <Billing />,
+    route: "/billingCashier",
+    component: <Billing showEditColumn={false} />,
+  },
+
+  {
+    type: "collapse",
+    name: "ስቶረ ውስጥ የቀረ እቃ",
+    key: "billing",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/stokeAmount",
+    component: <StockAmountTable />,
   },
   {
     type: "collapse",
-    name: "Notifications",
+    name: "ለዲፓርትመንት ደረሰኝ",
+    key: "Department_billing",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/departmentBilling",
+    component: <DepartmentBilling />,
+  },
+  {
+    type: "collapse",
+    name: "ለእንግዳ ደረሰኝ",
+    key: "billing",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/billingManager",
+    component: <Billing showEditColumn={true} />,
+  },
+
+  {
+    type: "collapse",
+    name: "ማስታወቂያ",
     key: "notifications",
     icon: <Icon fontSize="small">notifications</Icon>,
     route: "/notifications",
@@ -221,8 +312,8 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Profile",
-    key: "profile",
+    name: "ሰራተኛ  ዝርዝር",
+    key: "ሰራተኛ  ዝርዝር",
     icon: <Icon fontSize="small">person</Icon>,
     route: "/profile",
     component: <EmployeeList />,
@@ -254,7 +345,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Search",
+    name: "ፈልግ",
     key: "search",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/search",
@@ -262,7 +353,31 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Report",
+    name: "ፈልግ",
+    key: "searchInventory",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/searchForInventory",
+    component: <SearchMenuForInvnetory />,
+  },
+  {
+    type: "collapse",
+    name: "ፈልግ",
+    key: "search_For_cashier",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/searchForCashier",
+    component: <SearchMenuForCashier />,
+  },
+  {
+    type: "collapse",
+    name: "ፈልግ",
+    key: "searchAdmin",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/searchForAdmin",
+    component: <SearchMenuForAdmin />,
+  },
+  {
+    type: "collapse",
+    name: "ሪፖርት",
     key: "report",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/report",
@@ -270,7 +385,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Deposit",
+    name: "የገንዘብ አያያዝ",
     key: "deposit",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/deposit",
@@ -278,11 +393,19 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Inventory list",
-    key: "list",
+    name: "ትዕዛዞች",
+    key: "cashierOrder",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/showInventory",
-    component: <InventoryList />,
+    route: "/cashierOrder",
+    component: <CashierOrder />,
+  },
+  {
+    type: "collapse",
+    name: "ለእንግዳ ደረሰኝ",
+    key: "billingCashier",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/billingCashier",
+    component: <Billing showEditColumn={false} />,
   },
 ];
 

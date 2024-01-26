@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import React, { useState } from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
@@ -25,97 +25,136 @@ import MDButton from "../../../components/MDButton";
 import BasicLayout from "../components/BasicLayout";
 import bgImage from "../../../assets/images/image-6.png";
 import axios from "axios";
-import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import Button from "@mui/material/Button";
-import {BASE_URL} from "../../../appconfig";
+import { BASE_URL } from "../../../appconfig";
 import CashierDashboard from "../../CashierDashboard";
 import Store from "electron-store";
-
-
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Basic() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [open, setOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [loadingSign, setLoadingSign] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const electron = window.require('electron');
-  const ipcRenderer  = electron.ipcRenderer;
-
-
+  const electron = window.require("electron");
+  const ipcRenderer = electron.ipcRenderer;
+  const [loading, setLoading] = useState(false);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      setErrorMessage("Please enter both email and password.");
+      setOpen(true);
+      return;
+    }
+    setLoading(true);
 
     try {
       const response = await axios.post(
-          `${BASE_URL}/auth/admin/login`, // Corrected URL
+        `${BASE_URL}/auth/admin/login`, // Corrected URL
         {
           email,
           password,
         }
       );
-  //    session.defaultSession.setUserPreference('accessToken', response.data.accessToken);
 
+      //    session.defaultSession.setUserPreference('accessToken', response.data.accessToken);
 
-      ipcRenderer.send('save-user', { accessToken: response.data.accessToken, user: response.data.user });
-      if(response.data.user.role == 'cashier'){
+      ipcRenderer.send("save-user", {
+        accessToken: response.data.accessToken,
+        user: response.data.user,
+      });
+      if (response.data.user.role == "coordinator") {
         navigate("/cashierDashboard");
-      }else if(response.data.user.role == 'admin'){
+      } else if (response.data.user.role == "admin") {
         navigate("/mainDashboard");
-      }else if(response.data.user.role == 'communittee_admin'){
+      } else if (response.data.user.role == "student") {
         navigate("/cafeCommetteDashboard");
+      } else if (response.data.user.role == "dean") {
+        navigate("/cafeManagerDashboard");
+      } else if (response.data.user.role == "instructor") {
+        navigate("/storeKeeperdashboard");
       }
-      
-      console.log(response.data.user.role);
+      setLoading(false);
+
       //ceNlXlqqa27MYEJsUE8hey352DeXrEdQJmqDEbaV
       // Redirect or perform other actions as needed
     } catch (error) {
       if (error.response && error.response.data && error.response.data.errors) {
         const errors = error.response.data.errors;
-        let errorMessage = '';
+        let errorMessage = "";
 
-        if (typeof errors === 'string') {
+        if (typeof errors === "string") {
           errorMessage = errors;
         } else {
-          errorMessage = Object.values(errors).map(errorArray => errorArray.join(' ')).join(' ');
+          errorMessage = Object.values(errors)
+            .map((errorArray) => errorArray.join(" "))
+            .join(" ");
         }
         setErrorMessage(errorMessage);
         setOpen(true);
-      } else if (error.response && error.response.data && error.response.data.message) {
+      } else if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         setErrorMessage(error.response.data.message);
         setOpen(true);
+        setLoading(false);
       } else {
-        console.error("Registration failed", error);
+        setErrorMessage(" network error try again");
+        setOpen(true);
+        setLoading(false);
       }
     }
+    setLoading(false);
   };
 
   return (
     <BasicLayout image={bgImage}>
       <Dialog
-          open={open}
-          onClose={() => setOpen(false)}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{ style: { padding: "15px" } }}
       >
-        <DialogTitle id="alert-dialog-title">{"Registration Error"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {"registration error"}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {errorMessage}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => {setOpen(false); setErrorMessage('');}} color="primary" autoFocus>
-            Close
-          </Button>
+          <MDButton
+            onClick={() => {
+              setOpen(false);
+              setErrorMessage("");
+            }}
+            color="error"
+            style={{ borderRadius: "15%" }}
+          >
+            close
+          </MDButton>
         </DialogActions>
       </Dialog>
       <Card>
         <MDBox
           variant="gradient"
-          bgColor="info"
+          bgColor="dark"
           borderRadius="lg"
           coloredShadow="info"
           mx={2}
@@ -125,7 +164,7 @@ function Basic() {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Login
+            login
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -133,7 +172,7 @@ function Basic() {
             <MDBox mb={2}>
               <MDInput
                 type="email"
-                label="Email"
+                label="email"
                 fullWidth
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -142,48 +181,43 @@ function Basic() {
             <MDBox mb={2}>
               <MDInput
                 type="password"
-                label="Password"
+                label="password"
                 fullWidth
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Remember me
-              </MDTypography>
-            </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton
-                variant="gradient"
-                color="info"
-                fullWidth
-                onClick={handleLogin}
-              >
-                Login
-              </MDButton>
+              {loading ? (
+                <MDBox textAlign="center">
+                  <CircularProgress color="info" />
+                </MDBox>
+              ) : (
+                <MDButton
+                  variant="gradient"
+                  color="dark"
+                  fullWidth
+                  onClick={handleLogin}
+                >
+                  login
+                </MDButton>
+              )}
             </MDBox>
+
             <MDBox mt={3} mb={1} textAlign="center">
-            <MDTypography variant="button" color="text">
-              New Here?{" "}
-              <MDTypography
+              <MDTypography variant="button" color="text">
+                are you new here ?{" "}
+                <MDTypography
                   onClick={() => navigate("/authentication/sign-up")}
                   variant="button"
-                  color="info"
+                  color="primary"
                   fontWeight="medium"
                   textGradient
-                  style={{ cursor: 'pointer' }}
-              >
-                Sign up
+                  style={{ cursor: "pointer" }}
+                >
+                  signup
+                </MDTypography>
               </MDTypography>
-            </MDTypography>
             </MDBox>
           </MDBox>
         </MDBox>

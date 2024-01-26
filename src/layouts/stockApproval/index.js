@@ -21,209 +21,324 @@ import Card from "@mui/material/Card";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
-import Input from "@mui/material/Input"; // Add this import
+import MDTypography from "../../components/MDTypography";
+
+import Link from "@mui/material/Link";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
+import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
+import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
+import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
+import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
+import CircularProgress from "@mui/material/CircularProgress";
+import MDButton from "../../components/MDButton";
+import {
+  EthDateTime,
+  dayOfWeekString,
+  limits,
+} from "ethiopian-calendar-date-converter";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
+import colors from "../../assets/theme/base/colors";
 
 function Approval() {
-  const [approvalRequests, setApprovalRequests] = useState([]);
-  const [selectedTimeRange, setSelectedTimeRange] = useState("today");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [requests, setRequests] = useState([]);
+  const [currentpage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
-  const [approvedBy, setApprovedBy] = useState({}); // Add state for approvedBy
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
+  const [openDialog, setOpenDialog] = useState(false);
+  const [confirmed, setConfirmed] = useState(null);
 
-  const handleTimeRangeChange = async (event) => {
-    const selectedRange = event.target.value;
-    setSelectedTimeRange(selectedRange);
+  const handleApproveRejConfirmation = (num) => {
+    setConfirmed(num);
+    setOpenDialog(true);
   };
 
-  const options = [
-    { label: "Today", value: "today" },
-    { label: "This week", value: "this week" },
-    // { label: "2024", value: "2024" },
-    // { label: "2025", value: "2025" },
-    // { label: "2026", value: "2026" },
-  ];
-
-  const handlePageChange = (event, page) => {
-    setCurrentPage(page);
-  };
-
-  const fetchApprovalRequests = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/requestfetch`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          time_range: selectedTimeRange,
-          page: currentPage,
-        },
-      });
-
-      if (response.data) {
-        setApprovalRequests(response.data["data"]);
-        setCurrentPage(response.data.current_page);
-        setLastPage(response.data.last_page);
-      } else {
-        console.log("Empty response");
-      }
-    } catch (error) {
-      console.error("Failed to fetch request:", error);
+  const handleConfirmation = () => {
+    if (confirmed !== null) {
+      handleApprove(confirmed);
+      setOpenDialog(false);
     }
   };
 
   useEffect(() => {
-    fetchApprovalRequests();
-  }, [selectedTimeRange, currentPage]);
+    fetchRequests(currentpage);
+  }, [currentpage]);
 
-  const handleApproveToggle = async (id) => {
-    // Find the request by ID
-    const request = approvalRequests.find((data) => data.id === id);
+  const fetchRequests = async (page) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/requestfetch?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    // Prompt the user for the name of the approver
-    const approver = prompt("Enter the name of the approver:");
-
-    if (approver !== null) {
-      try {
-        // Update the approvedBy field
-        setApprovedBy({
-          ...approvedBy,
-          [id]: approver,
-        });
-
-        // Send the updated data to the backend
-        await axios.put(`${BASE_URL}/request/${id}`, {
-          approvedBy: approver,
-        });
-
-      } catch (error) {
-        console.error("Failed to update approval status:", error);
-      }
-    }
+      setRequests(response.data.data);
+      setLastPage(response.data.last_page);
+    } catch (error) {}
+    setLoading(false);
   };
+
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+    fetchRequests(page);
+  };
+  const handleApprove = async (num) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/stockapprove`,
+        {
+          approved_by: num === 0 ? 0 : userData.user.id,
+          group_id: requests[0].group_id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data) {
+        fetchRequests(currentpage);
+      }
+    } catch (error) {}
+    setLoading(false);
+  };
+
+  function convertToEthiopianDate(inputDate) {
+    const parsedDate = new Date(inputDate);
+
+    if (!isNaN(parsedDate.getTime())) {
+      const ethDateTime = EthDateTime.fromEuropeanDate(parsedDate);
+      const dayOfWeek = ethDateTime.getDay();
+      const dayOfWeekStrings = [
+        "እሁድ",
+        "ሰኞ",
+        "ማክሰኞ",
+        "ረቡእ",
+        "ሐሙስ",
+        "አርብ",
+        "ቅዳሜ",
+      ];
+      const dayName = dayOfWeekStrings[dayOfWeek];
+
+      const ethiopianDateStr = `${dayName}, ${ethDateTime.toDateString()}`;
+
+      return `${ethiopianDateStr}`;
+    } else {
+      return "Invalid Date";
+    }
+  }
 
   return (
     <DashboardLayout>
-      {userData.user.role === "cashier" ? (
-        <DashboardNavbar absolute isMini />
+      {userData.user.role == "student" ? (
+        <NavbarForCommette />
+      ) : userData.user.role == "dean" ? (
+        <CafeManagerDashboardNavbar />
       ) : (
         <NavbarForCommette />
       )}
-      <CafeCommetteDashboard />
-      <MDBox pt={6} pb={3}>
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={2}
-                mb={2}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-                textAlign="center"
-              >
-                <Grid container alignItems="center" spacing={2}>
-                  <Grid item>
-                    <Typography style={{ color: "white" }} variant="h6">
-                      Stock Approval
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <FormControl>
-                      <Typography
-                        variant="h6"
-                        style={{ marginRight: "8px", color: "white" }}
-                      >
-                        Time Range:
+
+      {userData.user.role == "student" ? (
+        <CafeCommetteeSidenav
+          color="dark"
+          brand=""
+          brandName="የኮሚቴ ክፍል መተገበሪያ"
+        />
+      ) : userData.user.role == "dean" ? (
+        <CafeManagerSidenav
+          color="dark"
+          brand=""
+          brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
+        />
+      ) : (
+        <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" />
+      )}
+
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <MDBox
+            mx={2}
+            mt={2}
+            py={3}
+            px={2}
+            variant="gradient"
+            bgColor="dark"
+            borderRadius="lg"
+            coloredShadow="info"
+            style={{ border: "3px solid" }}
+          >
+            <MDTypography variant="h6" color="white" textAlign="center">
+              የእቃ ማውጫ ጥያቄዎች
+            </MDTypography>
+          </MDBox>
+
+          <TableContainer
+            component={Paper}
+            style={{ border: "3px solid #206A5D", marginTop: "20px" }}
+          >
+            {" "}
+            <Box
+              sx={{
+                backgroundColor: colors.white.main,
+                overflow: "scroll",
+                maxHeight: "600px",
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              }}
+            >
+              <Table>
+                <TableRow
+                  sx={{
+                    backgroundColor: colors.light.main,
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 1,
+                  }}
+                >
+                  <TableCell>የእቃው ስም</TableCell>
+                  <TableCell>ብዛት</TableCell>
+                  <TableCell>መለኪያ</TableCell>
+                </TableRow>
+
+                {requests &&
+                  requests.length > 0 &&
+                  requests.map((request, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{request.name}</TableCell>
+                      <TableCell>{request.quantity}</TableCell>
+                      <TableCell>{request.measured_in}</TableCell>
+                    </TableRow>
+                  ))}
+              </Table>
+            </Box>
+          </TableContainer>
+          <MDBox
+            variant="gradient"
+            style={{
+              backgroundColor: "#DEDDDB",
+              display: "block",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center !important",
+              width: "60%",
+
+              margin: "10px auto",
+              padding: "10px",
+              color: "black",
+              border: "2px solid #000",
+              boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
+              borderRadius: "30px",
+            }}
+          >
+            {requests && requests.length > 0 && (
+              <div>
+                <Typography>
+                  የተላከበት ቀን ፡ {convertToEthiopianDate(requests[0].created_at)}{" "}
+                  አ/ም
+                </Typography>{" "}
+                {requests &&
+                  requests.length > 0 &&
+                  requests[0].approved_by === 0 && (
+                    <Typography color="error"> ሁኔታ፡ የተሰረዘ</Typography>
+                  )}
+                {requests &&
+                  requests.length > 0 &&
+                  requests[0].approved_by > 0 && (
+                    <Typography color="primary">ሁኔታ፡ የጸደቀ</Typography>
+                  )}
+                <MDBox textAlign="center" mt={2}>
+                  {requests &&
+                    requests.length > 0 &&
+                    requests[0].approved_by === null && (
+                      <Typography>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{
+                            backgroundColor: "rgb(12, 56, 71)",
+                            color: "white",
+                            marginRight: "20px",
+                          }}
+                          onClick={() => handleApproveRejConfirmation()}
+                        >
+                          እጽድቅ
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{
+                            backgroundColor: "rgb(204, 4, 17)",
+                            color: "white",
+                          }}
+                          onClick={() => handleApproveRejConfirmation(0)}
+                        >
+                          ሰርዝ
+                        </Button>
                       </Typography>
-                      <Select
-                        id="time-range"
-                        value={selectedTimeRange}
-                        style={{
-                          minWidth: 120,
-                          height: 40,
-                          backgroundColor: "white",
-                        }}
-                        onChange={handleTimeRangeChange}
-                      >
-                        {options.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-              </MDBox>
-              <Paper>
-                <TableContainer component={Box}>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell align="center"><strong>Item Name</strong></TableCell>
-                        <TableCell align="center"><strong>Quantity</strong></TableCell>
-                        <TableCell align="center"><strong>Measured In</strong></TableCell>
-                        <TableCell align="center"><strong>Requested By</strong></TableCell>
-                        <TableCell align="center"><strong>Date</strong></TableCell>
-                        <TableCell align="center"><strong>Approved By</strong></TableCell>
-                        <TableCell align="center"><strong>Action</strong></TableCell>
-                      </TableRow>
-                      {approvalRequests &&
-                        approvalRequests.map((data) => (
-                          <TableRow key={data.id}>
-                            <TableCell>{data.name}</TableCell>
-                            <TableCell>{data.quantity}</TableCell>
-                            <TableCell>{data.measuredIn}</TableCell>
-                            <TableCell>{data.requestedBy}</TableCell>
-                            <TableCell>{data.date}</TableCell>
-                            <TableCell>
-                              <Input
-                                value={approvedBy[data.id] || ""}
-                                onChange={(e) =>
-                                  setApprovedBy({
-                                    ...approvedBy,
-                                    [data.id]: e.target.value,
-                                  })
-                                }
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                onClick={() => handleApproveToggle(data.id)}
-                                variant="outlined"
-                                color="primary"
-                              >
-                                Approve
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <Box mt={2} display="flex" justifyContent="center">
-                  <Pagination
-                    count={lastPage}
-                    page={currentPage}
-                    onChange={handlePageChange}
-                    shape="rounded"
-                    color="primary"
-                  />
-                </Box>
-              </Paper>
-            </Card>
-          </Grid>
+                    )}
+                </MDBox>
+              </div>
+            )}
+          </MDBox>
+
+          <MDBox textAlign="center">
+            {loading ? <CircularProgress color="primary" /> : ""}
+          </MDBox>
         </Grid>
-      </MDBox>
+      </Grid>
+      <Pagination
+        component={Link}
+        count={lastPage}
+        onChange={handlePageChange}
+        variant="outlined"
+        shape="rounded"
+        color="primary"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "20px",
+        }}
+      />
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{ style: { padding: "15px" } }}
+      >
+        <DialogTitle id="alert-dialog-title">የእቃ ማውጫ ማረጋገጫ </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            ድርጊቱን ለማከናወን እርግጠኛ ነዎት ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ justifyContent: "space-between" }}>
+          <MDButton onClick={() => setOpenDialog(false)} color="error">
+            አይደለሁም
+          </MDButton>
+          <MDButton onClick={handleConfirmation} color="primary">
+            አዎ
+          </MDButton>
+        </DialogActions>
+      </Dialog>
+
       <Footer />
     </DashboardLayout>
   );

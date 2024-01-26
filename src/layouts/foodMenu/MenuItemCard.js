@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import "react-confirm-alert/src/react-confirm-alert.css";
 
@@ -9,75 +9,125 @@ import MDButton from "../../components/MDButton";
 
 import { Segment } from "semantic-ui-react";
 import { IMG_BASE_URL } from "../../appconfig";
-const primaryColor = "#425B58"; // Your primary color
-const secondaryColor = "#FFC2A0"; // Your secondary color
-// Create a common card component for menu and drink items
-function MenuItemCard({ item, onEdit, onDelete, onToggleAvailability }) {
+import MDInput from "../../components/MDInput";
+import colors from "../../assets/theme/base/colors";
+
+function MenuItemCard({ item, onEdit, onDelete, onSet, userData }) {
+  const [isSetButtonVisible, setSetButtonVisible] = useState(false);
+  const [availableAmount, setAvailableAmount] = useState(item.available_amount);
+  const electron = window.require("electron");
+  const ipcRenderer = electron.ipcRenderer;
+
+  const handleInputChange = (event) => {
+    setAvailableAmount(event.target.value);
+    setSetButtonVisible(true);
+  };
+
+  const handleSetClick = () => {
+    // Call the onSet function and pass the availableAmount
+    onSet(item, availableAmount);
+    setSetButtonVisible(false);
+  };
   return (
-    <Card>
+    <Card style={{ marginTop: "15px" }}>
       <MDBox
         mx={2}
         mt={-3}
         py={3}
         px={2}
         variant="gradient"
-        bgColor="info"
+        bgColor="dark"
         borderRadius="lg"
         coloredShadow="info"
       >
+        <MDBox textAlign="center" mx={30} mt={-8} py={2}>
+          <MDButton
+            variant="contained"
+            color={item.is_available ? "primary" : "error"}
+            style={{
+              marginRight: "15px",
+              borderRadius: "50%",
+              padding: "2em 2em",
+              fontSize: "0.6em",
+              cursor: "none",
+            }}
+          >
+            {item.is_available ? "የሚገኝ" : "የማይገኝ"}
+          </MDButton>
+        </MDBox>
         <MDTypography variant="h4" color="white">
           {item.name}
         </MDTypography>
         <MDTypography variant="h6" color="white">
-          {item.meal_type || item.drink_type}
+          {item.meal_type.toString() === "breakfast"
+            ? "ቁርስ"
+            : item.meal_type.toString() === "lunch"
+            ? " ምሳ"
+            : "መጠጥ"}
         </MDTypography>
       </MDBox>
       <MDBox pt={3} pb={3} px={2}>
         <img
-          src={`${IMG_BASE_URL}${item.image_url.toString()}`}
+          src={`data:image;base64,${item.image_data}`}
           alt={item.name}
-          style={{ width: "100%", height: "auto" }}
+          style={{ width: "100%", height: "200px" }}
         />
         <MDTypography variant="body1">{item.description}</MDTypography>
         <MDTypography variant="body2">
-          Employee Price: {item.price_for_employee} | Guest Price:
+          የሰራተኛ ዋጋ: {item.price_for_employee} | የእንግዳ ዋጋ፡
           {item.price_for_guest}
         </MDTypography>
         <MDTypography variant="body2">
-          {item.is_fasting === 1 ? "Fasting" : "Non-Fasting"}
+          {item.is_fasting === 1 ? "የጾም" : "የፍስክ"}
         </MDTypography>
+        {userData.user.role === "dean" ? (
+          <MDInput
+            type="number"
+            label="ያለው መጠን"
+            value={availableAmount}
+            onChange={handleInputChange}
+          />
+        ) : (
+          <MDTypography variant="body2">
+            {" "}
+            ያለው መጠን : {availableAmount}{" "}
+          </MDTypography>
+        )}
         <MDBox textAlign="center" mb={2} mt={2}>
-        <MDBox textAlign="center" mb={2} mt={2}>
-          <MDButton
-            variant="gradient"
-            color={item.is_available ? "info" : "error"}
-            onClick={() => onToggleAvailability(item.id)}
-            style={{ marginRight: "15px" }}
-          >
-            {item.is_available ? "Available" : "Not Available"}
-          </MDButton>
-        </MDBox>
-        <Segment clearing basic>
-          <MDButton
-            variant="gradient"
-            color="info"
-            onClick={() => onEdit(item)}
-            style={{ marginRight: "15px" }}
-          >
-            Update
-          </MDButton>
-          <MDButton
-            variant="gradient"
-            onClick={() => onDelete(item.id)}
-            style={{
-              marginLeft: "30px",
-              backgroundColor: "#F44336",
-              color: "white",
-            }}
-          >
-            Delete
-          </MDButton>
-        </Segment>
+          {userData.user.role === "student" && (
+            <Segment clearing basic>
+              <MDButton
+                color="primary"
+                onClick={() => onEdit(item)}
+                style={{ marginRight: "15px" }}
+              >
+                ቀይር
+              </MDButton>
+              <MDButton
+                variant="gradient"
+                color="error"
+                onClick={() => onDelete(item.id)}
+                style={{
+                  marginLeft: "30px",
+
+                  color: "white",
+                }}
+              >
+                ሰርዝ
+              </MDButton>
+            </Segment>
+          )}
+          <MDBox mt={2} display="flex" gap="10px">
+            {isSetButtonVisible && (
+              <MDButton
+                onClick={handleSetClick}
+                variant="contained"
+                color="info"
+              >
+                አድርግ
+              </MDButton>
+            )}
+          </MDBox>
         </MDBox>
       </MDBox>
     </Card>

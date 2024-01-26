@@ -15,25 +15,22 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import CafeCommetteDashboard from "../CafeCommetteDashboard";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
 
-function InventoryList() {
+function ShowApproval() {
   const [inventoryList, setInventoryList] = useState([]); // Initialize as an empty array
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
-
   const fetchInventoryList = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/getinventory`, {
+      const response = await axios.get(`${BASE_URL}/allowedrequests`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(response.data);
-      setInventoryList(response.data[`data`]);
-    } catch (error) {
-      console.error(error);
-    }
+
+      setInventoryList(response.data.data); // Update this line to set the inventoryList state correctly
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -42,7 +39,7 @@ function InventoryList() {
 
   return (
     <DashboardLayout>
-      {userData.user.role == "cashier" ? (
+      {userData.user.role == "coordinator" ? (
         <DashboardNavbar absolute isMini />
       ) : (
         <NavbarForCommette />
@@ -65,18 +62,37 @@ function InventoryList() {
                 <strong>Item Price</strong>
               </TableCell>
               <TableCell>
-                <strong>Approved By</strong>
+                <strong>Total Price</strong>
               </TableCell>
+              <TableCell>
+                <strong>Total price in word</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Requested By</strong>
+              </TableCell>
+              {/* <TableCell>
+                <strong>Reccomendation</strong>
+              </TableCell> */}
+              {/* <TableCell>
+                    <strong>Date</strong>
+                  </TableCell> */}
+              {/* <TableCell>
+                <strong>approved</strong>
+              </TableCell> */}
             </TableRow>
-            {inventoryList.map((data) => (
-              <TableRow key={data.id}>
-                <TableCell>{data.name}</TableCell>
-                <TableCell>{data.quantity}</TableCell>
-                <TableCell>{data.measuredIn}</TableCell>
-                <TableCell>{data.itemPrice}</TableCell>
-                <TableCell>{data.approvedBy}</TableCell>
-              </TableRow>
-            ))}
+            {inventoryList &&
+              inventoryList.map((data) => (
+                <TableRow key={data.id}>
+                  <TableCell>{data.name}</TableCell>
+                  <TableCell>{data.quantity}</TableCell>
+                  <TableCell>{data.measuredIn}</TableCell>
+                  <TableCell>{data.pricePerItem}</TableCell>
+                  <TableCell>{data.totalPrice}</TableCell>
+                  <TableCell>{data.totalPriceInWord}</TableCell>
+                  <TableCell>{data.requestedBy}</TableCell>
+                  {/* <TableCell>{data.is_allowed}</TableCell> */}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -84,4 +100,4 @@ function InventoryList() {
   );
 }
 
-export default InventoryList;
+export default ShowApproval;

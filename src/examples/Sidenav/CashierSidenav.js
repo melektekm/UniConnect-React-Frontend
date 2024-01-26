@@ -10,19 +10,16 @@ import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
-import Tables from "../../layouts/tables";
 import Billing from "../../layouts/billing";
-import EmployeeList from "../../layouts/profile";
-import AddEmployee from "../../layouts/addEmployee";
-import AddMenuItem from "../../layouts/menuEntry";
-import FoodMenu from "../../layouts/foodMenu";
 import BuyFood from "../../layouts/buyFood";
-import InventoryEntry from "../../layouts/inventory";
 import Constraint from "../../layouts/constraints";
+import colors from "../../assets/theme/base/colors"; 
 import Deposit from "../../layouts/deposit";
-import { Icon } from "semantic-ui-react";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import BuyFoodDepartment from "../../layouts/buyFood/buyFoodDepartment";
+import DepartmentBilling from "../../layouts/billing/DepartmentBilling";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import {
   Dashboard as DashboardIcon,
   Add as AddIcon,
@@ -51,7 +48,10 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-
+import CashierOrder from "../../layouts/tables/CashierOrderView";
+import FoodMenu from "../../layouts/foodMenu";
+import StockApproval from "../../layouts/showApprovedStock";
+import MDButton from "../../components/MDButton";
 
 function CashierSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
@@ -62,17 +62,20 @@ function CashierSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const collapseName = location.pathname.replace("/", "");
-  
+  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
+
   const handleLogout = () => {
     setOpenLogoutDialog(true);
   };
 
-  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
-
   const handleOpenLogoutDialog = () => {
     setOpenLogoutDialog(true);
   };
-  
+  const iconStyle = {
+    
+    color: colors.badgeColors.primary.main, 
+  };
+
   const handleCloseLogoutDialog = () => {
     setOpenLogoutDialog(false);
   };
@@ -81,84 +84,84 @@ function CashierSidenav({ brand, brandName, selectedMenu, ...rest }) {
       await ipcRenderer.invoke("clear-user");
       navigate("/authentication/sign-in");
     } catch (error) {
-      console.error("Failed to clear token:", error);
+    
     }
   };
   const routes = [
     {
       type: "collapse",
-      name: "Dashboard",
+      name: "ዳሽቦርድ",
       key: "dashboard",
-      icon: <DashboardIcon fontSize="small" />,
+      icon: <DashboardIcon fontSize="small" style={iconStyle}/>,
       route: "/dashboard",
       component: <Dashboard />,
     },
     {
       type: "collapse",
-      name: "Orders",
-      key: "orders",
-      icon: <TableViewOutlinedIcon fontSize="small" />,
-      route: "/tables",
-      component: <Tables />,
+      name: "ትዕዛዞች",
+      key: "cashierOrder",
+      icon: <TableViewOutlinedIcon fontSize="small" style={iconStyle}/>,
+      route: "/cashierOrder",
+      component: <CashierOrder />,
     },
-
     {
       type: "collapse",
-      name: "Food Menu",
+      name: "የምግብ ዝርዝር",
       key: "food_menu",
-      icon: <FastfoodIcon fontSize="small" />,
-      route: "/foodMenu",
+      icon: <FastfoodIcon fontSize="small" style={iconStyle}/>,
+      route: "/food_menu",
       component: <FoodMenu />,
     },
     {
       type: "collapse",
-      name: "Menu Entry",
-      key: "add_food",
-      icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/addfood",
-      component: <AddMenuItem />,
-    },
-    {
-      type: "collapse",
-      name: "Buy Food",
-      key: "buy_food",
-      icon: <ShoppingCartIcon fontSize="small" />,
+      name: "ምግብ መግዣ",
+      key: "buyFood",
+      icon: <ShoppingCartIcon fontSize="small" style={iconStyle}/>,
       route: "/buyFood",
       component: <BuyFood />,
     },
     {
       type: "collapse",
-      name: "Billing",
-      key: "billing",
-      icon: <ReceiptLongIcon fontSize="small" />,
-      route: "/billing",
-      component: <Billing />,
+      name: "ለዲፓርትመንት ምግብ መግዣ",
+      key: "buyFoodDepartment",
+      icon: <ShoppingCartIcon fontSize="small" style={iconStyle}/>,
+      route: "/buyFoodDepartment",
+      component: <BuyFoodDepartment />,
     },
     {
       type: "collapse",
-      name: "Report",
-      key: "report",
-      icon: <AssessmentIcon fontSize="small" />,
-      route: "/report",
-      component: <ReportList />,
+      name: "ለእንግዳ ደረሰኝ",
+      key: "billingCashier",
+      icon: <ReceiptLongIcon fontSize="small" style={iconStyle}/>,
+      route: "/billingCashier",
+      component: <Billing showEditColumn={false} />,
     },
+
     {
       type: "collapse",
-      name: "Constraint",
-      key: "constraint",
-      icon: <ManageAccountsIcon fontSize="small" />,
-      route: "/constraint",
-      component: <Constraint />,
+      name: "ለዲፓርትመንት ደረሰኝ",
+      key: "departmentBilling",
+      icon: <ReceiptLongIcon fontSize="small" style={iconStyle}/>,
+      route: "/departmentBilling",
+      component: <DepartmentBilling />,
     },
+
     {
       type: "collapse",
-      name: "Deposit",
+      name: "የገንዘብ አያያዝ",
       key: "deposit",
-      icon: <AttachMoneyIcon fontSize="small" />,
+      icon: <AttachMoneyIcon fontSize="small" style={iconStyle}/>,
       route: "/deposit",
       component: <Deposit />,
     },
-
+    {
+      type: "collapse",
+      name: "የመተግበሪያ ገጽታ",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" style={iconStyle} />,
+      route: "/showApprovedStock",
+      component: <StockApproval />,
+    },
   ];
 
   let textColor = "white";
@@ -281,12 +284,7 @@ function CashierSidenav({ brand, brandName, selectedMenu, ...rest }) {
       }}
     >
       <MDBox pt={3} pb={1} px={4} textAlign="center">
-        <MDBox
-          component={NavLink}
-          to="/cashierdashboard"
-          display="flex"
-          alignItems="center"
-        >
+        <MDTypography component="h4" display="flex" alignItems="center">
           {brand && (
             <MDBox component="img" src={brand} alt="Brand" width="2rem" />
           )}
@@ -303,7 +301,7 @@ function CashierSidenav({ brand, brandName, selectedMenu, ...rest }) {
               {brandName}
             </MDTypography>
           </MDBox>
-        </MDBox>
+        </MDTypography>
       </MDBox>
       <Divider
         light={
@@ -314,8 +312,8 @@ function CashierSidenav({ brand, brandName, selectedMenu, ...rest }) {
       <List>{renderRoutes}</List>
       <Link to="#" onClick={handleOpenLogoutDialog}>
         <SidenavCollapse
-          name="Logout"
-          icon={<LogoutIcon fontSize="small">person</LogoutIcon>}
+          name="ውጣ"
+          icon={<LogoutIcon fontSize="small" style={iconStyle}>person</LogoutIcon>}
         />
       </Link>
       <Dialog
@@ -323,20 +321,29 @@ function CashierSidenav({ brand, brandName, selectedMenu, ...rest }) {
         onClose={handleCloseLogoutDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{ style: { padding: "15px" } }}
       >
-        <DialogTitle id="alert-dialog-title">Confirm Logout</DialogTitle>
+        <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to logout?
+            እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseLogoutDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleLogoutConfirmed} color="primary" autoFocus>
-            Logout
-          </Button>
+        <DialogActions style={{ justifyContent: "space-between" }}>
+          <MDButton
+            onClick={handleCloseLogoutDialog}
+            color="info"
+            style={{ borderRadius: "15%" }}
+          >
+            አይ
+          </MDButton>
+          <MDButton
+            onClick={handleLogoutConfirmed}
+            color="error"
+            style={{ borderRadius: "15%" }}
+          >
+            ውጣ
+          </MDButton>
         </DialogActions>
       </Dialog>
     </SidenavRoot>

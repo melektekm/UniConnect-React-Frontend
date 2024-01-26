@@ -12,6 +12,7 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
+
 import CafeCommetteDashboard from "../CafeCommetteDashboard";
 import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
 import {
@@ -24,6 +25,7 @@ import {
 import { Button, TextField } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
 
 function InventoryEntry() {
   const [name, setItemName] = useState("");
@@ -46,17 +48,23 @@ function InventoryEntry() {
   const CircularLoader = () => <CircularProgress size={24} color="inherit" />;
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
-  const isInputValid = (input) => {
-    const letterRegex = /^[A-Za-z\s]*$/; // Allow letters and spaces, including an empty string
-    return letterRegex.test(input);
+  const isInputValid = (input, fieldName) => {
+    if (fieldName === "name" || fieldName === "approvedBy") {
+      // Allow letters and spaces in "Item Name" and "Approved By"
+      const letterRegex = /^[A-Za-z\s]*$/;
+      return letterRegex.test(input);
+    } else if (fieldName === "quantity" || fieldName === "itemPrice") {
+      // Allow numbers in "Quantity" and "Item Price"
+      const numberRegex = /^[0-9]*$/;
+      return numberRegex.test(input);
+    }
   };
+
   const handleFormChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "name" || name === "approvedBy") {
-      if (!isInputValid(value)) {
-        return; // Prevent updating state for invalid input
-      }
+    if (!isInputValid(value, name)) {
+      return; // Prevent updating state for invalid input
     }
 
     // Update the state directly based on the input name
@@ -66,20 +74,25 @@ function InventoryEntry() {
       setApprovedBy(value);
     } else {
       // For other input fields, you can handle them similarly
-      // e.g., setQuantity(value), setItemPrice(value), etc.
+      if (name === "quantity") {
+        setQuantity(value);
+      } else if (name === "itemPrice") {
+        setItemPrice(value);
+      }
     }
   };
+
   const handleFormSubmit = async () => {
     const newErrorMessages = {
-      name: name ? "" : "Item Name is required.",
-      quantity: quantity ? "" : "Quantity is required.",
-      measuredIn: selectedMeasuredIn !== "" ? "" : "Measured In is required",
-      itemPrice: itemPrice ? "" : "Item Price is required.",
-      approvedBy: approvedBy ? "" : "Approved By is required.",
+      name: name ? "" : "የእቃው አይነት ስም ያስፈልጋል",
+      quantity: quantity ? "" : "ብዛት ያስፈልጋል",
+      measuredIn: selectedMeasuredIn !== "" ? "" : "መለኪያ አይነት",
+      itemPrice: itemPrice ? "" : "የአንዱ ዋጋ ያስፈልጋል",
+      approvedBy: approvedBy ? "" : "የፈቀደው ስም ያስፈልጋል",
     };
     setErrorMessages(newErrorMessages);
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
-      setErrorMessage("Please fill in all fields.");
+      setErrorMessage("እባክዎ ሁሉንም መስኮች ይሙሉ።");
       setOpen(true);
       return;
     }
@@ -102,7 +115,7 @@ function InventoryEntry() {
       );
       setLoading(false);
       if (response.data) {
-        setErrorMessage("Items added successfully!");
+        setErrorMessage("እቃዎች በተሳካ ሁኔታ ታክለዋል!");
         setOpen(true);
         setItemName("");
         setQuantity("");
@@ -110,19 +123,19 @@ function InventoryEntry() {
         setItemPrice("");
         setApprovedBy("");
       } else {
-        setErrorMessage("Registration response does not contain data.");
+        setErrorMessage("የምዝገባ ምላሽ አልያዘም።");
         setOpen(true);
       }
     } catch (error) {
       if (error.response && error.response.data) {
         const serverErrorMessages = error.response.data.errors;
-        let errorMessage = "Registration failed: ";
+        let errorMessage = "ምዝገባ አልተሳካም: ";
         for (const [key, value] of Object.entries(serverErrorMessages)) {
           errorMessage += `${key}: ${value[0]}, `;
         }
         setErrorMessage(errorMessage);
       } else {
-        setErrorMessage("Registration failed: " + error);
+        setErrorMessage("ምዝገባ አልተሳካም: " + error);
       }
       setOpen(true);
       setLoading(false);
@@ -137,7 +150,7 @@ function InventoryEntry() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Notification"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"ማስታወቂያ"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {errorMessage}
@@ -152,32 +165,28 @@ function InventoryEntry() {
             color="primary"
             autoFocus
           >
-            Close
+            ዝጋ
           </Button>
         </DialogActions>
       </Dialog>
-      {userData.user.role === "cashier" ? (
-        <DashboardNavbar absolute isMini />
-      ) : (
-        <NavbarForCommette />
-      )}
-      <CafeCommetteDashboard />
+      <NavbarForCommette />
+      <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
               <MDBox
                 mx={2}
-                mt={-3}
+                mt={2}
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="dark"
                 borderRadius="lg"
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  Inventory Items Entry
+                  የእቃዎች ማስገቢያ ቅጽ
                 </MDTypography>
               </MDBox>
               <MDBox pt={3} pb={3} px={2}>
@@ -185,7 +194,7 @@ function InventoryEntry() {
                   <MDBox mb={2}>
                     <MDInput
                       type="text"
-                      label="Item Name"
+                      label="የእቃው አይነት ስም"
                       variant="standard"
                       fullWidth
                       value={name}
@@ -200,7 +209,7 @@ function InventoryEntry() {
                   <MDBox mb={2}>
                     <MDInput
                       type="number"
-                      label="Quantity"
+                      label="ብዛት"
                       variant="standard"
                       fullWidth
                       value={quantity}
@@ -215,7 +224,7 @@ function InventoryEntry() {
                   <MDBox mb={2}>
                     <TextField
                       select
-                      label="Measured In"
+                      label="መለኪያ"
                       variant="standard"
                       fullWidth
                       value={selectedMeasuredIn}
@@ -239,7 +248,7 @@ function InventoryEntry() {
                   <MDBox mb={2}>
                     <MDInput
                       type="number"
-                      label="Item Price"
+                      label="የአንዱ ዋጋ"
                       variant="standard"
                       fullWidth
                       value={itemPrice}
@@ -254,7 +263,7 @@ function InventoryEntry() {
                   <MDBox mb={2}>
                     <MDInput
                       type="text"
-                      label="Approved By"
+                      label="የፈቀደው ስም"
                       variant="standard"
                       fullWidth
                       value={approvedBy}
@@ -273,7 +282,7 @@ function InventoryEntry() {
                       color="info"
                       onClick={handleFormSubmit}
                     >
-                      {loading ? <CircularLoader /> : "Submit"}
+                      {loading ? <CircularLoader /> : "አስገባ"}
                     </MDButton>
                   </MDBox>
                 </MDBox>

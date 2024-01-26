@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 // react-router-dom components
-import React from "react";
+import React, {useEffect} from "react";
 import { Link } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
@@ -27,22 +27,15 @@ import Icon from "@mui/material/Icon";
 // Material Dashboard 2 React components
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
+import HomeIcon from '@mui/icons-material/Home';
 
-function Breadcrumbs({ icon, title, route, light }) {
+function Breadcrumbs({ icon, title, route, light}) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync('get-user');
   const routes = route.slice(0, -1);
 
-  function handleRoute(){
-    if(userData.user.role == 'admin'){
-      return '/mainDashboard'
-    }else if(userData.user.role == 'cashier'){
-      return '/cashierdashboard'
-    }else if(userData.user.role == 'communittee_admin'){
-      return '/cafeCommetteDashboard'
-    }
-  }
+
 
   return (
     <MDBox mr={{ xs: 0, xl: 8 }}>
@@ -53,7 +46,7 @@ function Breadcrumbs({ icon, title, route, light }) {
           },
         }}
       >
-        <Link to={handleRoute}>
+
           <MDTypography
             component="span"
             variant="body2"
@@ -61,9 +54,9 @@ function Breadcrumbs({ icon, title, route, light }) {
             opacity={light ? 0.8 : 0.5}
             sx={{ lineHeight: 0 }}
           >
-            <Icon>{icon}</Icon>
+            <HomeIcon>{icon}</HomeIcon>
           </MDTypography>
-        </Link>
+
         {routes.map((el) => (
           <Link to={`/${el}`} key={el}>
             <MDTypography
@@ -86,7 +79,7 @@ function Breadcrumbs({ icon, title, route, light }) {
           color={light ? "white" : "dark"}
           sx={{ lineHeight: 0 }}
         >
-          {title.replace("-", " ")}
+          {title}
         </MDTypography>
       </MuiBreadcrumbs>
       <MDTypography
@@ -96,7 +89,7 @@ function Breadcrumbs({ icon, title, route, light }) {
         color={light ? "white" : "dark"}
         noWrap
       >
-        {title.replace("-", " ")}
+        {title}
       </MDTypography>
     </MDBox>
   );
