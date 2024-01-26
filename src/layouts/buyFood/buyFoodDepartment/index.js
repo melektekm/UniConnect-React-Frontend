@@ -10,7 +10,7 @@ import MDBox from "../../../components/MDBox";
 import MDTypography from "../../../components/MDTypography";
 import Icon from "@mui/material/Icon";
 import CashierSidenav from "../../../examples/Sidenav/CashierSidenav";
-
+import Sidenav from "../../../examples/Sidenav/AdminSidenav";
 function BuyFoodDepartment() {
   return (
     <DashboardLayout>
