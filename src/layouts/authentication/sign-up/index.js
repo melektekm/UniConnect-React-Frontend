@@ -194,6 +194,7 @@ function Cover() {
                 {roleError && <FormHelperText>{roleError}</FormHelperText>}
                 {/* <FormHelperText>{passwordError}</FormHelperText> */}
               </FormControl>
+              </FormControl>
             </MDBox>
             <MDBox mb={2}>
               <MDInput

@@ -24,13 +24,13 @@ import MDInput from "../../../components/MDInput";
 import Icon from "@mui/material/Icon";
 import Typography from "@mui/material/Typography";
 import { Select, MenuItem } from "@mui/material";
-import CashierSidenav from "../../../examples/Sidenav/CashierSidenav";
+// import CashierSidenav from "../../../examples/Sidenav/CashierSidenav";
 import AddIcon from "@mui/icons-material/Add";
 import MenuItemCard from "../../foodMenu/MenuItemCard";
-
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import { EthDateTime } from "ethiopian-calendar-date-converter";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import Sidenav from "../../../examples/Sidenav/AdminSidenav";
 import {
   CardContent,
   IconButton,
