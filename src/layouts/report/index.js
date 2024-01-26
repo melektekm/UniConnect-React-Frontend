@@ -16,6 +16,7 @@ import Footer from "../../examples/Footer";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 // import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import { Document, Page, Text, View, pdf, Font } from "@react-pdf/renderer";

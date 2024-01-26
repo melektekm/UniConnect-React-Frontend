@@ -80,9 +80,7 @@ function DashboardNavbar({
     try {
       await ipcRenderer.invoke("clear-user");
       navigate("/authentication/sign-in");
-    } catch (error) {
-     
-    }
+    } catch (error) {}
   };
   const handleOpenLogoutDialog = () => {
     setOpenLogoutDialog(true);
@@ -103,7 +101,7 @@ function DashboardNavbar({
 
   const navigate = useNavigate();
   const location = useLocation();
-  let routeName = '';
+  let routeName = "";
 
   routes.forEach((route) => {
     if (useLocation().pathname === route.route) {
@@ -162,7 +160,7 @@ function DashboardNavbar({
     >
       <NotificationItem
         onClick={handleOpenLogoutDialog}
-        icon={<ExitToAppIcon>ውጣ</ExitToAppIcon>}
+        icon={<ExitToAppIcon>Log out</ExitToAppIcon>}
         title="Log out"
       />
     </Menu>
@@ -238,7 +236,7 @@ function DashboardNavbar({
                   navigate("/searchForCashier");
                 }}
               >
-                ፈልግ
+                search
               </MDButton>
             </MDBox>
             <MDBox color={light ? "white" : "inherit"} textAlign="center">
@@ -285,33 +283,43 @@ function DashboardNavbar({
                 )}
               </IconButton>
               {renderMenu()}
-              <MDTypography style = {{fontSize: "0.67em"}}>ሰላም {userData.user.name}</MDTypography>
+              <MDTypography style={{ fontSize: "0.67em" }}>
+                ሰላም {userData.user.name}
+              </MDTypography>
             </MDBox>
           </MDBox>
         )}
       </Toolbar>
       <Dialog
-  open={openLogoutDialog}
-  onClose={handleCloseLogoutDialog}
-  aria-labelledby="alert-dialog-title"
-  aria-describedby="alert-dialog-description"
-  PaperProps={{ style: { padding: "15px" } }}
->
-  <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
-  <DialogContent>
-    <DialogContentText id="alert-dialog-description">
-      እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
-    </DialogContentText>
-  </DialogContent>
-  <DialogActions style={{ justifyContent: "space-between" }}>
-    <MDButton onClick={handleCloseLogoutDialog} color="info" style={{ borderRadius: "15%" }}>
-      አይ
-    </MDButton>
-    <MDButton onClick={handleLogout} color="error" style={{ borderRadius: "15%" }}>
-      ውጣ
-    </MDButton>
-  </DialogActions>
-</Dialog>
+        open={openLogoutDialog}
+        onClose={handleCloseLogoutDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{ style: { padding: "15px" } }}
+      >
+        <DialogTitle id="alert-dialog-title">Notification</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            are you sure you want to logout?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ justifyContent: "space-between" }}>
+          <MDButton
+            onClick={handleCloseLogoutDialog}
+            color="info"
+            style={{ borderRadius: "15%" }}
+          >
+            cancel
+          </MDButton>
+          <MDButton
+            onClick={handleLogout}
+            color="error"
+            style={{ borderRadius: "15%" }}
+          >
+            logout
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </AppBar>
   );
 }

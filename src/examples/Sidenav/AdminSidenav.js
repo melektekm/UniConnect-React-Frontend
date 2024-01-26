@@ -193,14 +193,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/addEmployee",
       component: <AddEmployee />,
     },
-    {
-      type: "collapse",
-      name: " guest billing",
-      key: "billing",
-      icon: <ReceiptLongIcon fontSize="small" />,
-      route: "/billing",
-      component: <Billing />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: " guest billing",
+    //   key: "billing",
+    //   icon: <ReceiptLongIcon fontSize="small" />,
+    //   route: "/billing",
+    //   component: <Billing />,
+    // },
     {
       type: "collapse",
       name: "employee list",
