@@ -91,20 +91,25 @@ function ViewCourses() {
                           <strong>Course Name</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Department</strong>
+                          <strong>Description</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Instructor</strong>
+                          <strong>Credit Hour</strong>
                         </TableCell>
-                        {/* Add more headers based on your course data model */}
+                        <TableCell align="center">
+                          <strong>Year</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong>Semester</strong>
+                        </TableCell>
                       </TableRow>
                       {courses.map((course) => (
-                        <TableRow key={course.courseCode}>
-                          <TableCell align="center">{course.courseCode}</TableCell>
-                          <TableCell align="center">{course.courseName}</TableCell>
-                          <TableCell align="center">{course.department}</TableCell>
-                          <TableCell align="center">{course.instructor}</TableCell>
-                          {/* Add more cells based on your course data model */}
+                        <TableRow key={course.id}>
+                          <TableCell align="center">{course.course_code}</TableCell>
+                          <TableCell align="center">{course.course_name}</TableCell>
+                          <TableCell align="center">{course.course_description}</TableCell>
+                          <TableCell align="center">{course.credit_hours}</TableCell>
+                          <TableCell align="center">{course.credit_hours}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
