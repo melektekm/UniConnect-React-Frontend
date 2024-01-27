@@ -119,7 +119,7 @@ function AssignmentsPage() {
     }
   };
 
-  const filteredAssignments = assignments.filter((assignment) => {
+  const filteredAssignments = (assignments || []).filter((assignment) => {
     if (filterStatus === "all") {
       return true;
     }
@@ -194,68 +194,71 @@ function AssignmentsPage() {
                           <strong>Actions</strong>
                         </TableCell>
                       </TableRow>
-                      {filteredAssignments.map((assignment) => (
-                        <TableRow key={assignment.assignmentId}>
-                          <TableCell>{assignment.name}</TableCell>
-                          <TableCell>{assignment.courseName}</TableCell>
-                          <TableCell>
-                            {assignment.assignmentDescription}
-                          </TableCell>
-                          <TableCell>{assignment.date}</TableCell>
-                          <TableCell>{assignment.status}</TableCell>
-                          <TableCell>
-                            <Box display="flex">
-                              <Button
-                                variant="contained"
-                                color="success"
-                                startIcon={<CheckCircle />}
-                                onClick={() =>
-                                  handleStatusChange(
-                                    assignment.assignmentId,
-                                    "sent"
-                                  )
-                                }
-                              >
-                                Mark as Sent
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="error"
-                                startIcon={<Cancel />}
-                                onClick={() =>
-                                  handleStatusChange(
-                                    assignment.assignmentId,
-                                    "unsent"
-                                  )
-                                }
-                              >
-                                Mark as Unsent
-                              </Button>
-                              <Button
-                                variant="contained"
-                                startIcon={<Edit />}
-                                onClick={() =>
-                                  handleEditAssignment(assignment.assignmentId)
-                                }
-                              >
-                                Edit
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="error"
-                                startIcon={<Delete />}
-                                onClick={() =>
-                                  handleDeleteAssignment(
-                                    assignment.assignmentId
-                                  )
-                                }
-                              >
-                                Delete
-                              </Button>
-                            </Box>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {assignments &&
+                        filteredAssignments.map((assignment) => (
+                          <TableRow key={assignment.assignmentId}>
+                            <TableCell>{assignment.name}</TableCell>
+                            <TableCell>{assignment.courseName}</TableCell>
+                            <TableCell>
+                              {assignment.assignmentDescription}
+                            </TableCell>
+                            <TableCell>{assignment.date}</TableCell>
+                            <TableCell>{assignment.status}</TableCell>
+                            <TableCell>
+                              <Box display="flex">
+                                <Button
+                                  variant="contained"
+                                  color="success"
+                                  startIcon={<CheckCircle />}
+                                  onClick={() =>
+                                    handleStatusChange(
+                                      assignment.assignmentId,
+                                      "sent"
+                                    )
+                                  }
+                                >
+                                  Mark as Sent
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="error"
+                                  startIcon={<Cancel />}
+                                  onClick={() =>
+                                    handleStatusChange(
+                                      assignment.assignmentId,
+                                      "unsent"
+                                    )
+                                  }
+                                >
+                                  Mark as Unsent
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  startIcon={<Edit />}
+                                  onClick={() =>
+                                    handleEditAssignment(
+                                      assignment.assignmentId
+                                    )
+                                  }
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="error"
+                                  startIcon={<Delete />}
+                                  onClick={() =>
+                                    handleDeleteAssignment(
+                                      assignment.assignmentId
+                                    )
+                                  }
+                                >
+                                  Delete
+                                </Button>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
