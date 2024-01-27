@@ -43,15 +43,15 @@ function ViewAssignments() {
       const response = await axios.get(`${BASE_URL}/getallassignments`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
         },
       });
-
-      setAssignments(response.data.data);
+      console.log(response.data);
+      if (response.data && response.data.assignments) {
+        setAssignments(response.data["assignments"]);
+      }
     } catch (error) {
       console.error("Error fetching assignments:", error);
     }
-
     setLoading(false);
   };
 
@@ -99,9 +99,9 @@ function ViewAssignments() {
                         <TableCell align="center">
                           <strong>Assignment Description</strong>
                         </TableCell>
-                        <TableCell align="center">
+                        {/* <TableCell align="center">
                           <strong>Course Name</strong>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell align="center">
                           <strong>Due Date</strong>
                         </TableCell>
@@ -110,21 +110,19 @@ function ViewAssignments() {
                         </TableCell>
                       </TableRow>
                       {assignments.map((assignment) => (
-                        <TableRow key={assignment.assignmentId}>
+                        <TableRow key={assignment.id}>
+                          <TableCell align="center">{assignment.id}</TableCell>
                           <TableCell align="center">
-                            {assignment.assignmentId}
+                            {assignment.ass_name}
                           </TableCell>
                           <TableCell align="center">
-                            {assignment.assignmentName}
+                            {assignment.Add_description}
                           </TableCell>
-                          <TableCell align="center">
-                            {assignment.assignmentDescription}
-                          </TableCell>
-                          <TableCell align="center">
+                          {/* <TableCell align="center">
                             {assignment.courseName}
-                          </TableCell>
+                          </TableCell> */}
                           <TableCell align="center">
-                            {assignment.dueDate}
+                            {assignment.due_date}
                           </TableCell>
                           <TableCell align="center">
                             <a
