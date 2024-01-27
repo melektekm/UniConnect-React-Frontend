@@ -45,13 +45,13 @@ function AssignmentsPage() {
           "Content-Type": "application/json",
         },
       });
-
-      setAssignments(response.data.data);
+      console.log(response.data);
+      if (response.data && response.data.assignments) {
+        setAssignments(response.data["assignments"]);
+      }
     } catch (error) {
       console.error("Error fetching assignments:", error);
-      setErrorMessage("Error fetching assignments");
     }
-
     setLoading(false);
   };
 
@@ -63,11 +63,11 @@ function AssignmentsPage() {
     setFilterStatus(event.target.value);
   };
 
-  const handleStatusChange = async (assignmentId, newStatus) => {
+  const handleStatusChange = async (id, newStatus) => {
     // Implement logic to update the status of the assignment on the server
     try {
-      await axios.put(
-        `${BASE_URL}/updateAssignmentStatus/${assignmentId}`,
+      await axios.post(
+        `${BASE_URL}/assignments/{id}/status`,
         { status: newStatus },
         {
           headers: {
@@ -80,7 +80,7 @@ function AssignmentsPage() {
       // Update the local state to reflect the change
       setAssignments((prevAssignments) =>
         prevAssignments.map((assignment) =>
-          assignment.assignmentId === assignmentId
+          assignment.id === id
             ? { ...assignment, status: newStatus }
             : assignment
         )
@@ -91,16 +91,16 @@ function AssignmentsPage() {
     }
   };
 
-  const handleEditAssignment = (assignmentId) => {
+  const handleEditAssignment = (id) => {
     // Implement logic to navigate to the edit assignment page
     // You may use React Router or any other navigation method
     // and pass the assignmentId as a parameter to the edit page.
   };
 
-  const handleDeleteAssignment = async (assignmentId) => {
+  const handleDeleteAssignment = async (id) => {
     // Implement logic to delete the assignment on the server
     try {
-      await axios.delete(`${BASE_URL}/deleteAssignment/${assignmentId}`, {
+      await axios.delete(`${BASE_URL}/deleteAssignment/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -109,9 +109,7 @@ function AssignmentsPage() {
 
       // Update the local state to reflect the deletion
       setAssignments((prevAssignments) =>
-        prevAssignments.filter(
-          (assignment) => assignment.assignmentId !== assignmentId
-        )
+        prevAssignments.filter((assignment) => assignment.id !== id)
       );
     } catch (error) {
       console.error("Error deleting assignment:", error);
@@ -171,97 +169,84 @@ function AssignmentsPage() {
                     </Select>
                   </FormControl>
                 </MDBox>
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>
-                          <strong>Assignment Name</strong>
-                        </TableCell>
-                        <TableCell>
+
+                <Table>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        <strong>Assignment Name</strong>
+                      </TableCell>
+                      {/* <TableCell>
                           <strong>Course Name</strong>
-                        </TableCell>
+                        </TableCell> */}
+                      <TableCell>
+                        <strong>Assignment Description</strong>
+                      </TableCell>
+                      <TableCell>
+                        <strong>Due Date</strong>
+                      </TableCell>
+                      <TableCell>
+                        <strong>Status</strong>
+                      </TableCell>
+                      <TableCell>
+                        <strong>Actions</strong>
+                      </TableCell>
+                    </TableRow>
+                    {filteredAssignments.map((assignment) => (
+                      <TableRow key={assignment.id}>
+                        <TableCell>{assignment.ass_name}</TableCell>
+                        {/* <TableCell>{assignment.courseName}</TableCell> */}
+                        <TableCell>{assignment.Add_description}</TableCell>
+                        <TableCell>{assignment.due_date}</TableCell>
+                        <TableCell>{assignment.status}</TableCell>
                         <TableCell>
-                          <strong>Assignment Description</strong>
-                        </TableCell>
-                        <TableCell>
-                          <strong>Due Date</strong>
-                        </TableCell>
-                        <TableCell>
-                          <strong>Status</strong>
-                        </TableCell>
-                        <TableCell>
-                          <strong>Actions</strong>
+                          <Box display="flex">
+                            <Button
+                              variant="contained"
+                              color="success"
+                              startIcon={<CheckCircle />}
+                              onClick={() =>
+                                handleStatusChange(assignment.id, "sent")
+                              }
+                            >
+                              Mark as Sent
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              startIcon={<Cancel />}
+                              onClick={() =>
+                                handleStatusChange(assignment.id, "unsent")
+                              }
+                            >
+                              Mark as Unsent
+                            </Button>
+                            <Button
+                              variant="contained"
+                              startIcon={<Edit />}
+                              onClick={() =>
+                                handleEditAssignment(assignment.id)
+                              }
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              startIcon={<Delete />}
+                              onClick={() =>
+                                handleDeleteAssignment(assignment.id)
+                              }
+                            >
+                              Delete
+                            </Button>
+                          </Box>
                         </TableCell>
                       </TableRow>
-                      {assignments &&
-                        filteredAssignments.map((assignment) => (
-                          <TableRow key={assignment.assignmentId}>
-                            <TableCell>{assignment.name}</TableCell>
-                            <TableCell>{assignment.courseName}</TableCell>
-                            <TableCell>
-                              {assignment.assignmentDescription}
-                            </TableCell>
-                            <TableCell>{assignment.date}</TableCell>
-                            <TableCell>{assignment.status}</TableCell>
-                            <TableCell>
-                              <Box display="flex">
-                                <Button
-                                  variant="contained"
-                                  color="success"
-                                  startIcon={<CheckCircle />}
-                                  onClick={() =>
-                                    handleStatusChange(
-                                      assignment.assignmentId,
-                                      "sent"
-                                    )
-                                  }
-                                >
-                                  Mark as Sent
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  color="error"
-                                  startIcon={<Cancel />}
-                                  onClick={() =>
-                                    handleStatusChange(
-                                      assignment.assignmentId,
-                                      "unsent"
-                                    )
-                                  }
-                                >
-                                  Mark as Unsent
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  startIcon={<Edit />}
-                                  onClick={() =>
-                                    handleEditAssignment(
-                                      assignment.assignmentId
-                                    )
-                                  }
-                                >
-                                  Edit
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  color="error"
-                                  startIcon={<Delete />}
-                                  onClick={() =>
-                                    handleDeleteAssignment(
-                                      assignment.assignmentId
-                                    )
-                                  }
-                                >
-                                  Delete
-                                </Button>
-                              </Box>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                    ))}
+                  </TableBody>
+                </Table>
+
                 {loading && <p>Loading...</p>}
                 {errorMessage && <p>{errorMessage}</p>}
               </Card>
