@@ -1,4 +1,3 @@
-
 // prop-types is a library for typechecking of props
 import React from "react";
 import PropTypes from "prop-types";
@@ -6,7 +5,6 @@ import PropTypes from "prop-types";
 // @mui material components
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
-
 
 // Material Dashboard 2 React components
 import MDBox from "../../../../components/MDBox";
@@ -37,16 +35,23 @@ function Footer({ light }) {
             color={light ? "white" : "text"}
             fontSize={size.sm}
           >
-            &copy; {new Date().getFullYear()}, made 
-            <MDBox fontSize={size.md} color={light ? "white" : "dark"} mb={-0.5} mx={0.25}>
-            </MDBox>
-            by 
+            &copy; {new Date().getFullYear()}, made
+            <MDBox
+              fontSize={size.md}
+              color={light ? "white" : "dark"}
+              mb={-0.5}
+              mx={0.25}
+            ></MDBox>
+            by
             <Link href="https://mint.gov.et/?lang=en" target="_blank">
-              <MDTypography variant="button" fontWeight="medium" color={light ? "white" : "dark"}>
-                MinT
+              <MDTypography
+                variant="button"
+                fontWeight="medium"
+                color={light ? "white" : "dark"}
+              >
+                {/* MinT */}
               </MDTypography>
             </Link>
-            
           </MDBox>
           <MDBox
             component="ul"
@@ -65,9 +70,11 @@ function Footer({ light }) {
               },
             })}
           >
-            
             <MDBox component="li" px={2} lineHeight={1}>
-              <Link href="https://www.creative-tim.com/presentation" target="_blank">
+              <Link
+                href="https://www.creative-tim.com/presentation"
+                target="_blank"
+              >
                 <MDTypography
                   variant="button"
                   fontWeight="regular"
@@ -77,8 +84,6 @@ function Footer({ light }) {
                 </MDTypography>
               </Link>
             </MDBox>
-            
-           
           </MDBox>
         </MDBox>
       </Container>

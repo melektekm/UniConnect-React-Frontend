@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Card,
@@ -35,7 +35,7 @@ function AssignmentUpload() {
 
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState(staticCourses); // Use static courses
-  const [courseId, setCourseId] = useState("");
+  const [courseid, setCourseId] = useState("");
   const [assignmentName, setAssignmentName] = useState("");
   const [assignmentDescription, setAssignmentDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -56,6 +56,31 @@ function AssignmentUpload() {
     border: "1px solid #007bff",
   };
 
+  useEffect(() => {
+    // Fetch courses when the component mounts
+    getCourses();
+  }, []);
+  console.log(accessToken);
+  const getCourses = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/get-all-courses`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.data) {
+        setCourses(response.data.courses);
+      } else {
+        setErrorMessage("Failed to fetch courses.");
+        setOpen(true);
+      }
+    } catch (error) {
+      setErrorMessage("Error fetching courses: " + error.message);
+      setOpen(true);
+    }
+  };
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -64,7 +89,7 @@ function AssignmentUpload() {
     e.preventDefault();
 
     // Check if all fields are filled
-    if (!courseId || !assignmentName || !dueDate || !file) {
+    if (!courseid || !assignmentName || !dueDate) {
       setNotification({
         type: "error",
         message: "Please fill in all fields.",
@@ -81,9 +106,10 @@ function AssignmentUpload() {
       // Your existing code
       const formDataObject = new FormData();
       formDataObject.append("file", file);
-      formDataObject.append("course_id", courseId);
-      formDataObject.append("assignment_name", assignmentName);
-      formDataObject.append("due_date", dueDate);
+      formDataObject.append("courseid", courseid);
+      formDataObject.append("assignmentName", assignmentName);
+      formDataObject.append("assignmentDescription", assignmentDescription);
+      formDataObject.append("dueDate", dueDate);
 
       const response = await axios.post(
         `${BASE_URL}/upload-assignment`,
@@ -105,8 +131,10 @@ function AssignmentUpload() {
         // Reset form fields after successful upload
         setCourseId("");
         setAssignmentName("");
+        setAssignmentDescription("");
         setDueDate("");
         setFile(null);
+        console.log(accessToken);
       } else {
         setNotification({
           type: "error",
@@ -140,11 +168,11 @@ function AssignmentUpload() {
                   >
                     <InputLabel htmlFor="course">Select Course</InputLabel>
                     <Select
-                      value={courseId}
+                      value={courseid}
                       onChange={(e) => setCourseId(e.target.value)}
                       label="Select Course"
                       inputProps={{
-                        name: "courseId",
+                        name: "courseid",
                         id: "course",
                       }}
                       style={{ height: "46px" }}
@@ -239,9 +267,7 @@ function AssignmentUpload() {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>{"Message"}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {notification.message}
-          </DialogContentText>
+          <DialogContentText>{notification.message}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
