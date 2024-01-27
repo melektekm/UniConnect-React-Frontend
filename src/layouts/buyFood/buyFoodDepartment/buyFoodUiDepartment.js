@@ -123,6 +123,13 @@ function AssignmentUpload() {
       );
 
       if (response.data.message) {
+        const message = response.data.message;
+        const menu = response.data.menu;
+
+        console.log(message); // Output: "በተሳካ ሁኔታ ምግብ አክለዋል"
+        console.log(menu); // Output: the assignment menu object
+
+        // Display the message or use the menu data as needed
         setNotification({
           type: "success",
           message: response.data.message,
@@ -135,6 +142,7 @@ function AssignmentUpload() {
         setDueDate("");
         setFile(null);
         console.log(accessToken);
+        console.log(response.data.message);
       } else {
         setNotification({
           type: "error",
