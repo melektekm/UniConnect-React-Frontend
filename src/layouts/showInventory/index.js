@@ -78,7 +78,7 @@ function ViewAssignments() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h4" color="white">
-                  View Assignments
+                  Assignment List
                 </MDTypography>
               </MDBox>
               <Card style={{ marginTop: "20px" }}>
