@@ -51,7 +51,7 @@ function AssignmentUpload() {
     // Fetch courses when the component mounts
     getCourses();
   }, []);
-
+  console.log(accessToken);
   const getCourses = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/get-all-courses`, {
@@ -106,6 +106,7 @@ function AssignmentUpload() {
         setAssignmentName("");
         setDueDate("");
         setFile(null);
+        console.log(accessToken);
       } else {
         setErrorMessage("Failed to upload assignment.");
         setOpen(true);
@@ -158,7 +159,7 @@ function AssignmentUpload() {
                     onChange={(e) => setAssignmentName(e.target.value)}
                     style={{ marginTop: "16px" }}
                   />
-                   <TextField
+                  <TextField
                     required
                     fullWidth
                     label="Assignment Description"
