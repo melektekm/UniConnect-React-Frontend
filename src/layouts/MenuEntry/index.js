@@ -1,112 +1,68 @@
-import { BASE_URL } from "../../appconfig";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import CashierDashboard from "../CashierDashboard";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
-import FoodItemForm from "./FoodItemForm";
+import TextField from "@mui/material/TextField";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
-import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
-// import Sidenav from "../../examples/Sidenav/AdminSidenav";
-// import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import { BASE_URL } from "../../appconfig";
 
 const AddMenuItem = () => {
-  const location = useLocation();
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
-  const userData = ipcRenderer.sendSync("get-user");
-  const selectedMenu = location.state?.selectedMenu ?? null;
+  const location = useLocation();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
 
   const initialFormValues = {
-    name: "",
-    description: "",
-    price_for_employee: "",
-    price_for_guest: "",
-    meal_type: "lunch",
-    is_fasting: true,
-    is_drink: false,
-    is_available: false,
-    available_amount: 0,
+    course_code: "",
+    course_name: "",
+    course_description: "",
+    credit_hours: "",
+    year: "",
+    semester: "",
   };
 
   const [formValues, setFormValues] = useState(initialFormValues);
 
   useEffect(() => {
-    if (selectedMenu) {
-      setFormValues({
-        name: selectedMenu.name,
-        description: selectedMenu.description,
-        price_for_employee: selectedMenu.price_for_employee,
-        price_for_guest: selectedMenu.price_for_guest,
-        meal_type: selectedMenu.meal_type,
-        is_fasting: selectedMenu.is_fasting,
-        is_drink: selectedMenu.is_drink,
-        is_available: selectedMenu.is_available,
-        available_amount: selectedMenu.available_amount,
-      });
-    }
-  }, [selectedMenu]);
-
-  const handleImageUpload = (event) => {
-    const selectedFile = event.target.files[0];
-    setFormValues({ ...formValues, image: selectedFile });
-  };
-
-  const inputHandler = (event) => {
-    const { name, value } = event.target;
-
-    const finalValue = name === "is_fasting" ? value === "1" : value;
-
-    setFormValues({ ...formValues, [name]: finalValue });
-  };
+    // Additional logic if there's any selectedMenu
+  }, [location]);
 
   const handleAddToMenu = async () => {
     const newErrorMessages = {
-      name: formValues.name ? (
-        ""
-      ) : (
-        <span style={{ fontSize: "14px", color: "red" }}>
-          የምግብ ዕቃ ስም ያስፈልጋል።
-        </span>
-      ),
-      description: formValues.description ? (
-        ""
-      ) : (
-        <span style={{ fontSize: "14px", color: "red" }}>መግለጫ ያስፈልጋል። </span>
-      ),
-      price_for_employee: formValues.price_for_employee ? (
-        ""
-      ) : (
-        <span style={{ fontSize: "14px", color: "red" }}>የሰራተኛ ዋጋ ያስፈልጋል።</span>
-      ),
-      price_for_guest: formValues.price_for_guest ? (
-        ""
-      ) : (
-        <span style={{ fontSize: "14px", color: "red" }}>የእንግዳ ዋጋ ያስፈልጋል።</span>
-      ),
+      course_code: formValues.course_code ? "" : "Course code is required.",
+      course_name: formValues.course_name ? "" : "Course name is required.",
+      course_description: formValues.course_description
+        ? ""
+        : "Course description is required.",
+      credit_hours: formValues.credit_hours
+        ? ""
+        : "Course credit hour is required.",
+      year: formValues.year ? "" : "Year is required",
+      semester: formValues.semester ? "" : "Semester is required.",
     };
 
     setErrorMessages(newErrorMessages);
 
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
-      setErrorMessage("ሁሉም መስኮች መሞላት አለባቸው.");
+      setErrorMessage("Fill all required fields.");
       setDialogOpen(true);
       return;
     }
@@ -115,76 +71,36 @@ const AddMenuItem = () => {
     try {
       let response;
       const formData = new FormData();
-      if (formValues.image) {
-        formData.append("image", formValues.image);
-      }
-      formData.append("name", formValues.name.toString());
-      formData.append("description", formValues.description.toString());
+      formData.append("course_code", formValues.course_code.toString());
+      formData.append("course_name", formValues.course_name.toString());
       formData.append(
-        "price_for_employee",
-        parseFloat(formValues.price_for_employee)
+        "course_description",
+        formValues.course_description.toString()
       );
-      formData.append(
-        "price_for_guest",
-        parseFloat(formValues.price_for_guest)
-      );
-      formData.append(
-        "price_for_department",
-        parseFloat(formValues.price_for_department)
-      );
-      formData.append("meal_type", formValues.meal_type.toString());
-      formData.append("is_fasting", formValues.is_fasting ? "1" : "0");
-      formData.append("is_drink", formValues.is_drink ? "1" : "0");
-      formData.append("is_available", formValues.is_available ? "1" : "0");
-      formData.append(
-        "available_amount",
-        parseInt(formValues.available_amount)
-      );
+      formData.append("credit_hour", parseFloat(formValues.credit_hour));
+      formData.append("year", formValues.year.toString());
+      formData.append("semester", formValues.semester.toString());
 
-      if (selectedMenu) {
-        response = await axios.post(
-          `${BASE_URL}/update-menu-items/${selectedMenu.id}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+      response = await axios.post(`${BASE_URL}/upload-course`, formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // Handle success
+      if (response.data.message) {
+        setSuccessMessage(response.data.message);
+        setDialogOpen(true);
+        setFormValues(initialFormValues); // Clear the form fields on success
+        setErrorMessages({});
       } else {
-        response = await axios.post(`${BASE_URL}/menu-items`, formData, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        setErrorMessage("Failed to upload course.");
+        setDialogOpen(true);
       }
-
-      // Menu item added/updated successfully
-      document.getElementById("imageUpload").value = "";
-
-      // Clear and reset the form fields
-      setFormValues(initialFormValues);
-      setErrorMessages({});
-      setSuccessMessage(
-        `${selectedMenu ? "ሜኑ መቀየር" : "ወደ ሜኑ ማስገባት "} ስኬታማ ነው!!`
-      );
-      setDialogOpen(true);
     } catch (error) {
-      if (error.response && error.response.data) {
-        // Parse the error messages from the server's response
-        const serverErrorMessages = error.response.data.errors;
-        let errorMessage = "የሜኑ ምግብ ምዝገባ አልተሳካም፦ ";
-
-        for (const [key, value] of Object.entries(serverErrorMessages)) {
-          errorMessage += `${key}: ${value[0]}, `;
-        }
-
-        setErrorMessage(errorMessage);
-      } else {
-        setErrorMessage("የሜኑ ምግብ ምዝገባ አልተሳካም፦ " + error);
-      }
+      // Handle error
+      setErrorMessage("Error uploading course: " + error.message);
       setDialogOpen(true);
     } finally {
       setLoading(false);
@@ -198,33 +114,7 @@ const AddMenuItem = () => {
   };
 
   return (
-    <DashboardLayout>
-      {/* {userData.user.role === "student" ? (
-        <NavbarForCommette />
-      ) : userData.user.role === "dean" ? (
-        <CafeManagerDashboardNavbar />
-      ) : (
-        <DashboardNavbar />
-      )}
-      {userData.user.role === "student" ? (
-        <CafeCommetteeSidenav
-          color="dark"
-          brand=""
-          brandName="የኮሚቴ ክፍል መተገበሪያ"
-        />
-      ) : userData.user.role === "dean" ? (
-        <CafeManagerSidenav
-          color="dark"
-          brand=""
-          brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
-        />
-      ) : (
-        <CashierSidenav
-          color="dark"
-          brand=""
-          brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ"
-        />
-      )} */}
+  <DashboardLayout>
       <DashboardNavbar />
       <Sidenav />
       <MDBox
@@ -239,22 +129,105 @@ const AddMenuItem = () => {
         coloredShadow="info"
         textAlign="center"
       >
-        <MDTypography variant="h6" color="white">
-          {selectedMenu ? "የሜኑ አይነት መቀየሪያ" : "የሜኑ አይነት መጨመሪያ "}
+        <MDTypography variant="h5" color="white">
+          Upload Course
         </MDTypography>
       </MDBox>
-      <FoodItemForm
-        values={formValues}
-        errorMessages={errorMessages}
-        loading={loading}
-        file={formValues.image}
-        handleImageUpload={handleImageUpload}
-        inputHandler={inputHandler}
-        handleAddToMenu={handleAddToMenu}
-        selectedMenu={selectedMenu}
-      />
+      <Card>
+        <CardContent>
+          <form>
+          <TextField
+              required
+              fullWidth
+              label="Course Code"
+              value={formValues.course_code}
+              onChange={(e) =>
+                setFormValues({ ...formValues, course_code: e.target.value })
+              }
+              style={{ marginTop: "16px" }}
+            />
+            <TextField
+              required
+              fullWidth
+              label="Course Name"
+              value={formValues.course_name}
+              onChange={(e) =>
+                setFormValues({ ...formValues, course_name: e.target.value })
+              }
+              style={{ marginTop: "16px" }}
+            />
+            <TextField
+              required
+              fullWidth
+              label="Course Description"
+              value={formValues.course_description}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  course_description: e.target.value,
+                })
+              }
+              style={{ marginTop: "16px" }}
+            />
+            <TextField
+              required
+              fullWidth
+              label="Credit Hours"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+              value={formValues.credit_hours}
+              onChange={(e) =>
+                setFormValues({ ...formValues, credit_hours: e.target.value })
+              }
+              style={{ marginTop: "16px" }}
+            />
+            <TextField
+              required
+              fullWidth
+              label="Year"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+              value={formValues.year}
+              onChange={(e) =>
+                setFormValues({ ...formValues, year: e.target.value })
+              }
+              style={{ marginTop: "16px" }}
+            />
+            <TextField
+              required
+              fullWidth
+              label="Semester"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+              value={formValues.semester}
+              onChange={(e) =>
+                setFormValues({ ...formValues, semester: e.target.value })
+              }
+              style={{ marginTop: "16px" }}
+            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "16px",
+              }}
+            >
+              <MDButton
+                variant="contained"
+                color="secondary"
+                type="button"
+                onClick={handleAddToMenu}
+                style={{ color: "white" }}
+              >
+                Upload Course
+              </MDButton>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>{successMessage ? "ማረጋገጫ" : "ማስታወቂያ"}</DialogTitle>
+        <DialogTitle>{successMessage ? "Success" : "Error"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {successMessage || errorMessage}
@@ -262,11 +235,11 @@ const AddMenuItem = () => {
         </DialogContent>
         <DialogActions>
           <Button color="primary" onClick={handleDialogClose}>
-            እሺ
+            Close
           </Button>
         </DialogActions>
       </Dialog>
-    </DashboardLayout>
+     </DashboardLayout>
   );
 };
 
