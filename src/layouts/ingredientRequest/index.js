@@ -40,28 +40,30 @@ import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function IngredientRequest() {
+  const [courseName, setCourseName] = useState("");
+  const [courseId, setCourseId] = useState("");
+  const [classroom, setClassroom] = useState("");
+  const [labroom, setLabroom] = useState("");
+  const [classDays, setClassDays] = useState([]);
+  const [labDays, setLabDays] = useState([]);
+  const [selectedType, setSelectedType] = useState("");
+  const [classInstructor, setClassInstructor] = useState("");
+  const [labInstructor, setLabInstructor] = useState("");
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
-  const userData = ipcRenderer.sendSync("get-user");
-  const [file, setFile] = useState(null);
+  // const userData = ipcRenderer.sendSync("get-user");
+  // const [file, setFile] = useState(null);
   const [totalPrice, setTotalPrice] = useState("");
   const [formData, setFormData] = useState({
-    name: "",
-    quantity: "",
-    price_per_item: "",
-    price_word: "",
-    measured_in: "",
+    courseName: "",
+    courseId: "",
+    classroom: "",
+    labroom: "",
+    classDays: "",
+    labDays: "",
+    labInstructor: "",
+    classInstructor: "",
   });
-
-  const fileInputStyle = {
-    display: "inline-block",
-    cursor: "pointer",
-    padding: "10px 20px",
-    backgroundColor: colors.dark.main,
-    color: "white",
-    borderRadius: "5px",
-    border: "1px solid #007bff",
-  };
 
   const [formList, setFormList] = useState({
     items: [],
@@ -83,16 +85,17 @@ function IngredientRequest() {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({
-    name: "",
-    quantity: "",
-    measured_in: "",
-    price_per_item: "",
-    price_word: "",
-    recommendations: "",
+    courseName: "",
+    courseId: "",
+    classroom: "",
+    labroom: "",
+    classDays: "",
+    labDays: "",
+    labInstructor: "",
+    classInstructor: "",
   });
-  const measuredInOptions = ["ኪግ", "እሽግ", "ቁጥር", "ሊትር", "ሌላ"];
-  const [sId, setSId] = useState(null);
-  const [type, setType] = useState("request");
+  const typeOptions = ["Exam", "class"];
+
   const [confirmationOpen, setConfirmationOpen] = useState(false);
 
   useEffect(() => {
@@ -131,12 +134,10 @@ function IngredientRequest() {
     if (type === "request") {
       setFormList({
         ...formList,
-        total_price_request: totalPrice > 0 ? totalPrice : "",
       });
     } else if (type === "entry") {
       setFormListEntry({
         ...formListEntry,
-        total_price_entry: totalPrice > 0 ? totalPrice : "",
       });
     }
   }, [formList.items, formListEntry.items, type]);
@@ -208,16 +209,20 @@ function IngredientRequest() {
 
   const addForm = () => {
     const newErrorMessages = {
-      name: formData.name ? "" : "Item Name is required.",
-      quantity: formData.quantity ? "" : "Quantity is required.",
-      measured_in: formData.measured_in ? "" : "Measured In is required.",
-      price_per_item: formData.price_per_item ? "" : "Item Price is required.",
-      price_word: formData.price_word ? "" : "Total price in word is required.",
+      courseName: courseName ? "" : "course name is required",
+      courseId: courseId ? "" : "course ID is required",
+      classroom: classroom ? "" : "classroom is required",
+      labroom: labroom ? "" : "labroom is required",
+      classDays: classDays ? "" : "class days is required",
+      labDays: labDays ? "" : "lab days is required",
+      labInstructor: labInstructor ? "" : "lab instructor is required",
+      classInstructor: classInstructor ? "" : "class instructor is required",
+      scheduleType: selectedType !== "" ? "" : "Type of schedule is required",
     };
     setErrorMessages(newErrorMessages);
 
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
-      setErrorMessage("እባክዎ ሁሉንም መስኮች ይሙሉ።");
+      setErrorMessage("please fill in all fields");
       setOpen(true);
       return;
     }
@@ -397,47 +402,7 @@ function IngredientRequest() {
                   justifyContent="space-between"
                   paddingRight="20px"
                 >
-                  <Grid item>
-                    <Typography style={{ color: "white" }} variant="h6">
-                      {type === "request"
-                        ? "የግዢ ስራ የክፍያ መጠየቂያ"
-                        : `የተፈጸመ ግዥ መረጃ ማስገቢያ ${
-                            sId !== null ? ` ለግዥ ጥያቂ መለያ ቁጥር፡   ${sId}` : ""
-                          }`}
-                    </Typography>
-                  </Grid>
-
-                  <Grid item xs={6} style={{ textAlign: "right" }}>
-                    <FormControl>
-                      <Typography
-                        variant="h6"
-                        style={{ textAlign: "center", color: "white" }}
-                      >
-                        አይነት
-                      </Typography>
-                      <select
-                        id="approval-type"
-                        value={type}
-                        style={{
-                          minWidth: 120,
-                          height: 40,
-                          backgroundColor: "white",
-                          borderRadius: "8px",
-                          border: "1px solid #ccc",
-                          padding: "8px",
-                          fontSize: "0.8em",
-                        }}
-                        onChange={handleTypeChange}
-                      >
-                        <option value="request">
-                          <strong>ግዥ መጠየቂያ</strong>
-                        </option>
-                        <option value="entry">
-                          <strong>የእቃ ማስገቢያ</strong>
-                        </option>
-                      </select>
-                    </FormControl>
-                  </Grid>
+                  Schedule upload
                 </Grid>
               </MDBox>
 
@@ -556,15 +521,11 @@ function IngredientRequest() {
                     >
                       <DialogTitle id="confirmation-dialog-title">
                         {" "}
-                        {type === "request"
-                          ? "ደብዳቤውን ለመላክ ማረጋገጫ"
-                          : "የግዥ መረጃውን ለማስገባት ማረጋገጫ"}
+                        notification
                       </DialogTitle>
                       <DialogContent>
                         <DialogContentText>
-                          {type === "request"
-                            ? "ደብዳቤውን ወደ ኮሚቴ ለመላክ እርግጠኛ ነዎት ?"
-                            : "የግዥ መረጃውን ለማስገባት እርግጠኛ ነዎት ?"}
+                          are you sure you want to send the schedule?
                         </DialogContentText>
                       </DialogContent>
                       <DialogActions>
@@ -573,14 +534,14 @@ function IngredientRequest() {
                           style={{ borderRadius: "15%" }}
                           color="error"
                         >
-                          አይደለሁም
+                          No
                         </MDButton>
                         <MDButton
                           onClick={handleSendForm}
                           style={{ borderRadius: "15%" }}
                           color="primary"
                         >
-                          አዎ
+                          yes
                         </MDButton>
                       </DialogActions>
                     </Dialog>
@@ -600,32 +561,31 @@ function IngredientRequest() {
               <TableBody>
                 <TableRow sx={{ backgroundColor: "#    " }}>
                   <TableCell>
-                    <strong>ተራ ቁጥር</strong>
+                    <strong>No</strong>
                   </TableCell>
                   <TableCell>
-                    <strong>የእቃው አይነት</strong>
+                    <strong>course name</strong>
                   </TableCell>
                   <TableCell>
-                    <strong>ብዛት</strong>
+                    <strong>course id</strong>
                   </TableCell>
                   <TableCell>
-                    <strong>መለኪያ</strong>
+                    <strong>Classroom</strong>
                   </TableCell>
                   <TableCell>
-                    <strong>የአንዱ ዋጋ</strong>
-                  </TableCell>
-                  {/* <TableCell>
-                    <strong>Total Price</strong>
-                  </TableCell> */}
-                  <TableCell>
-                    <strong>ጠቅላላ ዋጋ ብር</strong>
-                  </TableCell>
-
-                  <TableCell>
-                    <strong>የጠቅላላ ዋጋ በፊደል</strong>
+                    <strong>Labroom</strong>
                   </TableCell>
                   <TableCell>
-                    <strong>መቀነሻ</strong>
+                    <strong>class Days</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Lab Days</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Class Instructor</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Lab Instructor</strong>
                   </TableCell>
                 </TableRow>
 
@@ -650,7 +610,7 @@ function IngredientRequest() {
                           color="error"
                           onClick={() => openRemoveDialog(index)}
                         >
-                          ሰርዝ
+                          remove
                         </MDButton>
                       </TableCell>
                     </TableRow>
@@ -658,116 +618,6 @@ function IngredientRequest() {
               </TableBody>
             </Table>
           </TableContainer>
-          {type === "request" ? (
-            <MDInput
-              type="text"
-              name="total_price_request"
-              variant="standard"
-              fullWidth
-              value={
-                formList.total_price_request !== ""
-                  ? `ጠቅላላ ድምር ፡ ${formList.total_price_request} ብር`
-                  : ""
-              }
-              margin="dense"
-              required
-              error={!!errorMessages.totalPrice}
-              helperText={errorMessages.totalPrice}
-              readOnly
-            />
-          ) : (
-            <MDInput
-              type="text"
-              name="total_price_entry"
-              variant="standard"
-              fullWidth
-              value={
-                formListEntry.total_price_entry !== ""
-                  ? `ጠቅላላ ድምር ፡ ${formListEntry.total_price_entry} ብር`
-                  : ""
-              }
-              margin="dense"
-              required
-              error={!!errorMessages.totalPrice}
-              helperText={errorMessages.totalPrice}
-              readOnly
-            />
-          )}
-
-          {type === "request" ? (
-            <MDInput
-              type="text"
-              name="recommendations"
-              label="እስተያየት"
-              variant="standard"
-              fullWidth
-              value={formList.recommendations}
-              onChange={(e) =>
-                setFormList({ ...formList, recommendations: e.target.value })
-              }
-              margin="dense"
-              required
-              error={!!errorMessages.recommendations}
-              helperText={errorMessages.recommendations}
-            />
-          ) : (
-            <MDBox>
-              <MDInput
-                type="number"
-                name="returned_amount"
-                label="ተመላሽ ገንዘብ በቁጥር"
-                variant="standard"
-                fullWidth
-                value={formListEntry.returned_amount}
-                onChange={(e) =>
-                  setFormListEntry({
-                    ...formListEntry,
-                    returned_amount: e.target.value,
-                  })
-                }
-                margin="dense"
-                required
-              />
-
-              <MDBox mb={2} style={{ display: "flex", alignItems: "center" }}>
-                <label htmlFor="fileInput" style={fileInputStyle}>
-                  <input
-                    type="file"
-                    id="fileInput"
-                    onChange={(e) => {
-                      const selectedFile = e.target.files[0];
-                      setFile(selectedFile);
-
-                      setFormListEntry((prevFormListEntry) => ({
-                        ...prevFormListEntry,
-                        file: selectedFile,
-                      }));
-                    }}
-                    accept="image/*,application/pdf"
-                    style={{ display: "none" }}
-                  />
-                  <span>&#128206; {file ? file.name : "የደረሰኝ ፋይል ያስገቡ"}</span>
-                </label>
-                <MDTypography variant="body2" ml={1}>
-                  ከ 3 MB ያልበለጠ ፤ pdf,jpeg,jpg,png
-                </MDTypography>
-              </MDBox>
-            </MDBox>
-          )}
-
-          <MDInput
-            type="text"
-            name="requestedBy"
-            variant="standard"
-            fullWidth
-            value={"የጠያቂው ስም ፡ " + userData.user.name}
-            onChange={handleFormChange}
-            readOnly
-            margin="dense"
-            required
-            error={!!errorMessages.requestedBy}
-            helperText={errorMessages.requestedBy}
-          />
         </MDBox>
       </Card>
 
@@ -779,10 +629,10 @@ function IngredientRequest() {
         aria-describedby="remove-dialog-description"
         PaperProps={{ style: { padding: "15px" } }}
       >
-        <DialogTitle id="remove-dialog-title">የእቃ መሰረዣ ማረጋገጫ</DialogTitle>
+        <DialogTitle id="remove-dialog-title">notification</DialogTitle>
         <DialogContent>
           <DialogContentText id="remove-dialog-description">
-            እቃውን ከዝርዝሩ ለማጥፋት እርግጠኛ ነዎት?
+            are you sure you want to remove the items?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -791,14 +641,14 @@ function IngredientRequest() {
             color="primary"
             style={{ borderRadius: "10%" }}
           >
-            መዝጊያ
+            close
           </MDButton>
           <MDButton
             onClick={confirmRemoveForm}
             color="success"
             style={{ borderRadius: "10%" }}
           >
-            ማረጋገጫ
+            notification
           </MDButton>
         </DialogActions>
       </Dialog>
@@ -817,7 +667,7 @@ function IngredientRequest() {
               loading
             } // Update this line
           >
-            ዝርዝሩን ላክ
+            send schedule
           </MDButton>
         ) : (
           <MDBox textAlign="center">

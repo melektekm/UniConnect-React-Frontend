@@ -24,12 +24,12 @@ function Tables() {
     <DashboardLayout>
       {/* <CafeManagerDashboardNavbar />
       <CafeManagerSidenav color="dark" brand="" brandName="የሚንት ካፌ መተግበሪያ" /> */}
-      <DashboardNavbar />
+      {/* <DashboardNavbar /> */}
       <Sidenav />
       <MDBox pt={6} pb={3}>
         <OrderTables showEditColumn={true} />
       </MDBox>
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }
