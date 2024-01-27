@@ -25,10 +25,10 @@ import IngredientRequest from "../../layouts/ingredientRequest";
 import IngredientApproval from "../../layouts/ingredientApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
-import InventoryList from "../../layouts/showInventory";
+import ViewAssignments from "../../layouts/showInventory";
 import ShowApproval from "../../layouts/showIngredientApproval";
 import StockApproval from "../../layouts/showApprovedStock";
-import BuyFoodDepartment from "../../layouts/buyFood/buyFoodDepartment";
+import AssignmentUpload from "../../layouts/buyFood/buyFoodDepartment";
 
 import { Icon } from "semantic-ui-react";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
@@ -135,7 +135,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       key: "buy_food_department",
       icon: <ShoppingCartIcon fontSize="small" />,
       route: "/buyFoodDepartment",
-      component: <BuyFoodDepartment />,
+      component: <AssignmentUpload />,
     },
     // {
     //   type: "collapse",
@@ -147,11 +147,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     // },
     {
       type: "collapse",
-      name: "showInventory",
+      name: "View Assignment",
       key: "list",
       icon: <ShoppingCartIcon fontSize="small" />,
       route: "/showInventory",
-      component: <InventoryList />,
+      component: <ViewAssignments />,
     },
     // {
     //   type: "collapse",

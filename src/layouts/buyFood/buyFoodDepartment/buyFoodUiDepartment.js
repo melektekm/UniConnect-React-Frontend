@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Card,
@@ -18,24 +18,33 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { BASE_URL } from "../../../appconfig";
+import { BASE_URL } from "../../../appconfig"; // Commented out for static courses
 import colors from "../../../assets/theme/base/colors";
+
+const staticCourses = [
+  { id: 1, name: "Course 1" },
+  { id: 2, name: "Course 2" },
+  // Add more courses as needed
+];
 
 function AssignmentUpload() {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
-  const accessToken = userData.accessToken;
+  const accessToken = userData.accessToken; // Commented out for static response
 
   const [loading, setLoading] = useState(false);
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState(staticCourses); // Use static courses
   const [courseId, setCourseId] = useState("");
   const [assignmentName, setAssignmentName] = useState("");
   const [assignmentDescription, setAssignmentDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [file, setFile] = useState(null);
   const [open, setOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [notification, setNotification] = useState({
+    type: "",
+    message: "",
+  });
 
   const fileInputStyle = {
     display: "inline-block",
@@ -47,40 +56,29 @@ function AssignmentUpload() {
     border: "1px solid #007bff",
   };
 
-  useEffect(() => {
-    // Fetch courses when the component mounts
-    getCourses();
-  }, []);
-
-  const getCourses = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/get-all-courses`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (response.data) {
-        setCourses(response.data.courses);
-      } else {
-        setErrorMessage("Failed to fetch courses.");
-        setOpen(true);
-      }
-    } catch (error) {
-      setErrorMessage("Error fetching courses: " + error.message);
-      setOpen(true);
-    }
-  };
-
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
   const handleAssignmentSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if all fields are filled
+    if (!courseId || !assignmentName || !dueDate || !file) {
+      setNotification({
+        type: "error",
+        message: "Please fill in all fields.",
+      });
+      setOpen(true);
+      return;
+    }
+
     setLoading(true);
 
     try {
+      setCourses(staticCourses);
+
+      // Your existing code
       const formDataObject = new FormData();
       formDataObject.append("file", file);
       formDataObject.append("course_id", courseId);
@@ -99,7 +97,10 @@ function AssignmentUpload() {
       );
 
       if (response.data.message) {
-        setErrorMessage("Assignment uploaded successfully.");
+        setNotification({
+          type: "success",
+          message: response.data.message,
+        });
         setOpen(true);
         // Reset form fields after successful upload
         setCourseId("");
@@ -107,11 +108,17 @@ function AssignmentUpload() {
         setDueDate("");
         setFile(null);
       } else {
-        setErrorMessage("Failed to upload assignment.");
+        setNotification({
+          type: "error",
+          message: "Failed to upload assignment.",
+        });
         setOpen(true);
       }
     } catch (error) {
-      setErrorMessage("Error uploading assignment: " + error.message);
+      setNotification({
+        type: "error",
+        message: "Error uploading assignment: " + error.message,
+      });
       setOpen(true);
     } finally {
       setLoading(false);
@@ -158,7 +165,7 @@ function AssignmentUpload() {
                     onChange={(e) => setAssignmentName(e.target.value)}
                     style={{ marginTop: "16px" }}
                   />
-                   <TextField
+                  <TextField
                     required
                     fullWidth
                     label="Assignment Description"
@@ -218,7 +225,6 @@ function AssignmentUpload() {
                       variant="contained"
                       color="secondary"
                       type="submit"
-                      onClick={handleAssignmentSubmit}
                       style={{ color: "white" }}
                     >
                       Upload Assignment
@@ -233,7 +239,9 @@ function AssignmentUpload() {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>{"Message"}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{errorMessage}</DialogContentText>
+          <DialogContentText>
+            {notification.message}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
