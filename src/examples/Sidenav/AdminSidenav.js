@@ -10,11 +10,11 @@ import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
-import Tables from "../../layouts/tables";
+import AssignmentsPage from "../../layouts/tables";
 import Billing from "../../layouts/billing";
 import EmployeeList from "../../layouts/profile";
 import AddEmployee from "../../layouts/addEmployee";
-import AddMenuItem from "../../layouts/menuEntry";
+import CourseUpload from "../../layouts/menuEntry";
 import FoodMenu from "../../layouts/foodMenu";
 import BuyFood from "../../layouts/buyFood";
 import InventoryEntry from "../../layouts/inventory";
@@ -52,7 +52,7 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "../../context";
-import ReportList from "../../layouts/report";
+import ViewCourses from "../../layouts/report";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import KitchenIcon from "@mui/icons-material/Kitchen";
 
@@ -83,11 +83,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Orders",
+      name: "Assignment List",
       key: "orders",
       icon: <TableViewOutlinedIcon fontSize="small" />,
       route: "/tables",
-      component: <Tables />,
+      component: <AssignmentsPage />,
     },
     // {
     //   type: "collapse",
@@ -115,20 +115,20 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     // },
     {
       type: "collapse",
-      name: "menu entry",
+      name: "Upload Courses",
       key: "add_food",
       icon: <RestaurantMenuIcon fontSize="small" />,
       route: "/addfood",
-      component: <AddMenuItem />,
+      component: <CourseUpload />,
     },
-    {
-      type: "collapse",
-      name: "buy food",
-      key: "buy_food",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/buyFood",
-      component: <BuyFood />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "buy food",
+    //   key: "buy_food",
+    //   icon: <ShoppingCartIcon fontSize="small" />,
+    //   route: "/buyFood",
+    //   component: <BuyFood />,
+    // },
     {
       type: "collapse",
       name: "Upload Assignments",
@@ -169,22 +169,22 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/stockApproval",
     //   component: <Approval />,
     // },
-    {
-      type: "collapse",
-      name: "ingredient_Request",
-      key: "ingredient_Request",
-      icon: <KitchenIcon fontSize="small" />,
-      route: "/ingredientRequest",
-      component: <IngredientRequest />,
-    },
-    {
-      type: "collapse",
-      name: "ingredient_Approval",
-      key: "ingredient_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/ingredientApproval",
-      component: <IngredientApproval />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "ingredient_Request",
+    //   key: "ingredient_Request",
+    //   icon: <KitchenIcon fontSize="small" />,
+    //   route: "/ingredientRequest",
+    //   component: <IngredientRequest />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "ingredient_Approval",
+    //   key: "ingredient_Approval",
+    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
+    //   route: "/ingredientApproval",
+    //   component: <IngredientApproval />,
+    // },
     // {
     //   type: "collapse",
     //   name: "Add-employee",
@@ -211,11 +211,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     // },
     {
       type: "collapse",
-      name: "report",
+      name: "Course List",
       key: "report",
       icon: <AssessmentIcon fontSize="small" />,
       route: "/report",
-      component: <ReportList />,
+      component: <ViewCourses />,
     },
     // {
     //   type: "collapse",
