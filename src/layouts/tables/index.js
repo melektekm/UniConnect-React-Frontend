@@ -29,7 +29,7 @@ function Tables() {
       <MDBox pt={6} pb={3}>
         <OrderTables showEditColumn={true} />
       </MDBox>
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }

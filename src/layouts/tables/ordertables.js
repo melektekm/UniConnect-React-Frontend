@@ -131,7 +131,7 @@ function AssignmentsPage() {
       <Sidenav />
       <div style={{ flex: "1" }}>
         <DashboardNavbar />
-        <MDBox pt={6} pb={3} >
+        <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
               <MDBox
@@ -150,13 +150,20 @@ function AssignmentsPage() {
               </MDBox>
               <Card style={{ marginTop: "20px", padding: "20px" }}>
                 <MDBox p={3} display="flex" alignItems="center">
-                  <FormControl variant="outlined" fullWidth>
-                    <InputLabel>Status</InputLabel>
+                  <FormControl
+                    variant="outlined"
+                    fullWidth
+                    style={{ margin: "0 0 10px" }}
+                  >
+                    <InputLabel htmlFor="filter-status">Status</InputLabel>
                     <Select
                       value={filterStatus}
                       onChange={handleFilterChange}
                       label="Status"
-                      style={{ minWidth: 120 }}
+                      inputProps={{
+                        name: "status",
+                        id: "filter-status",
+                      }}
                     >
                       <MenuItem value="all">All</MenuItem>
                       <MenuItem value="sent">Sent</MenuItem>
@@ -191,7 +198,9 @@ function AssignmentsPage() {
                         <TableRow key={assignment.assignmentId}>
                           <TableCell>{assignment.name}</TableCell>
                           <TableCell>{assignment.courseName}</TableCell>
-                          <TableCell>{assignment.assignmentDescription}</TableCell>
+                          <TableCell>
+                            {assignment.assignmentDescription}
+                          </TableCell>
                           <TableCell>{assignment.date}</TableCell>
                           <TableCell>{assignment.status}</TableCell>
                           <TableCell>
