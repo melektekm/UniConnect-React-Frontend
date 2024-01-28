@@ -14,10 +14,7 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
-import {
-  Card,
-  Box,
-} from "@mui/material";
+import { Card, Box } from "@mui/material";
 
 function ViewCourses() {
   const electron = window.require("electron");
@@ -34,7 +31,7 @@ function ViewCourses() {
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/getallcourses`, {
+      const response = await axios.get(`${BASE_URL}/fetch-course`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -100,10 +97,18 @@ function ViewCourses() {
                       </TableRow>
                       {courses.map((course) => (
                         <TableRow key={course.courseCode}>
-                          <TableCell align="center">{course.courseCode}</TableCell>
-                          <TableCell align="center">{course.courseName}</TableCell>
-                          <TableCell align="center">{course.department}</TableCell>
-                          <TableCell align="center">{course.instructor}</TableCell>
+                          <TableCell align="center">
+                            {course.courseCode}
+                          </TableCell>
+                          <TableCell align="center">
+                            {course.courseName}
+                          </TableCell>
+                          <TableCell align="center">
+                            {course.department}
+                          </TableCell>
+                          <TableCell align="center">
+                            {course.instructor}
+                          </TableCell>
                           {/* Add more cells based on your course data model */}
                         </TableRow>
                       ))}

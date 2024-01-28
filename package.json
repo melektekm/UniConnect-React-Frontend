@@ -77,6 +77,7 @@
     "fontkit": "^2.0.2",
     "framer-motion": "^10.16.4",
     "media-engine": "^1.0.3",
+    "next": "^14.1.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-color": "^2.19.3",
