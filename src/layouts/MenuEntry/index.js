@@ -77,9 +77,9 @@ const AddMenuItem = () => {
         "course_description",
         formValues.course_description.toString()
       );
-      formData.append("credit_hour", parseFloat(formValues.credit_hour));
-      formData.append("year", formValues.year.toString());
-      formData.append("semester", formValues.semester.toString());
+      formData.append("credit_hour", parseFloat(formValues.credit_hours));
+      formData.append("year", formValues.year);
+      formData.append("semester", formValues.semester);
 
       response = await axios.post(`${BASE_URL}/upload-course`, formData, {
         headers: {
@@ -114,7 +114,7 @@ const AddMenuItem = () => {
   };
 
   return (
-  <DashboardLayout>
+    <DashboardLayout>
       <DashboardNavbar />
       <Sidenav />
       <MDBox
@@ -136,7 +136,7 @@ const AddMenuItem = () => {
       <Card>
         <CardContent>
           <form>
-          <TextField
+            <TextField
               required
               fullWidth
               label="Course Code"
@@ -177,7 +177,10 @@ const AddMenuItem = () => {
               InputLabelProps={{ shrink: true }}
               value={formValues.credit_hours}
               onChange={(e) =>
-                setFormValues({ ...formValues, credit_hours: e.target.value })
+                setFormValues({
+                  ...formValues,
+                  credit_hours: parseInt(e.target.value),
+                })
               }
               style={{ marginTop: "16px" }}
             />
@@ -189,7 +192,7 @@ const AddMenuItem = () => {
               InputLabelProps={{ shrink: true }}
               value={formValues.year}
               onChange={(e) =>
-                setFormValues({ ...formValues, year: e.target.value })
+                setFormValues({ ...formValues, year: parseInt(e.target.value) })
               }
               style={{ marginTop: "16px" }}
             />
@@ -201,7 +204,10 @@ const AddMenuItem = () => {
               InputLabelProps={{ shrink: true }}
               value={formValues.semester}
               onChange={(e) =>
-                setFormValues({ ...formValues, semester: e.target.value })
+                setFormValues({
+                  ...formValues,
+                  semester: parseInt(e.target.value),
+                })
               }
               style={{ marginTop: "16px" }}
             />
@@ -239,7 +245,7 @@ const AddMenuItem = () => {
           </Button>
         </DialogActions>
       </Dialog>
-     </DashboardLayout>
+    </DashboardLayout>
   );
 };
 
