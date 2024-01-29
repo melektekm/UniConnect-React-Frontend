@@ -87,7 +87,7 @@ function Basic() {
         navigate("/storeKeeperdashboard");
       }
       setLoading(false);
-
+console.log(response.data.user.role);
       //ceNlXlqqa27MYEJsUE8hey352DeXrEdQJmqDEbaV
       // Redirect or perform other actions as needed
     } catch (error) {

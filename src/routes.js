@@ -38,7 +38,7 @@ Coded by www.creative-tim.com
 // Material Dashboard 2 React layouts
 import React from "react";
 import Dashboard from "./layouts/dashboard";
-import Tables from "./layouts/tables";
+import AssignmentsPage from "./layouts/tables";
 import Billing from "./layouts/billing";
 import Notifications from "./layouts/notifications";
 import EmployeeList from "./layouts/profile";
@@ -46,7 +46,7 @@ import SignIn from "./layouts/authentication/sign-in";
 import SignUp from "./layouts/authentication/sign-up";
 import MainDashboard from "./layouts/MainDashboard";
 import AddEmployee from "./layouts/addEmployee";
-import AddMenuItem from "./layouts/menuEntry";
+import CourseUpload from "./layouts/menuEntry";
 import FoodMenu from "./layouts/foodMenu";
 import BuyFood from "./layouts/buyFood";
 import Constraint from "./layouts/constraints";
@@ -59,16 +59,16 @@ import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
 import StockRequest from "./layouts/stockRequest";
 import Approval from "./layouts/stockApproval";
-import InventoryList from "./layouts/showInventory";
+import ViewAssignments from "./layouts/showInventory";
 import ShowApproval from "./layouts/showIngredientApproval";
 import StockApproval from "./layouts/showApprovedStock";
-import BuyFoodDepartment from "./layouts/buyFood/buyFoodDepartment";
+import AssignmentUpload from "./layouts/buyFood/buyFoodDepartment";
 import Department from "./layouts/departmentList";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
 import SearchMenu from "./layouts/search/searchForCafeManager";
-import ReportList from "./layouts/report";
+import ViewCourses from "./layouts/report";
 import IngredientRequest from "./layouts/ingredientRequest";
 import IngredientApproval from "./layouts/ingredientApproval";
 import DepartmentBilling from "./layouts/billing/DepartmentBilling";
@@ -154,19 +154,19 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ሜኑ ማስገቢያ",
+    name: "Upload Courses",
     key: "add_food",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/addFood",
-    component: <AddMenuItem />,
+    component: <CourseUpload />,
   },
   {
     type: "collapse",
-    name: "ትዕዛዞች",
+    name: "Assignment List",
     key: "orders",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",
-    component: <Tables />,
+    component: <AssignmentsPage />,
   },
   {
     type: "collapse",
@@ -202,11 +202,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ለዲፓርትመንት ምግብ መግዣ",
+    name: "Upload Assignments",
     key: "buy_food_department",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/buyFoodDepartment",
-    component: <BuyFoodDepartment />,
+    component: <AssignmentUpload />,
   },
   {
     type: "collapse",
@@ -262,11 +262,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "የገባው የእቃ ዝርዝር",
+    name: "View Assignment",
     key: "list",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/showInventory",
-    component: <InventoryList />,
+    component: <ViewAssignments />,
   },
   {
     type: "collapse",
@@ -377,11 +377,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ሪፖርት",
+    name: "Course List",
     key: "report",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/report",
-    component: <ReportList />,
+    component: <ViewCourses />,
   },
   {
     type: "collapse",
