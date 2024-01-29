@@ -78,7 +78,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const routes = [
     {
       type: "collapse",
-      name: "ዳሽቦርድ",
+      name: "Dashboard",
       key: "dashboard",
       icon: <DashboardIcon fontSize="small" />,
       route: "/dashboard",
@@ -86,11 +86,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ትዕዛዞች",
+      name: "Assignment List",
       key: "orders",
       icon: <TableViewOutlinedIcon fontSize="small" />,
       route: "/tables",
-      component: <Tables />,
+      component: <AssignmentsPage />,
     },
     {
       type: "collapse",
@@ -118,11 +118,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ሜኑ ማስገቢያ",
+      name: "Upload Courses",
       key: "add_food",
       icon: <RestaurantMenuIcon fontSize="small" />,
       route: "/addfood",
-      component: <AddMenuItem />,
+      component: <CourseUpload />,
     },
     {
       type: "collapse",
@@ -134,11 +134,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ለዲፓርትመንት ምግብ መግዣ",
+      name: "Upload Assignments",
       key: "buy_food_department",
       icon: <ShoppingCartIcon fontSize="small" />,
       route: "/buyFoodDepartment",
-      component: <BuyFoodDepartment />,
+      component: <AssignmentUpload />,
     },
     {
       type: "collapse",
@@ -150,11 +150,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "የገባው የእቃ ዝርዝር",
+      name: "View Assignment",
       key: "list",
       icon: <ShoppingCartIcon fontSize="small" />,
       route: "/showInventory",
-      component: <InventoryList />,
+      component: <ViewAssignments />,
     },
     {
       type: "collapse",
@@ -214,11 +214,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ሪፖርት",
+      name: "Course List",
       key: "report",
       icon: <AssessmentIcon fontSize="small" />,
       route: "/report",
-      component: <ReportList />,
+      component: <ViewCourses />,
     },
     {
       type: "collapse",

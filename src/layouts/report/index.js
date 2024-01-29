@@ -34,7 +34,7 @@ function ViewCourses() {
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/getallcourses`, {
+      const response = await axios.get(`${BASE_URL}/fetch-course`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -109,7 +109,8 @@ function ViewCourses() {
                           <TableCell align="center">{course.course_name}</TableCell>
                           <TableCell align="center">{course.course_description}</TableCell>
                           <TableCell align="center">{course.credit_hours}</TableCell>
-                          <TableCell align="center">{course.credit_hours}</TableCell>
+                          <TableCell align="center">{course.year}</TableCell>
+                          <TableCell align="center">{course.semester}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

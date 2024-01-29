@@ -225,7 +225,7 @@ function DashboardNavbar({
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox pr={1}>
+            {/* <MDBox pr={1}>
               <MDButton
                 variant="gradient"
                 style={{ color: "blue !important" }}
@@ -238,7 +238,7 @@ function DashboardNavbar({
               >
                 search
               </MDButton>
-            </MDBox>
+            </MDBox> */}
             <MDBox color={light ? "white" : "inherit"} textAlign="center">
               <IconButton
                 size="small"
