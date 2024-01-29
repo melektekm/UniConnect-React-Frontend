@@ -37,8 +37,11 @@ function ViewCourses() {
           "Content-Type": "application/json",
         },
       });
+      if (response.data && response.data.courses) {
+        setCourses(response.data["courses"]);
+      }
 
-      setCourses(response.data.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
@@ -88,28 +91,36 @@ function ViewCourses() {
                           <strong>Course Name</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Department</strong>
+                          <strong>Description</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Instructor</strong>
+                          <strong>Credit Hour</strong>
                         </TableCell>
-                        {/* Add more headers based on your course data model */}
+                        <TableCell align="center">
+                          <strong>Year</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong>Semester</strong>
+                        </TableCell>
                       </TableRow>
                       {courses.map((course) => (
-                        <TableRow key={course.courseCode}>
+                        <TableRow key={course.id}>
                           <TableCell align="center">
-                            {course.courseCode}
+                            {course.course_code}
                           </TableCell>
                           <TableCell align="center">
-                            {course.courseName}
+                            {course.course_name}
                           </TableCell>
                           <TableCell align="center">
-                            {course.department}
+                            {course.course_description}
                           </TableCell>
                           <TableCell align="center">
-                            {course.instructor}
+                            {course.credit_hours}
                           </TableCell>
-                          {/* Add more cells based on your course data model */}
+                          <TableCell align="center">{course.year}</TableCell>
+                          <TableCell align="center">
+                            {course.semester}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

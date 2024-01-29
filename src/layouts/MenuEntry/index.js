@@ -71,12 +71,9 @@ const AddMenuItem = () => {
     try {
       let response;
       const formData = new FormData();
-      formData.append("course_code", formValues.course_code.toString());
-      formData.append("course_name", formValues.course_name.toString());
-      formData.append(
-        "course_description",
-        formValues.course_description.toString()
-      );
+      formData.append("course_code", formValues.course_code);
+      formData.append("course_name", formValues.course_name);
+      formData.append("course_description", formValues.course_description);
       formData.append("credit_hour", parseFloat(formValues.credit_hours));
       formData.append("year", formValues.year);
       formData.append("semester", formValues.semester);

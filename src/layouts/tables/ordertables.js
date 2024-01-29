@@ -117,7 +117,7 @@ function AssignmentsPage() {
     }
   };
 
-  const filteredAssignments = assignments.filter((assignment) => {
+  const filteredAssignments = (assignments || []).filter((assignment) => {
     if (filterStatus === "all") {
       return true;
     }
