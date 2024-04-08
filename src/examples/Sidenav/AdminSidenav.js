@@ -73,14 +73,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     } catch (error) {}
   };
   const routes = [
-    {
-      type: "collapse",
-      name: "dashboard",
-      key: "dashboard",
-      icon: <DashboardIcon fontSize="small" />,
-      route: "/dashboard",
-      component: <Dashboard />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "dashboard",
+    //   key: "dashboard",
+    //   icon: <DashboardIcon fontSize="small" />,
+    //   route: "/dashboard",
+    //   component: <Dashboard />,
+    // },
     {
       type: "collapse",
       name: "Assignment List",
@@ -185,14 +185,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/ingredientApproval",
     //   component: <IngredientApproval />,
     // },
-    // {
-    //   type: "collapse",
-    //   name: "Add-employee",
-    //   key: "Add-employee",
-    //   icon: <AddIcon fontSize="small" />,
-    //   route: "/addEmployee",
-    //   component: <AddEmployee />,
-    // },
+    {
+      type: "collapse",
+      name: "Add-employee",
+      key: "Add-employee",
+      icon: <AddIcon fontSize="small" />,
+      route: "/addEmployee",
+      component: <AddEmployee />,
+    },
     // {
     //   type: "collapse",
     //   name: " guest billing",

@@ -1,496 +1,310 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
-import { Pagination } from "@mui/material";
-import Link from "@mui/material/Link";
-import { Dropdown } from "@mui/base/Dropdown";
-import { FormControl, MenuItem, Select } from "@mui/material";
-import CircularProgress from '@mui/material/CircularProgress';
-
-import { connect } from "react-redux";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  setNewAssignmentCount,
-} from "../../stateManagment/AssignmentSlice";
-
-const AssignmentPage = ({ setNewAssignmentCount }) => {
-  const [assignments, setAssignments] = useState([]);
-  const [filteredAssignments, setFilteredAssignments] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
-  const [assignmentStatus, setAssignmentStatus] = useState({});
-  const [perPage, setPerPage] = useState(20);
-  const [selectedStatus, setSelectedStatus] = useState("All");
-  const [loading, setLoading] = useState(true);
-
-  const accessToken = userData.accessToken;
-
-  const fetchAssignments = async () => {
-    setLoading(true)
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/assignments?page=${currentPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          params: {
-            per_page: perPage,
-          },
-        }
-      );
-      const newAssignmentsCount = response.data.data.filter(
-        (assignment) => !assignmentStatus[assignment.id]
-      ).length;
-
-      setNewAssignmentCount(newAssignmentsCount);
-
-      const newAssignmentsStatus = {};
-      response.data.data.forEach((assignment) => {
-        newAssignmentsStatus[assignment.id] = assignment.status;
-      });
-      setAssignmentStatus(newAssignmentsStatus);
-      setAssignments(response.data.data);
-
-      let filteredAssignments = response.data.data;
-      if (selectedStatus === "Sent") {
-        filteredAssignments = filteredAssignments.filter(
-          (assignment) => assignment.status === "Sent"
-        );
-      } else if (selectedStatus === "Unsent") {
-        filteredAssignments = filteredAssignments.filter(
-          (assignment) => assignment.status === "Unsent"
-        );
-      }
-
-      setFilteredAssignments(filteredAssignments);
-      setCurrentPage(response.data.current_page);
-      setLastPage(response.data.last_page);
-    } catch (error) {
-      // Handle error
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchAssignments();
-  }, [currentPage, perPage]);
-
-  const handleStatusFiltering = (type) => {
-    if (type === "Sent") {
-      setSelectedStatus("Sent");
-      setFilteredAssignments(assignments.filter((assignment) => assignment.status === "Sent"));
-    } else if (type === "Unsent") {
-      setSelectedStatus("Unsent");
-      setFilteredAssignments(assignments.filter((assignment) => assignment.status === "Unsent"));
-    } else {
-      setSelectedStatus("All");
-      setFilteredAssignments([]);
-    }
-  };
-
-  const handlePageChange = (event, page) => {
-    setCurrentPage(page);
-  };
-
+  CardTitle,
+  CardDescription,
+  CardHeader,
+  CardContent,
+  Card,
+} from "@/components/ui/card";
+import {
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenu,
+} from "@/components/ui/dropdown-menu";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+function Dashboard() {
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 20,
-        }}
-      >
-         <MDButton
-            style={{
-              marginRight: "30px",
-              color: "white",
-              backgroundColor: "#F44336",
-              fontWeight: "bold",
-            }}
-            variant={selectedMenuType === "Sent" ? "contained" : "outlined"}
-            onClick={() => handleStatusFiltering("Sent")}
+    <DashboardLayout>
+      <DashboardNavbar />
+      <Sidenav />
+      <div className="flex flex-col w-full min-h-screen">
+        <header className="flex items-center h-16 px-4 border-b shrink-0 md:px-6">
+          <Link
+            className="flex items-center gap-2 text-lg font-semibold sm:text-base mr-4"
+            href="#"
           >
-            Sent
-          </MDButton>
-
-          <MDButton
-            style={{
-              marginRight: "30px",
-              color: "black",
-              backgroundColor: " #FFC107",
-              fontWeight: "bold",
-            }}
-            variant={
-              selectedMenuType === "Unsent" ? "contained" : "outlined"
-            }
-            onClick={() => handleStatusFiltering("Unsent")}
-          >
-            Unsent
-          </MDButton>
-          <MDButton
-            style={{ marginRight: "30px" }}
-            variant="outlined"
-            onClick={() => handleStatusFiltering("All")}
-          >
-            All
-          </MDButton>
-      <TableContainer>
-        <Table>
-          <TableBody
-            sx={{
-              fontSize: "1.7em",
-              color: "white !important",
-            }}
-          >
-            <TableRow sx={{ backgroundColor: "#158467" }}>
-              <TableCell align="center">
-                <h3 style={{ color: "dark" }}>Assignment ID </h3>
-              </TableCell>
-              <TableCell align="center">
-                <h3 style={{ color: "dark" }}>Assignment Name</h3>
-              </TableCell>
-              <TableCell align="center">
-                <h3 style={{ color: "dark" }}>Course Name</h3>
-              </TableCell>
-              <TableCell align="center">
-                <h3 style={{ color: "dark" }}>Due Date</h3>
-              </TableCell>
-              <TableCell align="center">
-                <h3 style={{ color: "dark" }}>Uploaded File</h3>
-              </TableCell>
-              {/* <TableCell align="center">
-                <h3 style={{ color: "dark" }}>የትዕዛዝ ሁኔታ</h3>
-              </TableCell> */}
-              {showEditColumn && <TableCell></TableCell>}
-            </TableRow>
-
-            {searchedOrder.length > 0 ? (
-              searchedOrder.map((order) => (
-                <TableRow key={order.id} sx={{ backgroundColor: "#158467" }}>
-                  <TableCell align="center">
-                    <h4 style={{ color: "#07031A" }}>{order.coupon_code} </h4>
-                  </TableCell>
-                  <TableCell align="center">
-                    <h4 style={{ color: "#07031A" }}>{order.employee_name}</h4>
-                  </TableCell>
-                  <TableCell align="center">
-                    <h4 style={{ color: "black" }}>{order.total_price}</h4>
-                  </TableCell>
-                  <TableCell align="center">
-                    <h4>{convertToEthiopianDate(order.created_at)}</h4>
-                    <h4>({order.created_at})</h4>
-                  </TableCell>
-                  <TableCell align="center">
-                    <ul>
-                      {order.menu_items.map((item, index) => (
-                        <li key={index}>
-                          {item.name} ("ብዛት": {item.quantity})
-                        </li>
-                      ))}
-                    </ul>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Badge
-                        style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-                    >
-                      <div
-                          style={{
-                            width: 25,
-                            height: 25,
-
-                            borderRadius: "50%",
-                            backgroundColor:
-                                ordersStatus[order.id] === "UnServed"
-                                    ? "#f44336"
-                                    : ordersStatus[order.id] === "Processing"
-                                        ? "#ff9800"
-                                        : "#4caf50",
-                            marginRight: 8,
-                          }}
-                      />
-                      <MDTypography variant="h5">
-                        {order.id in ordersStatus?
-                            ordersStatus[order.id] === "UnServed"
-                                ? "ያልቀረበ"
-                                : ordersStatus[order.id] === "Processing"
-                                    ? "እየተዘጋጀ ያለ"
-                                    : "የቀረበ"
-                            : order.status}
-                      </MDTypography>
-
-
-                    </Badge>
-                  </TableCell>
-                  {showEditColumn && ordersStatus[order.id] !== "Served" && (
-                    <TableCell>
-
-                      <IconButton
-                        onClick={(event) => handleClick(event, order.id)}
-                      >
-                        <EditIcon color="primary" />
-                      </IconButton>
-
-                      <Menu
-                        id={`simple-menu-${order.id}`}
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                      >
-                        <MenuItem
-                          onClick={(event) =>
-                            handleOrderStatusChange(event, order.id)
-                          }
-                          data-value="UnServed"
-                        >
-                          ያልቀረበ
-                        </MenuItem>
-                        <MenuItem
-                          onClick={(event) =>
-                            handleOrderStatusChange(event, order.id)
-                          }
-                          data-value="Processing"
-                        >
-                          እየተዘጋጀ ነው
-                        </MenuItem>
-                        <MenuItem
-                          onClick={(event) =>
-                            handleOrderStatusChange(event, order.id)
-                          }
-                          data-value="Served"
-                        >
-                          ምግቡ ቀርቦላቸዋል
-                        </MenuItem>
-                      </Menu>
-
-                    </TableCell>
-                  )}
-                </TableRow>
-              ))
-            ) : orders.length > 0 ? (
-              selectedMenuType === "All" || filteredOrders.length > 0 ? (
-                (Array.isArray(filteredOrders) && filteredOrders.length > 0
-                  ? filteredOrders
-                  : orders
-                ).map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell align="center">
-                      <h4 style={{ color: "#07031A" }}>{order.coupon_code}</h4>
-                    </TableCell>
-                    <TableCell align="center">
-                      <h4 style={{ color: "#07031A" }}>
-                        {" "}
-                        {order.employee_name}
-                      </h4>
-                    </TableCell>
-                    <TableCell align="center">
-                      <h4 style={{ color: "black" }}>
-                        {order.total_price} ብር{" "}
-                      </h4>
-                    </TableCell>
-                    <TableCell align="center">
-                      <h4 style={{ color: "#07031A" }}>
-                        {convertToEthiopianDate(order.created_at)}
-                      </h4>
-                      <h4 style={{ color: "#07031A" }}>({order.created_at})</h4>
-                    </TableCell>
-                    <TableCell align="center">
-                      <ol style={{ color: "#07031A" }}>
-                        {order.menu_items.map((item, index) => (
-                          <li key={index}>
-                            <h4 style={{ color: "#07031A" }}>
-                              {item.name} (ብዛት: {item.quantity})
-                            </h4>
-                          </li>
-                        ))}
-                      </ol>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Badge
-                          style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-                      >
-                        <div
-                            style={{
-                              width: 25,
-                              height: 25,
-
-                              borderRadius: "50%",
-                              backgroundColor:
-                                  ordersStatus[order.id] === "UnServed"
-                                      ? "#f44336"
-                                      : ordersStatus[order.id] === "Processing"
-                                          ? "#ff9800"
-                                          : "#4caf50",
-                              marginRight: 8,
-                            }}
-                        />
-                        <MDTypography variant="h5">
-                          {order.id in ordersStatus?
-                              ordersStatus[order.id] === "UnServed"
-                                  ? "ያልቀረበ"
-                                  : ordersStatus[order.id] === "Processing"
-                                      ? "እየተዘጋጀ ያለ"
-                                      : "የቀረበ"
-                              : order.status}
-                        </MDTypography>
-
-
-                      </Badge>
-                    </TableCell>
-                    {showEditColumn && ordersStatus[order.id] !== "Served" && (
-                      <TableCell>
-                        <IconButton
-                          onClick={(event) => handleClick(event, order.id)}
-                        >
-                          <EditIcon color="primary" />
-                        </IconButton>
-
-                        <Menu
-                          id={`simple-menu-${order.id}`}
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={Boolean(anchorEl)}
-                          onClose={handleClose}
-                        >
-                          <MenuItem
-                            onClick={(event) =>
-                              handleOrderStatusChange(event, order.id)
-                            }
-                            data-value="UnServed"
-                          >
-                            ያልቀረበ
-                          </MenuItem>
-                          <MenuItem
-                            onClick={(event) =>
-                              handleOrderStatusChange(event, order.id)
-                            }
-                            data-value="Processing"
-                          >
-                            እየተዘጋጀ ነው
-                          </MenuItem>
-                          <MenuItem
-                            onClick={(event) =>
-                              handleOrderStatusChange(event, order.id)
-                            }
-                            data-value="Served"
-                          >
-                            ምግቡን ቀርቦላቸዋል
-                          </MenuItem>
-                        </Menu>
-                      </TableCell>
-                    )}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7}>ምንም ትዕዛዞች አልተገኙም</TableCell>
-                </TableRow>
-              )
-            ) : (
-              <TableRow>
-                <TableCell colSpan={7}>ምንም ትዕዛዞች አልተገኙም</TableCell>
-              </TableRow>
-            )}
-            {searchedOrder.length > 0 && (
-              <TableRow>
-                <TableCell colSpan={7} align="center">
-                  <MDButton
-                    variant="contained"
-                    onClick={() => setSearchedOrder([])}
-                    color={"secondary"}
-                  >
-                    የፍለጋ ውጤቶችን ሰርዝ
-                  </MDButton>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        {loading ?
-        <MDBox textAlign = "center">
-
-        <CircularProgress color="primary"/>
-
-</MDBox>:''}
-      </TableContainer>
-
-      <Box mt={2} display="flex" justifyContent="center">
-        <Pagination
-          component={Link}
-          count={lastPage}
-          page={currentPage}
-          onChange={handlePageChange}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-        />
-      </Box>
-      <Dialog
-        open={openEmptySearchDialog}
-        onClose={() => setOpenEmptySearchDialog(false)}
-        aria-labelledby="empty-search-dialog-title"
-        aria-describedby="empty-search-dialog-description"
-        PaperProps={{ sx: { padding: "20px" } }}
-      >
-        <DialogTitle id="empty-search-dialog-title">{"ማስታወቂያ"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="empty-search-dialog-description">
-            {emptySearchErrorMessage}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <MDButton
-            onClick={() => {
-              
-              setOpenEmptySearchDialog(false);
-              setEmptySearchErrorMessage("");
-              
-            }}
-            color="primary"
-            variant="contained"
-          >
-            ዝጋ
-          </MDButton>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={openNoMatchDialog}
-        onClose={() => setOpenNoMatchDialog(false)}
-        aria-labelledby="no-match-dialog-title"
-        aria-describedby="no-match-dialog-description"
-        PaperProps={{ sx: { padding: "20px" } }}
-      >
-        <DialogTitle id="no-match-dialog-title">{"ማስታወቂያ"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="no-match-dialog-description">
-            {noMatchErrorMessage}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setOpenNoMatchDialog(false);
-              setNoMatchErrorMessage("");
-            }}
-            color="error"
-            variant="text"
-          >
-            ዝጋ
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+            <FrameIcon className="w-6 h-6" />
+            <span className="sr-only">Acme Inc</span>
+          </Link>
+          <nav className="hidden font-medium sm:flex flex-row items-center gap-5 text-sm lg:gap-6">
+            <Link className="font-bold" href="#">
+              Assignments
+            </Link>
+            <Link className="text-gray-500 dark:text-gray-400" href="#">
+              Calendar
+            </Link>
+            <Link className="text-gray-500 dark:text-gray-400" href="#">
+              Notes
+            </Link>
+          </nav>
+          <div className="flex items-center w-full gap-4 md:ml-auto md:gap-2 lg:gap-4">
+            <Button
+              className="rounded-full ml-auto"
+              size="icon"
+              variant="ghost"
+            >
+              <img
+                alt="Avatar"
+                className="rounded-full border"
+                height="32"
+                src="/placeholder.svg"
+                style={{
+                  aspectRatio: "32/32",
+                  objectFit: "cover",
+                }}
+                width="32"
+              />
+              <span className="sr-only">Toggle user menu</span>
+            </Button>
+          </div>
+        </header>
+        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] bg-gray-100/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 dark:bg-gray-800/40">
+          <div className="max-w-6xl w-full mx-auto flex items-center gap-4">
+            <form className="flex-1">
+              <Input
+                className="bg-white dark:bg-gray-950"
+                placeholder="Search assignments..."
+              />
+              <Button className="sr-only" type="submit">
+                Submit
+              </Button>
+            </form>
+            <Button>Add New</Button>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl w-full mx-auto">
+            <Card>
+              <CardHeader className="flex flex-row items-center gap-4">
+                <BookIcon className="w-8 h-8" />
+                <div className="grid gap-1">
+                  <CardTitle>Math Homework</CardTitle>
+                  <CardDescription>Due: 2024-01-26</CardDescription>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="ml-auto" size="icon" variant="ghost">
+                      <MoreHorizontalIcon className="w-4 h-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>View Assignment</DropdownMenuItem>
+                    <DropdownMenuItem>View Settings</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </CardHeader>
+              <CardContent className="grid gap-2">
+                <div className="text-sm font-semibold">
+                  Complete the math homework.
+                </div>
+                <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-1">
+                    <GithubIcon className="w-4 h-4" />
+                    <span className="text-gray-500 dark:text-gray-400">
+                      3h ago
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <GitBranchIcon className="w-4 h-4" />
+                    <span className="text-gray-500 dark:text-gray-400">
+                      main
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center gap-4">
+                <BookIcon className="w-8 h-8" />
+                <div className="grid gap-1">
+                  <CardTitle>Science Project</CardTitle>
+                  <CardDescription>Due: 2024-01-28</CardDescription>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="ml-auto" size="icon" variant="ghost">
+                      <MoreHorizontalIcon className="w-4 h-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>View Assignment</DropdownMenuItem>
+                    <DropdownMenuItem>View Settings</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </CardHeader>
+              <CardContent className="grid gap-2">
+                <div className="text-sm font-semibold">
+                  Complete the science project.
+                </div>
+                <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-1">
+                    <GithubIcon className="w-4 h-4" />
+                    <span className="text-gray-500 dark:text-gray-400">
+                      1 day ago
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <GitBranchIcon className="w-4 h-4" />
+                    <span className="text-gray-500 dark:text-gray-400">
+                      main
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center gap-4">
+                <BookIcon className="w-8 h-8" />
+                <div className="grid gap-1">
+                  <CardTitle>English Essay</CardTitle>
+                  <CardDescription>Due: 2024-01-30</CardDescription>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="ml-auto" size="icon" variant="ghost">
+                      <MoreHorizontalIcon className="w-4 h-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>View Assignment</DropdownMenuItem>
+                    <DropdownMenuItem>View Settings</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </CardHeader>
+              <CardContent className="grid gap-2">
+                <div className="text-sm font-semibold">
+                  Complete the English essay.
+                </div>
+                <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-1">
+                    <GithubIcon className="w-4 h-4" />
+                    <span className="text-gray-500 dark:text-gray-400">
+                      2 days ago
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <GitBranchIcon className="w-4 h-4" />
+                    <span className="text-gray-500 dark:text-gray-400">
+                      main
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    </DashboardLayout>
   );
-};
-const mapDispatchToProps = {
-  setNewOrderCount,
-};
+}
 
-export default connect(null, mapDispatchToProps)(OrderTables);
+function BookIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+    </svg>
+  );
+}
+
+function FrameIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="22" x2="2" y1="6" y2="6" />
+      <line x1="22" x2="2" y1="18" y2="18" />
+      <line x1="6" x2="6" y1="2" y2="22" />
+      <line x1="18" x2="18" y1="2" y2="22" />
+    </svg>
+  );
+}
+
+function GitBranchIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="6" x2="6" y1="3" y2="15" />
+      <circle cx="18" cy="6" r="3" />
+      <circle cx="6" cy="18" r="3" />
+      <path d="M18 9a9 9 0 0 1-9 9" />
+    </svg>
+  );
+}
+
+function GithubIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+      <path d="M9 18c-4.51 2-5-2-7-2" />
+    </svg>
+  );
+}
+
+function MoreHorizontalIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="1" />
+      <circle cx="19" cy="12" r="1" />
+      <circle cx="5" cy="12" r="1" />
+    </svg>
+  );
+}
+export default Dashboard;

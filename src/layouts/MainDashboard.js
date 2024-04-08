@@ -11,7 +11,7 @@ export default function MainDashboard({ selectedMenu }) {
     <AdminSidenav
       color="dark"
       brand=""
-      brandName="የሚንት ካፌ መተግበሪያ"
+      brandName="UNICONNECT"
       selectedMenu={selectedMenu}
     />
   );

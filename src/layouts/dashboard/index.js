@@ -1,310 +1,239 @@
-// import Link from "next/link";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import {
-//   CardTitle,
-//   CardDescription,
-//   CardHeader,
-//   CardContent,
-//   Card,
-// } from "@/components/ui/card";
-// import {
-//   DropdownMenuTrigger,
-//   DropdownMenuItem,
-//   DropdownMenuContent,
-//   DropdownMenu,
-// } from "@/components/ui/dropdown-menu";
-// import Sidenav from "../../examples/Sidenav/AdminSidenav";
-// import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-// import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-// function Dashboard() {
-//   return (
-//     <DashboardLayout>
-//       <DashboardNavbar />
-//       <Sidenav />
-//       <div className="flex flex-col w-full min-h-screen">
-//         <header className="flex items-center h-16 px-4 border-b shrink-0 md:px-6">
-//           <Link
-//             className="flex items-center gap-2 text-lg font-semibold sm:text-base mr-4"
-//             href="#"
-//           >
-//             <FrameIcon className="w-6 h-6" />
-//             <span className="sr-only">Acme Inc</span>
-//           </Link>
-//           <nav className="hidden font-medium sm:flex flex-row items-center gap-5 text-sm lg:gap-6">
-//             <Link className="font-bold" href="#">
-//               Assignments
-//             </Link>
-//             <Link className="text-gray-500 dark:text-gray-400" href="#">
-//               Calendar
-//             </Link>
-//             <Link className="text-gray-500 dark:text-gray-400" href="#">
-//               Notes
-//             </Link>
-//           </nav>
-//           <div className="flex items-center w-full gap-4 md:ml-auto md:gap-2 lg:gap-4">
-//             <Button
-//               className="rounded-full ml-auto"
-//               size="icon"
-//               variant="ghost"
-//             >
-//               <img
-//                 alt="Avatar"
-//                 className="rounded-full border"
-//                 height="32"
-//                 src="/placeholder.svg"
-//                 style={{
-//                   aspectRatio: "32/32",
-//                   objectFit: "cover",
-//                 }}
-//                 width="32"
-//               />
-//               <span className="sr-only">Toggle user menu</span>
-//             </Button>
-//           </div>
-//         </header>
-//         <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] bg-gray-100/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 dark:bg-gray-800/40">
-//           <div className="max-w-6xl w-full mx-auto flex items-center gap-4">
-//             <form className="flex-1">
-//               <Input
-//                 className="bg-white dark:bg-gray-950"
-//                 placeholder="Search assignments..."
-//               />
-//               <Button className="sr-only" type="submit">
-//                 Submit
-//               </Button>
-//             </form>
-//             <Button>Add New</Button>
-//           </div>
-//           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl w-full mx-auto">
-//             <Card>
-//               <CardHeader className="flex flex-row items-center gap-4">
-//                 <BookIcon className="w-8 h-8" />
-//                 <div className="grid gap-1">
-//                   <CardTitle>Math Homework</CardTitle>
-//                   <CardDescription>Due: 2024-01-26</CardDescription>
-//                 </div>
-//                 <DropdownMenu>
-//                   <DropdownMenuTrigger asChild>
-//                     <Button className="ml-auto" size="icon" variant="ghost">
-//                       <MoreHorizontalIcon className="w-4 h-4" />
-//                       <span className="sr-only">Toggle menu</span>
-//                     </Button>
-//                   </DropdownMenuTrigger>
-//                   <DropdownMenuContent align="end">
-//                     <DropdownMenuItem>View Assignment</DropdownMenuItem>
-//                     <DropdownMenuItem>View Settings</DropdownMenuItem>
-//                   </DropdownMenuContent>
-//                 </DropdownMenu>
-//               </CardHeader>
-//               <CardContent className="grid gap-2">
-//                 <div className="text-sm font-semibold">
-//                   Complete the math homework.
-//                 </div>
-//                 <div className="flex items-center gap-4 text-sm">
-//                   <div className="flex items-center gap-1">
-//                     <GithubIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       3h ago
-//                     </span>
-//                   </div>
-//                   <div className="flex items-center gap-1">
-//                     <GitBranchIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       main
-//                     </span>
-//                   </div>
-//                 </div>
-//               </CardContent>
-//             </Card>
-//             <Card>
-//               <CardHeader className="flex flex-row items-center gap-4">
-//                 <BookIcon className="w-8 h-8" />
-//                 <div className="grid gap-1">
-//                   <CardTitle>Science Project</CardTitle>
-//                   <CardDescription>Due: 2024-01-28</CardDescription>
-//                 </div>
-//                 <DropdownMenu>
-//                   <DropdownMenuTrigger asChild>
-//                     <Button className="ml-auto" size="icon" variant="ghost">
-//                       <MoreHorizontalIcon className="w-4 h-4" />
-//                       <span className="sr-only">Toggle menu</span>
-//                     </Button>
-//                   </DropdownMenuTrigger>
-//                   <DropdownMenuContent align="end">
-//                     <DropdownMenuItem>View Assignment</DropdownMenuItem>
-//                     <DropdownMenuItem>View Settings</DropdownMenuItem>
-//                   </DropdownMenuContent>
-//                 </DropdownMenu>
-//               </CardHeader>
-//               <CardContent className="grid gap-2">
-//                 <div className="text-sm font-semibold">
-//                   Complete the science project.
-//                 </div>
-//                 <div className="flex items-center gap-4 text-sm">
-//                   <div className="flex items-center gap-1">
-//                     <GithubIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       1 day ago
-//                     </span>
-//                   </div>
-//                   <div className="flex items-center gap-1">
-//                     <GitBranchIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       main
-//                     </span>
-//                   </div>
-//                 </div>
-//               </CardContent>
-//             </Card>
-//             <Card>
-//               <CardHeader className="flex flex-row items-center gap-4">
-//                 <BookIcon className="w-8 h-8" />
-//                 <div className="grid gap-1">
-//                   <CardTitle>English Essay</CardTitle>
-//                   <CardDescription>Due: 2024-01-30</CardDescription>
-//                 </div>
-//                 <DropdownMenu>
-//                   <DropdownMenuTrigger asChild>
-//                     <Button className="ml-auto" size="icon" variant="ghost">
-//                       <MoreHorizontalIcon className="w-4 h-4" />
-//                       <span className="sr-only">Toggle menu</span>
-//                     </Button>
-//                   </DropdownMenuTrigger>
-//                   <DropdownMenuContent align="end">
-//                     <DropdownMenuItem>View Assignment</DropdownMenuItem>
-//                     <DropdownMenuItem>View Settings</DropdownMenuItem>
-//                   </DropdownMenuContent>
-//                 </DropdownMenu>
-//               </CardHeader>
-//               <CardContent className="grid gap-2">
-//                 <div className="text-sm font-semibold">
-//                   Complete the English essay.
-//                 </div>
-//                 <div className="flex items-center gap-4 text-sm">
-//                   <div className="flex items-center gap-1">
-//                     <GithubIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       2 days ago
-//                     </span>
-//                   </div>
-//                   <div className="flex items-center gap-1">
-//                     <GitBranchIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       main
-//                     </span>
-//                   </div>
-//                 </div>
-//               </CardContent>
-//             </Card>
-//           </div>
-//         </main>
-//       </div>
-//     </DashboardLayout>
-//   );
-// }
+import React, { useState, useEffect } from "react";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import MDBox from "../../components/MDBox";
+import MDTypography from "../../components/MDTypography";
+import MainDashboard from "../../layouts/MainDashboard";
+import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
+import AdminNavbar from "../../examples/Navbars/AdminNavbar";
+import Footer from "../../examples/Footer";
+import MDInput from "../../components/MDInput";
+import MDButton from "../../components/MDButton";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import axios from "axios";
+import { BASE_URL } from "../../appconfig";
+import Icon from "@mui/material/Icon";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
+import { Button } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useLocation, useNavigate } from "react-router-dom";
 
-// function BookIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-//     </svg>
-//   );
-// }
+function Dashboard({ selectedEmployee }) {
+  const [name, setName] = useState("");
+  const [role, setRole] = useState(0);
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessages, setErrorMessages] = useState({
+    name: "",
+    email: "",
+    role: "",
+  });
 
-// function FrameIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <line x1="22" x2="2" y1="6" y2="6" />
-//       <line x1="22" x2="2" y1="18" y2="18" />
-//       <line x1="6" x2="6" y1="2" y2="22" />
-//       <line x1="18" x2="18" y1="2" y2="22" />
-//     </svg>
-//   );
-// }
+  const electron = window.require("electron");
+  const ipcRenderer = electron.ipcRenderer;
+  const CircularLoader = () => <CircularProgress size={24} color="inherit" />;
 
-// function GitBranchIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <line x1="6" x2="6" y1="3" y2="15" />
-//       <circle cx="18" cy="6" r="3" />
-//       <circle cx="6" cy="18" r="3" />
-//       <path d="M18 9a9 9 0 0 1-9 9" />
-//     </svg>
-//   );
-// }
+  const [formValues, setFormValues] = useState({
+    name: selectedEmployee ? selectedEmployee.name : "",
+    email: selectedEmployee ? selectedEmployee.email : "",
+    role: selectedEmployee ? selectedEmployee.role : 0,
+  });
 
-// function GithubIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-//       <path d="M9 18c-4.51 2-5-2-7-2" />
-//     </svg>
-//   );
-// }
+  const userData = ipcRenderer.sendSync("get-user");
+  const accessToken = userData.accessToken;
+  const [open, setOpen] = useState(false);
 
-// function MoreHorizontalIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <circle cx="12" cy="12" r="1" />
-//       <circle cx="19" cy="12" r="1" />
-//       <circle cx="5" cy="12" r="1" />
-//     </svg>
-//   );
-// }
-// export default Dashboard;
+  const handleRegister = async () => {
+    const newErrorMessages = {
+      name: name ? "" : "name is required",
+      role: role ? "" : "role is required",
+      email: email ? "" : "email is required",
+    };
+    setErrorMessages(newErrorMessages);
+
+    if (Object.values(newErrorMessages).some((message) => message !== "")) {
+      setErrorMessage("Please fill in all fields");
+      setOpen(true);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const requestData = {
+        name: name,
+        email: email,
+        role: role,
+      };
+
+      const response = await axios.post(
+        `${BASE_URL}/auth/admin/addEmployee`,
+        requestData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data) {
+        resetState();
+        setErrorMessage("");
+        setSuccessMessage("Employee registered successfully");
+        setOpen(true);
+      } else {
+        setErrorMessage("No response");
+        setOpen(true);
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const serverErrorMessages = error.response.data.errors;
+        let errorMessage = "user not registered";
+
+        for (const [key, value] of Object.entries(serverErrorMessages)) {
+          errorMessage += `${key}: ${value[0]}, `;
+        }
+
+        setErrorMessage(errorMessage);
+      } else {
+        setErrorMessage("user not registered: " + error);
+      }
+      setOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetState = () => {
+    setName("");
+    setRole(0);
+    setEmail("");
+  };
+  return (
+    <DashboardLayout>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {successMessage ? "notification" : "notification"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {successMessage || errorMessage}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setOpen(false);
+              setErrorMessage("");
+            }}
+            color="primary"
+            autoFocus
+          >
+            close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <AdminNavbar />
+      <Sidenav />
+      <MainDashboard />
+      <MDBox pt={6} pb={3}>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Card>
+              <MDBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="dark"
+                borderRadius="lg"
+                coloredShadow="info"
+              >
+                <MDTypography variant="h6" color="white">
+                  add employee
+                </MDTypography>
+              </MDBox>
+              <MDBox pt={3} pb={3} px={2}>
+                <MDBox component="form" role="form">
+                  <MDInput
+                    type="text"
+                    name="name"
+                    label="Name"
+                    variant="outlined"
+                    fullWidth
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    margin="normal"
+                    required
+                    error={!!errorMessages.name}
+                    helperText={errorMessages.name}
+                  />
+
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel>Role</InputLabel>
+                    <Select
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                      label="Role"
+                    >
+                      <MenuItem value="coordinator">Coordinator</MenuItem>
+                      <MenuItem value="admin">Admin</MenuItem>
+                      <MenuItem value="student">Student</MenuItem>
+                      <MenuItem value="dean">Dean</MenuItem>
+                      <MenuItem value="instructor">Instructor</MenuItem>
+                      <MenuItem value="registrar">Registrar</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <MDInput
+                    type="email"
+                    label="Email"
+                    name="email"
+                    variant="outlined"
+                    fullWidth
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    margin="normal"
+                    required
+                    error={!!errorMessages.email}
+                    helperText={errorMessages.email}
+                  />
+
+                  <MDBox mt={4} mb={1} textAlign="center">
+                    <MDButton color="primary" onClick={handleRegister}>
+                      add
+                    </MDButton>
+                  </MDBox>
+                </MDBox>
+              </MDBox>
+            </Card>
+          </Grid>
+        </Grid>
+      </MDBox>
+      <Footer />
+    </DashboardLayout>
+  );
+}
+
+export default Dashboard;

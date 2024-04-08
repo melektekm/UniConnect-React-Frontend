@@ -159,7 +159,7 @@ function StockApproval() {
 
       fs.writeFileSync(colorsFilePath, mintColorsContent);
 
-      setMessage(`ገይታው ወደ ሚንት ገጽታ ተቀይሯል`);
+      setMessage(`Theme has been changed`);
     } catch (error) {}
   };
 
