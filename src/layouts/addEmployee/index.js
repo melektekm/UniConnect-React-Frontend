@@ -103,7 +103,7 @@ function AddEmployee({ selectedEmployee }) {
     } catch (error) {
       if (error.response && error.response.data) {
         const serverErrorMessages = error.response.data.errors;
-        let errorMessage = "Employee not registered";
+        let errorMessage = "user not registered";
 
         for (const [key, value] of Object.entries(serverErrorMessages)) {
           errorMessage += `${key}: ${value[0]}, `;
@@ -111,7 +111,7 @@ function AddEmployee({ selectedEmployee }) {
 
         setErrorMessage(errorMessage);
       } else {
-        setErrorMessage("Employee not registered: " + error);
+        setErrorMessage("user not registered: " + error);
       }
       setOpen(true);
     } finally {
@@ -197,12 +197,12 @@ function AddEmployee({ selectedEmployee }) {
                       onChange={(e) => setRole(e.target.value)}
                       label="Role"
                     >
-                      <MenuItem value={0}>Select Role</MenuItem>
-                      <MenuItem value={1}>Admin</MenuItem>
-                      <MenuItem value={2}>Coordinator</MenuItem>
-                      <MenuItem value={3}>Student</MenuItem>
-                      <MenuItem value={4}>Dean</MenuItem>
-                      <MenuItem value={5}>Instructor</MenuItem>
+                      <MenuItem value="coordinator">Coordinator</MenuItem>
+                      <MenuItem value="admin">Admin</MenuItem>
+                      <MenuItem value="student">Student</MenuItem>
+                      <MenuItem value="dean">Dean</MenuItem>
+                      <MenuItem value="instructor">Instructor</MenuItem>
+                      <MenuItem value="registrar">Registrar</MenuItem>
                     </Select>
                   </FormControl>
 

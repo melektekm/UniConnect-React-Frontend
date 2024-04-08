@@ -1,4 +1,3 @@
-
 import React from "react";
 
 // react-router components
@@ -18,7 +17,6 @@ import MDButton from "../../../components/MDButton";
 
 // Material Dashboard 2 React example components
 
-
 // Material Dashboard 2 React base styles
 import breakpoints from "../../../assets/theme/base/breakpoints";
 
@@ -28,7 +26,6 @@ import { useMaterialUIController } from "../../../context";
 function DefaultNavbar({ transparent, light }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-
 
   return (
     <Container>
@@ -57,18 +54,21 @@ function DefaultNavbar({ transparent, light }) {
           backdropFilter: transparent ? "none" : `saturate(200%) blur(30px)`,
         })}
       >
-  <MDBox
-  component='div'
-  py={transparent ? 1.5 : 0.75}
-  lineHeight={1}
-  pl={{ xs: 0, lg: 1 }}
-  style={{ textAlign: 'center' }}
->
-  <MDTypography variant="h5" fontWeight="bold" color={light ? "white" : "dark"}>
-    የኢኖቬሽንና ቴክኖሎጂ ሚኒስቴር ካፌ መተግበሪያ
-  </MDTypography>
-</MDBox>
-
+        <MDBox
+          component="div"
+          py={transparent ? 1.5 : 0.75}
+          lineHeight={1}
+          pl={{ xs: 0, lg: 1 }}
+          style={{ textAlign: "center" }}
+        >
+          <MDTypography
+            variant="h5"
+            fontWeight="bold"
+            color={light ? "white" : "dark"}
+          >
+            UNICONNECT
+          </MDTypography>
+        </MDBox>
       </MDBox>
     </Container>
   );

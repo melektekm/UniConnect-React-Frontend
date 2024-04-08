@@ -221,9 +221,9 @@ function AdminNavbar({ absolute, light, isMini }) {
                 <AccountCircleIcon sx={iconsStyle} />
               </IconButton>
               {renderMenu()}
-              <MDTypography style={{ fontSize: "0.67em" }}>
-                ስላም {userData.user.name}
-              </MDTypography>
+              {/* <MDTypography style={{ fontSize: "0.67em" }}>
+                 {userData.user.name}
+              </MDTypography> */}
             </MDBox>
           </MDBox>
         )}

@@ -14,10 +14,7 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
-import {
-  Card,
-  Box,
-} from "@mui/material";
+import { Card, Box } from "@mui/material";
 
 function ViewCourses() {
   const electron = window.require("electron");
@@ -40,8 +37,11 @@ function ViewCourses() {
           "Content-Type": "application/json",
         },
       });
+      if (response.data && response.data.courses) {
+        setCourses(response.data["courses"]);
+      }
 
-      setCourses(response.data.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
@@ -105,12 +105,22 @@ function ViewCourses() {
                       </TableRow>
                       {courses.map((course) => (
                         <TableRow key={course.id}>
-                          <TableCell align="center">{course.course_code}</TableCell>
-                          <TableCell align="center">{course.course_name}</TableCell>
-                          <TableCell align="center">{course.course_description}</TableCell>
-                          <TableCell align="center">{course.credit_hours}</TableCell>
+                          <TableCell align="center">
+                            {course.course_code}
+                          </TableCell>
+                          <TableCell align="center">
+                            {course.course_name}
+                          </TableCell>
+                          <TableCell align="center">
+                            {course.course_description}
+                          </TableCell>
+                          <TableCell align="center">
+                            {course.credit_hours}
+                          </TableCell>
                           <TableCell align="center">{course.year}</TableCell>
-                          <TableCell align="center">{course.semester}</TableCell>
+                          <TableCell align="center">
+                            {course.semester}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
