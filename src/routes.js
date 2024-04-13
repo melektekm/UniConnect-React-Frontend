@@ -64,7 +64,7 @@ import ShowApproval from "./layouts/showIngredientApproval";
 import StockApproval from "./layouts/showApprovedStock";
 import AssignmentUpload from "./layouts/buyFood/buyFoodDepartment";
 import Department from "./layouts/departmentList";
-
+// import Billing from "./layouts/billing";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import SearchMenu from "./layouts/search/searchForCafeManager";
@@ -77,7 +77,7 @@ import SearchMenuForCashier from "./layouts/search/searchForCashier";
 import CashierOrder from "./layouts/tables/CashierOrderView";
 import storeKeeperDashboard from "./layouts/dashboard/storeKeeperDashboard";
 import StockAmountTable from "./layouts/stokeAmount";
-
+import InventoryEntry from "./layouts/inventory";
 const routes = [
   {
     type: "collapse",
@@ -95,15 +95,30 @@ const routes = [
     route: "/food_menu",
     component: <FoodMenu />,
   },
-
+  // {
+  //   type: "collapse",
+  //   name: " guest billing",
+  //   key: "billing",
+  //   icon: <Icon fontSize="small" />,
+  //   route: "/billing",
+  //   component: <Billing />,
+  // },
   {
     type: "collapse",
-    name: "ገደብ",
-    key: "constraint",
+    name: "Inventory",
+    key: "inventory",
     icon: <Icon fontSize="small" />,
-    route: "/constraint",
-    component: <Constraint />,
+    route: "/inventory",
+    component: <InventoryEntry />,
   },
+  // {
+  //   type: "collapse",
+  //   name: "ገደብ",
+  //   key: "constraint",
+  //   icon: <Icon fontSize="small" />,
+  //   route: "/constraint",
+  //   component: <Constraint />,
+  // },
   {
     type: "collapse",
     name: "ዳሽቦርድ",

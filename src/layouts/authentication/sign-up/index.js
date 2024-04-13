@@ -125,7 +125,7 @@ function Cover() {
         aria-describedby="alert-dialog-description"
         PaperProps={{ style: { padding: "15px" } }}
       >
-        <DialogTitle id="alert-dialog-title">የregistration error</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Registration error</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {errorMessage}
@@ -242,7 +242,7 @@ function Cover() {
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                አስቀድመው መለያ አለህ?{" "}
+                Do you have an account?{" "}
                 <MDTypography
                   onClick={() => navigate("/authentication/sign-in")}
                   variant="button"
@@ -251,7 +251,7 @@ function Cover() {
                   textGradient
                   style={{ cursor: "pointer" }}
                 >
-                  ይግቡ
+                  Login
                 </MDTypography>
               </MDTypography>
             </MDBox>
