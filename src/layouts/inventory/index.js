@@ -26,7 +26,7 @@ import { Button, TextField } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
-
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 function InventoryEntry() {
   const [name, setItemName] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -144,6 +144,7 @@ function InventoryEntry() {
 
   return (
     <DashboardLayout>
+      <Sidenav />
       <Dialog
         open={open}
         onClose={() => setOpen(false)}

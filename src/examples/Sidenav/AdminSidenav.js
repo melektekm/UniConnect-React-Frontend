@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import PropTypes from "prop-types";
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import List from "@mui/material/List";
@@ -29,7 +29,7 @@ import ViewAssignments from "../../layouts/showInventory";
 import ShowApproval from "../../layouts/showIngredientApproval";
 import StockApproval from "../../layouts/showApprovedStock";
 import AssignmentUpload from "../../layouts/buyFood/buyFoodDepartment";
-
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { Icon } from "semantic-ui-react";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -65,7 +65,10 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const collapseName = location.pathname.replace("/", "");
-
+  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
+  const handleOpenLogoutDialog = () => {
+    setOpenLogoutDialog(true);
+  };
   const handleLogout = async () => {
     try {
       await ipcRenderer.invoke("clear-user");
@@ -73,14 +76,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     } catch (error) {}
   };
   const routes = [
-    // {
-    //   type: "collapse",
-    //   name: "dashboard",
-    //   key: "dashboard",
-    //   icon: <DashboardIcon fontSize="small" />,
-    //   route: "/dashboard",
-    //   component: <Dashboard />,
-    // },
+    {
+      type: "collapse",
+      name: "dashboard",
+      key: "dashboard",
+      icon: <DashboardIcon fontSize="small" />,
+      route: "/dashboard",
+      component: <Dashboard />,
+    },
     {
       type: "collapse",
       name: "Assignment List",
@@ -89,30 +92,30 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/tables",
       component: <AssignmentsPage />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "ent_Approval",
-    //   key: "Ingredient_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showIngredientApproval",
-    //   component: <ShowApproval />,
-    // // },
-    // {
-    //   type: "collapse",
-    //   name: "stock_Approval",
-    //   key: "stock_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showApprovedStock",
-    //   component: <StockApproval />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "food menu",
-    //   key: "food_menu",
-    //   icon: <FastfoodIcon fontSize="small" />,
-    //   route: "/food_menu",
-    //   component: <FoodMenu />,
-    // },
+    {
+      type: "collapse",
+      name: "ent_Approval",
+      key: "Ingredient_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/showIngredientApproval",
+      component: <ShowApproval />,
+    },
+    {
+      type: "collapse",
+      name: "stock_Approval",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/showApprovedStock",
+      component: <StockApproval />,
+    },
+    {
+      type: "collapse",
+      name: "food menu",
+      key: "food_menu",
+      icon: <FastfoodIcon fontSize="small" />,
+      route: "/food_menu",
+      component: <FoodMenu />,
+    },
     {
       type: "collapse",
       name: "Upload Courses",
@@ -121,14 +124,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/addfood",
       component: <CourseUpload />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "buy food",
-    //   key: "buy_food",
-    //   icon: <ShoppingCartIcon fontSize="small" />,
-    //   route: "/buyFood",
-    //   component: <BuyFood />,
-    // },
+    {
+      type: "collapse",
+      name: "buy food",
+      key: "buy_food",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/buyFood",
+      component: <BuyFood />,
+    },
     {
       type: "collapse",
       name: "Upload Assignments",
@@ -137,14 +140,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/buyFoodDepartment",
       component: <AssignmentUpload />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "Inventory",
-    //   key: "inventory",
-    //   icon: <InventoryIcon fontSize="small" />,
-    //   route: "/inventory",
-    //   component: <InventoryEntry />,
-    // },
+    {
+      type: "collapse",
+      name: "Inventory",
+      key: "inventory",
+      icon: <InventoryIcon fontSize="small" />,
+      route: "/inventory",
+      component: <InventoryEntry />,
+    },
     {
       type: "collapse",
       name: "View Assignment",
@@ -153,38 +156,38 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/showInventory",
       component: <ViewAssignments />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "stock_request",
-    //   key: "stock_request",
-    //   icon: <ShoppingCartIcon fontSize="small" />,
-    //   route: "/stockRequest",
-    //   component: <StockRequest />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "Stock Approval",
-    //   key: "stock_Approval",
-    //   icon: <Icon fontSize="small" />,
-    //   route: "/stockApproval",
-    //   component: <Approval />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "ingredient_Request",
-    //   key: "ingredient_Request",
-    //   icon: <KitchenIcon fontSize="small" />,
-    //   route: "/ingredientRequest",
-    //   component: <IngredientRequest />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "ingredient_Approval",
-    //   key: "ingredient_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/ingredientApproval",
-    //   component: <IngredientApproval />,
-    // },
+    {
+      type: "collapse",
+      name: "stock_request",
+      key: "stock_request",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/stockRequest",
+      component: <StockRequest />,
+    },
+    {
+      type: "collapse",
+      name: "Stock Approval",
+      key: "stockApproval",
+      icon: <Icon fontSize="small" />,
+      route: "/stockApproval",
+      component: <Approval />,
+    },
+    {
+      type: "collapse",
+      name: "ingredient_Request",
+      key: "ingredient_Request",
+      icon: <KitchenIcon fontSize="small" />,
+      route: "/ingredientRequest",
+      component: <IngredientRequest />,
+    },
+    {
+      type: "collapse",
+      name: "ingredient_Approval",
+      key: "ingredient_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/ingredientApproval",
+      component: <IngredientApproval />,
+    },
     {
       type: "collapse",
       name: "Add-employee",
@@ -201,14 +204,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/billing",
     //   component: <Billing />,
     // },
-    // {
-    //   type: "collapse",
-    //   name: "employee list",
-    //   key: "profile",
-    //   icon: <PersonIcon fontSize="small" />,
-    //   route: "/profile",
-    //   component: <EmployeeList />,
-    // },
+    {
+      type: "collapse",
+      name: "employee list",
+      key: "profile",
+      icon: <PersonIcon fontSize="small" />,
+      route: "/profile",
+      component: <EmployeeList />,
+    },
     {
       type: "collapse",
       name: "Course List",
@@ -225,22 +228,22 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/constraint",
     //   component: <Constraint />,
     // },
-    // {
-    //   type: "collapse",
-    //   name: "የመተግበሪያ ገጽታ",
-    //   key: "stock_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showApprovedStock",
-    //   component: <StockApproval />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "የገንዘብ አያያዝ",
-    //   key: "deposit",
-    //   icon: <AttachMoneyIcon fontSize="small" />,
-    //   route: "/deposit",
-    //   component: <Deposit />,
-    // },
+    {
+      type: "collapse",
+      name: "የመተግበሪያ ገጽታ",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/showApprovedStock",
+      component: <StockApproval />,
+    },
+    {
+      type: "collapse",
+      name: "የገንዘብ አያያዝ",
+      key: "deposit",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/deposit",
+      component: <Deposit />,
+    },
   ];
 
   let textColor = "white";
@@ -393,8 +396,24 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
           (darkMode && !transparentSidenav && whiteSidenav)
         }
       />
+      <Dialog open={openLogoutDialog} onClose={() => setOpenLogoutDialog(false)}>
+        <DialogTitle>Confirm Logout</DialogTitle>
+        <DialogContent>
+          <MDTypography>
+            Are you sure you want to logout?
+          </MDTypography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenLogoutDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleLogout} color="primary">
+            Logout
+          </Button>
+        </DialogActions>
+      </Dialog>
       <List>{renderRoutes}</List>
-      <Link to="/" onClick={handleLogout}>
+      <Link to="/" onClick={handleOpenLogoutDialog}>
         <SidenavCollapse
           name="Logout"
           icon={<LogoutIcon fontSize="small">person</LogoutIcon>}

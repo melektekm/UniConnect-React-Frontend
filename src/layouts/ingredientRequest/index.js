@@ -51,7 +51,7 @@ function IngredientRequest() {
   const [labInstructor, setLabInstructor] = useState("");
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
-  // const userData = ipcRenderer.sendSync("get-user");
+  const userData = ipcRenderer.sendSync("get-user");
   // const [file, setFile] = useState(null);
   const [totalPrice, setTotalPrice] = useState("");
   const [formData, setFormData] = useState({
@@ -64,6 +64,8 @@ function IngredientRequest() {
     labInstructor: "",
     classInstructor: "",
   });
+  const [type, setType] = useState("request"); // Default value is "request", you can change it if needed
+  const measuredInOptions = ["Option 1", "Option 2", "Option 3"];
 
   const [formList, setFormList] = useState({
     items: [],
