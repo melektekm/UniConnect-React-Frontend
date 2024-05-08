@@ -22,7 +22,7 @@ import MDButton from "../../components/MDButton";
 import { BASE_URL } from "../../appconfig";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-function UploadCourse() {
+function CourseMaterial() {
   const [courseCode, setCourseCode] = useState("");
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
@@ -211,4 +211,4 @@ function UploadCourse() {
   );
 }
 
-export default UploadCourse;
+export default CourseMaterial;
