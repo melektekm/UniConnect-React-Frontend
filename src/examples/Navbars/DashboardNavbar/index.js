@@ -284,7 +284,7 @@ function DashboardNavbar({
               </IconButton>
               {renderMenu()}
               <MDTypography style={{ fontSize: "0.67em" }}>
-                ሰላም {userData.user.name}
+                Hello,{userData.user.name}
               </MDTypography>
             </MDBox>
           </MDBox>

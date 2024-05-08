@@ -78,6 +78,8 @@ import CashierOrder from "./layouts/tables/CashierOrderView";
 import storeKeeperDashboard from "./layouts/dashboard/storeKeeperDashboard";
 import StockAmountTable from "./layouts/stokeAmount";
 import InventoryEntry from "./layouts/inventory";
+import UploadAssignment from "./layouts/assignmentUpload";
+import CourseMaterial from "./layouts/courseMaterial";
 const routes = [
   {
     type: "collapse",
@@ -193,7 +195,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዲፓርትመንት ማስገቢያ ",
+    name: "Course upload ",
     key: "Add-department",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/addDepartment",
@@ -421,6 +423,22 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billingCashier",
     component: <Billing showEditColumn={false} />,
+  },
+  {
+    type: "collapse",
+    name: "Upload Assignment",
+    key: "assignmentUpload",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/assignmentUpload",
+    component: <UploadAssignment />,
+  },
+  {
+    type: "collapse",
+    name: "Upload Course Material",
+    key: "courseMaterial",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/courseMaterial",
+    component: <CourseMaterial />,
   },
 ];
 

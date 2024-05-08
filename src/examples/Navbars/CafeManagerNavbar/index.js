@@ -268,7 +268,7 @@ function CafeManagerDashboardNavbar({ absolute, light, isMini }) {
                 <NotificationsNoneIcon sx={iconsStyle} />
               </IconButton>
               {renderMenu()}
-              <MDTypography style = {{fontSize: "0.67em"}}>ሰላም {userData.user.name}</MDTypography>
+              <MDTypography style = {{fontSize: "0.67em"}}>Hello,{userData.user.name}</MDTypography>
             </MDBox>
           </MDBox>
         )}

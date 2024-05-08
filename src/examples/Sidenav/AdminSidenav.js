@@ -55,7 +55,9 @@ import {
 import ViewCourses from "../../layouts/report";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import KitchenIcon from "@mui/icons-material/Kitchen";
-
+import UploadCourse from "../../layouts/addDepartment";
+import UploadAssignment from "../../layouts/assignmentUpload";
+import CourseMaterial from "../../layouts/courseMaterial";
 function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
@@ -244,6 +246,30 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/deposit",
       component: <Deposit />,
     },
+    {
+      type: "collapse",
+      name: "Course upload ",
+      key: "Add-department",
+      icon: <AttachMoneyIcon fontSize="small"/>,
+      route: "/addDepartment",
+      component: <UploadCourse />,
+    },
+    {
+      type: "collapse",
+      name: "Upload Assignment",
+      key: "assignmentUpload",
+      icon: <AttachMoneyIcon fontSize="small"/>,
+      route: "/assignmentUpload",
+      component: <UploadAssignment />,
+    },
+    // {
+    //   type: "collapse",
+    //   name: "Upload Course Material",
+    //   key: "courseMaterial",
+    //   icon: <AttachMoneyIcon fontSize="small"/>,
+    //   route: "/courseMaterial",
+    //   component: <CourseMaterial />,
+    // },
   ];
 
   let textColor = "white";
