@@ -235,7 +235,7 @@ function NavbarForCommette({ absolute, light, isMini }) {
               </IconButton>
               {renderMenu()}
 
-              <MDTypography style = {{fontSize: "0.67em"}}>ሰላም {userData.user.name}</MDTypography>
+              <MDTypography style = {{fontSize: "0.67em"}}>Hello,{userData.user.name}</MDTypography>
               <IconButton
                 size="small"
                 disableRipple

@@ -12,6 +12,7 @@ import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
 import {
@@ -43,6 +44,7 @@ function ViewAssignments() {
       const response = await axios.get(`${BASE_URL}/getallassignments`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
       });
       console.log(response.data);
@@ -64,6 +66,7 @@ function ViewAssignments() {
       <Sidenav />
       <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
         <DashboardNavbar />
+        <MainDashboard />
         <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -99,9 +102,9 @@ function ViewAssignments() {
                         <TableCell align="center">
                           <strong>Assignment Description</strong>
                         </TableCell>
-                        {/* <TableCell align="center">
+                        <TableCell align="center">
                           <strong>Course Name</strong>
-                        </TableCell> */}
+                        </TableCell>
                         <TableCell align="center">
                           <strong>Due Date</strong>
                         </TableCell>
@@ -118,20 +121,23 @@ function ViewAssignments() {
                           <TableCell align="center">
                             {assignment.Add_description}
                           </TableCell>
-                          {/* <TableCell align="center">
+                          <TableCell align="center">
                             {assignment.courseName}
-                          </TableCell> */}
+                          </TableCell>
                           <TableCell align="center">
                             {assignment.due_date}
                           </TableCell>
                           <TableCell align="center">
-                            <a
+                            <Button
+                              variant="contained"
+                              color="primary"
                               href={assignment.uploadedFileUrl}
                               target="_blank"
                               rel="noopener noreferrer"
+                              download
                             >
-                              View File
-                            </a>
+                              Download File
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))}

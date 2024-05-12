@@ -39,7 +39,8 @@ import storeKeeperDashboard from "./layouts/dashboard/storeKeeperDashboard";
 import Sidenav from "./examples/Sidenav/AdminSidenav";
 import Department from "./layouts/departmentList";
 import StockAmountTable from "./layouts/stokeAmount";
-
+import UploadAssignment from "./layouts/assignmentUpload";
+import AddCourseMaterial from "./layouts/courseMaterial";
 function getLayoutComponent(path) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -151,6 +152,10 @@ function getLayoutComponent(path) {
       return <BasicLayout />;
     case "/authentication/sign-up":
       return <SignUpLayout />;
+    case "/assignmentUpload":
+      return <UploadAssignment/>;
+    case "/courseMaterial":
+      return <AddCourseMaterial/>;
     default:
       return null;
   }

@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import MainDashboard from "../../layouts/MainDashboard";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
@@ -58,33 +59,37 @@ const AddMenuItem = () => {
       year: formValues.year ? "" : "Year is required",
       semester: formValues.semester ? "" : "Semester is required.",
     };
-
+  
     setErrorMessages(newErrorMessages);
-
+  
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
       setErrorMessage("Fill all required fields.");
       setDialogOpen(true);
       return;
     }
-
+  
     setLoading(true);
     try {
-      let response;
-      const formData = new FormData();
-      formData.append("course_code", formValues.course_code);
-      formData.append("course_name", formValues.course_name);
-      formData.append("course_description", formValues.course_description);
-      formData.append("credit_hour", parseFloat(formValues.credit_hours));
-      formData.append("year", formValues.year);
-      formData.append("semester", formValues.semester);
-
-      response = await axios.post(`${BASE_URL}/upload-course`, formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
+      const jsonData = {
+        course_code: formValues.course_code,
+        course_name: formValues.course_name,
+        course_description: formValues.course_description,
+        credit_hour: parseFloat(formValues.credit_hours),
+        year: formValues.year,
+        semester: formValues.semester,
+      };
+  
+      const response = await axios.post(
+        `${BASE_URL}/upload-course`,
+        jsonData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
       // Handle success
       if (response.data.message) {
         setSuccessMessage(response.data.message);
@@ -103,6 +108,7 @@ const AddMenuItem = () => {
       setLoading(false);
     }
   };
+  
 
   const handleDialogClose = () => {
     setDialogOpen(false);
@@ -114,6 +120,7 @@ const AddMenuItem = () => {
     <DashboardLayout>
       <DashboardNavbar />
       <Sidenav />
+      <MainDashboard />
       <MDBox
         mx={2}
         mt={1}

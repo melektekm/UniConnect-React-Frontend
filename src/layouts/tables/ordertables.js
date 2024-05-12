@@ -11,6 +11,7 @@ import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
 import {
@@ -23,6 +24,10 @@ import {
   Select,
 } from "@mui/material";
 import { CheckCircle, Cancel, Edit, Delete } from "@mui/icons-material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 
 function AssignmentsPage() {
   const electron = window.require("electron");
@@ -32,7 +37,11 @@ function AssignmentsPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [filterStatus, setFilterStatus] = useState("all"); // 'all', 'sent', 'unsent'
   const [selectedAssignment, setSelectedAssignment] = useState(null);
-
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const itemsPerPage = 20; // Set the number of items to display per page
+  const [current_page, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
 
@@ -48,6 +57,9 @@ function AssignmentsPage() {
       console.log(response.data);
       if (response.data && response.data.assignments) {
         setAssignments(response.data["assignments"]);
+        setCurrentPage(response.data.current_page);
+        setLastPage(response.data.last_page);
+      }else{
       }
     } catch (error) {
       console.error("Error fetching assignments:", error);
@@ -57,7 +69,7 @@ function AssignmentsPage() {
 
   useEffect(() => {
     fetchAssignments();
-  }, []);
+  }, [current_page]);
 
   const handleFilterChange = (event) => {
     setFilterStatus(event.target.value);
@@ -91,14 +103,29 @@ function AssignmentsPage() {
     }
   };
 
-  const handleEditAssignment = (id) => {
-    // Implement logic to navigate to the edit assignment page
-    // You may use React Router or any other navigation method
-    // and pass the assignmentId as a parameter to the edit page.
-  };
-
+  function handleEditAssignment(updatedAssignment){
+    if (!selectedAssignment){
+      setAssignments([...assignments, updatedAssignment]);
+    }
+      else{
+        setAssignments(
+          assignments.map((assignment)=>
+          assignment.id === updatedAssignment.id ? updatedAssignment : assignment
+        )
+        );
+        setSelectedAssignment(null);
+      }
+      Navigate("/assignmentUpload", { statec: {selectedAssignment: updatedAssignment}}); 
+  }
+  function handleDeleteDialogOpen(id) {
+    const assignmentItem = assignments.find((assignmentItem) => assignmentItem.id === id);
+    setItemToDelete(assignmentItem);
+    setDeleteDialogOpen(true);
+  }
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };  
   const handleDeleteAssignment = async (id) => {
-    // Implement logic to delete the assignment on the server
     try {
       await axios.delete(`${BASE_URL}/deleteAssignment/${id}`, {
         headers: {
@@ -108,9 +135,8 @@ function AssignmentsPage() {
       });
 
       // Update the local state to reflect the deletion
-      setAssignments((prevAssignments) =>
-        prevAssignments.filter((assignment) => assignment.id !== id)
-      );
+      setAssignments(assignments.filter((assignment) => assignment.id !== id));
+       setDeleteDialogOpen(false);
     } catch (error) {
       console.error("Error deleting assignment:", error);
       setErrorMessage("Error deleting assignment");
@@ -129,6 +155,7 @@ function AssignmentsPage() {
       <Sidenav />
       <div style={{ flex: "1" }}>
         <DashboardNavbar />
+        <MainDashboard />
         <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -176,9 +203,9 @@ function AssignmentsPage() {
                       <TableCell>
                         <strong>Assignment Name</strong>
                       </TableCell>
-                      {/* <TableCell>
+                      <TableCell>
                           <strong>Course Name</strong>
-                        </TableCell> */}
+                        </TableCell>
                       <TableCell>
                         <strong>Assignment Description</strong>
                       </TableCell>
@@ -195,7 +222,7 @@ function AssignmentsPage() {
                     {filteredAssignments.map((assignment) => (
                       <TableRow key={assignment.id}>
                         <TableCell>{assignment.ass_name}</TableCell>
-                        {/* <TableCell>{assignment.courseName}</TableCell> */}
+                        <TableCell>{assignment.courseName}</TableCell>
                         <TableCell>{assignment.Add_description}</TableCell>
                         <TableCell>{assignment.due_date}</TableCell>
                         <TableCell>{assignment.status}</TableCell>
@@ -209,8 +236,8 @@ function AssignmentsPage() {
                                 handleStatusChange(assignment.id, "sent")
                               }
                             >
-                              Mark as Sent
-                            </Button>
+                             Sent
+                            </Button> 
                             <Button
                               variant="contained"
                               color="error"
@@ -219,7 +246,7 @@ function AssignmentsPage() {
                                 handleStatusChange(assignment.id, "unsent")
                               }
                             >
-                              Mark as Unsent
+                             Unsent
                             </Button>
                             <Button
                               variant="contained"
@@ -254,6 +281,25 @@ function AssignmentsPage() {
           </Grid>
         </MDBox>
         <Footer />
+        <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          {itemToDelete && (
+            <p>
+              Are you sure you want to delete {" "}
+              <strong>"{itemToDelete.name} ?"</strong>?
+            </p>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose}>Close</Button>
+          <Button
+            onClick={() => handleDeleteAssignment(itemToDelete ? itemToDelete.id : null)}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       </div>
     </div>
   );
