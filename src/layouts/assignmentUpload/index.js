@@ -97,17 +97,18 @@ function UploadAssignment() {
 
         setLoading(true);
         try {
-            const formData = new FormData();
-            formData.append("course_code", formValues.course_code);
-            formData.append("assignmentName", formValues.assignmentName);
-            formData.append("assignmentDescription", formValues.assignmentDescription);
-            formData.append("dueDate", formValues.dueDate);
-            formData.append("file", formValues.file);
+            const jsonData = {
+                course_code: formValues.course_code,
+                assignmentName: formValues.assignmentName,
+                assignmentDescription: formValues.assignmentDescription,
+                dueDate: formValues.dueDate,
+                file: formValues.file, // Assuming the file object is needed in JSON format
+            };
 
-            const response = await axios.post(`${BASE_URL}/upload-assignment`, formData, {
+            const response = await axios.post(`${BASE_URL}/upload-assignment`, jsonData, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
-                    "Content-Type": "multipart/form-data",
+                    "Content-Type": "application/json",
                 },
             });
 
@@ -125,6 +126,7 @@ function UploadAssignment() {
             setLoading(false);
         }
     };
+
 
     const handleDialogClose = () => {
         setDialogOpen(false);
@@ -174,21 +176,24 @@ function UploadAssignment() {
             <MDBox pt={6} pb={3}>
                 <Grid container spacing={6}>
                     <Grid item xs={12}>
+                        <MDBox
+                            mx={2}
+                            mt={2}
+                            mb={2}
+                            py={3}
+                            px={2}
+                            variant="gradient"
+                            bgColor="dark"
+                            borderRadius="lg"
+                            coloredShadow="info"
+                            textAlign="center"
+                        // style={{ display: "flex", justifyContent: "space-between" }}
+                        >
+                            <MDTypography variant="h5" color="white">
+                                Assignment Upload
+                            </MDTypography>
+                        </MDBox>
                         <Card>
-                            <MDBox
-                                mx={2}
-                                mt={-3}
-                                py={3}
-                                px={2}
-                                variant="gradient"
-                                bgColor="dark"
-                                borderRadius="lg"
-                                coloredShadow="info"
-                            >
-                                <MDTypography variant="h6" color="white">
-                                    Assignment Upload
-                                </MDTypography>
-                            </MDBox>
                             <MDBox pt={3} pb={3} px={2}>
                                 <MDBox component="form" role="form">
                                     <MDBox mb={2}>
@@ -287,7 +292,7 @@ function UploadAssignment() {
                                         File must be 4 MB in PDF format.
                                     </MDTypography>
                                 </MDBox>
-                                <MDBox mb={2}>
+                                <MDBox mt={2} mb={1} textAlign="center">
                                     <MDButton
                                         variant="contained"
                                         color="primary"

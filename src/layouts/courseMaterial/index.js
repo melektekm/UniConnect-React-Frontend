@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Dialog,
@@ -22,58 +22,115 @@ import MDButton from "../../components/MDButton";
 import { BASE_URL } from "../../appconfig";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-function CourseMaterial() {
-  const [courseCode, setCourseCode] = useState("");
-  const [courseName, setCourseName] = useState("");
-  const [courseDescription, setCourseDescription] = useState("");
-  const [creditHours, setCreditHours] = useState("");
-  const [year, setYear] = useState("");
-  const [semester, setSemester] = useState("");
+import colors from "../../assets/theme/base/colors";
+import FormControl from "@mui/material/FormControl"; // Import FormControl
+import InputLabel from "@mui/material/InputLabel"; // Import InputLabel
+import Select from "@mui/material/Select"; // Import Select
+import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
+
+function AddCourseMaterial() {
+  const [courses, setCourses] = useState([]);
+  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessages, setErrorMessages] = useState({});
+  const electron = window.require("electron");
+  const ipcRenderer = electron.ipcRenderer;
+  const userData = ipcRenderer.sendSync("get-user");
+  const accessToken = userData.accessToken; // Assuming accessToken is available in user data
+  const [formValues, setFormValues] = useState({
+    courseCode: "",
+    materialTitle: "",
+    materialDescription: "",
+    file: null,
+});
   const [open, setOpen] = useState(false);
 
-  const handleUploadCourse = async () => {
-    // Check if any of the input fields are empty
-    if (
-      !courseCode ||
-      !courseName ||
-      !courseDescription ||
-      !creditHours ||
-      !year ||
-      !semester
-    ) {
-      setErrorMessage("Please fill in all the fields.");
+  useEffect(() => {
+    getCourses();
+  }, []);
+
+  const getCourses = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/get-all-courses`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Pass accessToken in headers
+        },
+      });
+      if (response.data) {
+        setCourses(response.data.courses);
+      } else {
+        setErrorMessage("Failed to fetch courses.");
+        setOpen(true);
+      }
+    } catch (error) {
+      setErrorMessage("Error fetching courses: " + error.message);
       setOpen(true);
+    }
+  };
+
+  const handleUploadMaterial = async () => {
+    // Check if any of the input fields are empty
+    const newErrorMessages = {
+      courseCode: formValues.courseCode ? "" : "Course is required",
+      materialTitle: formValues.materialTitle ? "" : "Title is required",
+    };
+
+    setErrorMessages(newErrorMessages);
+
+    if (Object.values(newErrorMessages).some((message) => message !== "")) {
+      setErrorMessage("All fields should be filled");
+      setDialogOpen(true);
       return;
     }
 
     setLoading(true);
     try {
-      const courseData = {
-        course_code: courseCode,
-        course_name: courseName,
-        course_description: courseDescription,
-        credit_hours: creditHours,
-        year: year,
-        semester: semester,
+      const materialData = {
+        code: formValues.courseCode,
+        title: formValues.materialTitle,
+        description: formValues.materialDescription,
+        file: formValues.file, // Assuming you want to send the file name only
       };
 
-      const response = await axios.post(`${BASE_URL}/upload-course`, courseData);
+      const response = await axios.post(
+        `${BASE_URL}/upload-material`,
+        materialData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.data) {
-        setErrorMessage("Course uploaded successfully!");
+        setErrorMessage("Material uploaded successfully!");
         setOpen(true);
       } else {
-        setErrorMessage("Failed to upload course. Please try again.");
+        setErrorMessage("Failed to upload material. Please try again.");
         setOpen(true);
       }
     } catch (error) {
-      setErrorMessage("An error occurred while uploading the course.");
+      setErrorMessage("An error occurred while uploading the material.");
       setOpen(true);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFileUpload = (event) => {
+    const selectedFile = event.target.files[0];
+    setFormValues({ ...formValues, file: selectedFile });
+    setFile(selectedFile); // Set the file in the state
+  };
+  const fileInputStyle = {
+    display: "inline-block",
+    cursor: "pointer",
+    padding: "10px 20px",
+    backgroundColor: colors.dark.main,
+    color: "white",
+    borderRadius: "5px",
+    border: "1px solid #007bff",
   };
 
   return (
@@ -103,45 +160,58 @@ function CourseMaterial() {
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
+            <MDBox
+              mx={2}
+              mt={2}
+              mb={2}
+              py={3}
+              px={2}
+              variant="gradient"
+              bgColor="dark"
+              borderRadius="lg"
+              coloredShadow="info"
+              textAlign="center"
+            >
+              <MDTypography variant="h5" color="white">
+                Add Course Material
+              </MDTypography>
+            </MDBox>
             <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="dark"
-                borderRadius="lg"
-                coloredShadow="info"
-                textAlign="center"
-              >
-                <MDTypography variant="h5" color="white">
-                  Upload Course
-                </MDTypography>
-              </MDBox>
               <CardContent>
+                <MDBox mb={2}>
+                  <FormControl variant="outlined" fullWidth style={{ marginTop: "16px" }}>
+                    <InputLabel htmlFor="course">Course</InputLabel>
+                    <Select
+                      value={formValues.courseCode}
+                      onChange={(e) =>
+                        setFormValues({ ...formValues, courseCode: e.target.value })
+                      }
+                      label="Course"
+                      inputProps={{
+                        name: "course_code",
+                        id: "course",
+                      }}
+                      style={{ minHeight: "45px" }}
+                    >
+                      <MenuItem value="">Select Course</MenuItem>
+                      {courses.map((course) => (
+                        <MenuItem key={course.id} value={course.code}>
+                          {course.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </MDBox>
                 <MDBox pt={2} pb={2} px={2}>
                   <MDBox component="form" role="form">
-                    <MDBox mb={1}>
+                    <MDBox mb={2}>
                       <MDInput
                         type="text"
-                        label="Course Code"
+                        label="Material Title"
                         variant="outlined"
                         fullWidth
-                        value={courseCode}
-                        onChange={(e) => setCourseCode(e.target.value)}
-                        margin="normal"
-                        required
-                      />
-                    </MDBox>
-                    <MDBox mb={1}>
-                      <MDInput
-                        type="text"
-                        label="Course Name"
-                        variant="outlined"
-                        fullWidth
-                        value={courseName}
-                        onChange={(e) => setCourseName(e.target.value)}
+                        value={formValues.materialTitle}
+                        onChange={(e) => setFormValues({ ...formValues, materialTitle: e.target.value })}
                         margin="normal"
                         required
                       />
@@ -149,54 +219,34 @@ function CourseMaterial() {
                     <MDBox mb={1}>
                       <MDInput
                         type="text"
-                        label="Course Description"
+                        label="Material Description"
                         variant="outlined"
                         fullWidth
-                        value={courseDescription}
-                        onChange={(e) => setCourseDescription(e.target.value)}
+                        value={formValues.materialDescription}
+                        onChange={(e) => setFormValues({ ...formValues, materialDescription: e.target.value })}
                         margin="normal"
                         required
                       />
                     </MDBox>
-                    <MDBox mb={1}>
-                      <MDInput
-                        type="number"
-                        label="Credit Hours"
-                        variant="outlined"
-                        fullWidth
-                        value={creditHours}
-                        onChange={(e) => setCreditHours(e.target.value)}
-                        margin="normal"
-                        required
-                      />
-                    </MDBox>
-                    <MDBox mb={1}>
-                      <MDInput
-                        type="number"
-                        label="Year"
-                        variant="outlined"
-                        fullWidth
-                        value={year}
-                        onChange={(e) => setYear(e.target.value)}
-                        margin="normal"
-                        required
-                      />
-                    </MDBox>
-                    <MDBox mb={1}>
-                      <MDInput
-                        type="number"
-                        label="Semester"
-                        variant="outlined"
-                        fullWidth
-                        value={semester}
-                        onChange={(e) => setSemester(e.target.value)}
-                        margin="normal"
-                        required
-                      />
+                    <MDBox mb={2} style={{ display: 'flex', alignItems: 'center' }}>
+                      <label htmlFor="fileUpload" style={fileInputStyle}>
+                        <input
+                          type="file"
+                          id="fileUpload"
+                          accept="application/pdf"
+                          // name="imageUrl"
+                          onChange={handleFileUpload}
+                          style={{ display: "none" }}
+                        />
+                        <span>&#128206; {file ? file.name : "Choose File:"}</span>
+                      </label>
+                      <MDTypography variant="body2" ml={1}>
+                        File must be 4 MB in PDF format.
+                      </MDTypography>
                     </MDBox>
                     <MDBox mt={2} mb={1} textAlign="center">
-                      <MDButton color="primary" onClick={handleUploadCourse}>
-                        {loading ? <CircularProgress /> : "Upload Course"}
+                      <MDButton color="primary" onClick={handleUploadMaterial}>
+                        {loading ? <CircularProgress /> : "Upload Material"}
                       </MDButton>
                     </MDBox>
                   </MDBox>
@@ -211,4 +261,4 @@ function CourseMaterial() {
   );
 }
 
-export default CourseMaterial;
+export default AddCourseMaterial;

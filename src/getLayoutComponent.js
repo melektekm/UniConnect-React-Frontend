@@ -40,7 +40,7 @@ import Sidenav from "./examples/Sidenav/AdminSidenav";
 import Department from "./layouts/departmentList";
 import StockAmountTable from "./layouts/stokeAmount";
 import UploadAssignment from "./layouts/assignmentUpload";
-import CourseMaterial from "./layouts/courseMaterial";
+import AddCourseMaterial from "./layouts/courseMaterial";
 function getLayoutComponent(path) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -155,7 +155,7 @@ function getLayoutComponent(path) {
     case "/assignmentUpload":
       return <UploadAssignment/>;
     case "/courseMaterial":
-      return <CourseMaterial/>;
+      return <AddCourseMaterial/>;
     default:
       return null;
   }

@@ -79,7 +79,7 @@ import storeKeeperDashboard from "./layouts/dashboard/storeKeeperDashboard";
 import StockAmountTable from "./layouts/stokeAmount";
 import InventoryEntry from "./layouts/inventory";
 import UploadAssignment from "./layouts/assignmentUpload";
-import CourseMaterial from "./layouts/courseMaterial";
+import AddCourseMaterial from "./layouts/courseMaterial";
 const routes = [
   {
     type: "collapse",
@@ -438,7 +438,7 @@ const routes = [
     key: "courseMaterial",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/courseMaterial",
-    component: <CourseMaterial />,
+    component: <AddCourseMaterial />,
   },
 ];
 

@@ -22,6 +22,7 @@ import MDButton from "../../components/MDButton";
 import { BASE_URL } from "../../appconfig";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+
 function UploadCourse() {
   const [courseCode, setCourseCode] = useState("");
   const [courseName, setCourseName] = useState("");
@@ -59,7 +60,15 @@ function UploadCourse() {
         semester: semester,
       };
 
-      const response = await axios.post(`${BASE_URL}/upload-course`, courseData);
+      const response = await axios.post(
+        `${BASE_URL}/upload-course`,
+        courseData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.data) {
         setErrorMessage("Course uploaded successfully!");
@@ -103,22 +112,23 @@ function UploadCourse() {
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
+            <MDBox
+              mx={2}
+              mt={2}
+              mb={2}
+              py={3}
+              px={2}
+              variant="gradient"
+              bgColor="dark"
+              borderRadius="lg"
+              coloredShadow="info"
+              textAlign="center"
+            >
+              <MDTypography variant="h5" color="white">
+                Upload Course
+              </MDTypography>
+            </MDBox>
             <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="dark"
-                borderRadius="lg"
-                coloredShadow="info"
-                textAlign="center"
-              >
-                <MDTypography variant="h5" color="white">
-                  Upload Course
-                </MDTypography>
-              </MDBox>
               <CardContent>
                 <MDBox pt={2} pb={2} px={2}>
                   <MDBox component="form" role="form">

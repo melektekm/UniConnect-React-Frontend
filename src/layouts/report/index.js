@@ -12,6 +12,7 @@ import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
 import { Card, Box } from "@mui/material";
@@ -58,6 +59,7 @@ function ViewCourses() {
       <Sidenav />
       <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
         <DashboardNavbar />
+        <MainDashboard />
         <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -91,9 +93,6 @@ function ViewCourses() {
                           <strong>Course Name</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Description</strong>
-                        </TableCell>
-                        <TableCell align="center">
                           <strong>Credit Hour</strong>
                         </TableCell>
                         <TableCell align="center">
@@ -101,6 +100,9 @@ function ViewCourses() {
                         </TableCell>
                         <TableCell align="center">
                           <strong>Semester</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong>Description</strong>
                         </TableCell>
                       </TableRow>
                       {courses.map((course) => (
@@ -112,14 +114,14 @@ function ViewCourses() {
                             {course.course_name}
                           </TableCell>
                           <TableCell align="center">
-                            {course.course_description}
-                          </TableCell>
-                          <TableCell align="center">
                             {course.credit_hours}
                           </TableCell>
                           <TableCell align="center">{course.year}</TableCell>
                           <TableCell align="center">
                             {course.semester}
+                          </TableCell>
+                          <TableCell align="center">
+                            {course.course_description}
                           </TableCell>
                         </TableRow>
                       ))}
