@@ -40,7 +40,7 @@ import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function IngredientRequest() {
-  const [courseName, setCourseName] = useState("");
+  const [course_name, setcourse_name] = useState("");
   const [courseId, setCourseId] = useState("");
   const [classroom, setClassroom] = useState("");
   const [labroom, setLabroom] = useState("");
@@ -55,7 +55,7 @@ function IngredientRequest() {
   // const [file, setFile] = useState(null);
   const [totalPrice, setTotalPrice] = useState("");
   const [formData, setFormData] = useState({
-    courseName: "",
+    course_name: "",
     courseId: "",
     classroom: "",
     labroom: "",
@@ -87,7 +87,7 @@ function IngredientRequest() {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({
-    courseName: "",
+    course_name: "",
     courseId: "",
     classroom: "",
     labroom: "",
@@ -211,7 +211,7 @@ function IngredientRequest() {
 
   const addForm = () => {
     const newErrorMessages = {
-      courseName: courseName ? "" : "course name is required",
+      course_name: course_name ? "" : "course name is required",
       courseId: courseId ? "" : "course ID is required",
       classroom: classroom ? "" : "classroom is required",
       labroom: labroom ? "" : "labroom is required",

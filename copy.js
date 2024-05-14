@@ -28,7 +28,7 @@
 // import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
 
 // function InventoryEntry() {
-//   const [courseName, setCourseName] = useState("");
+//   const [course_name, setcourse_name] = useState("");
 //   const [courseId, setCourseId] = useState("");
 //   const [classroom, setClassroom] = useState("");
 //   const [labroom, setLabroom] = useState("");
@@ -42,7 +42,7 @@
 //   const typeOptions = ["Exam", "class"];
 //   const [errorMessage, setErrorMessage] = useState("");
 //   const [errorMessages, setErrorMessages] = useState({
-//     courseName: "",
+//     course_name: "",
 //     courseId: "",
 //     classroom: "",
 //     labroom: "",
@@ -56,7 +56,7 @@
 //   const accessToken = userData.accessToken;
 //   const isInputValid = (input, fieldName) => {
 //     if (
-//       fieldName === "courseName" ||
+//       fieldName === "course_name" ||
 //       fieldName === "classInstructor" ||
 //       fieldName === "labInstructor"
 //     ) {
@@ -76,8 +76,8 @@
 //   //     }
 
 //   //     // Update the state directly based on the input name
-//   //     if (name === "courseName") {
-//   //       setCourseName(value);
+//   //     if (name === "course_name") {
+//   //       setcourse_name(value);
 //   //     } else if (name === "courseId") {
 //   //       setCourseId(value);
 //   //     } else {
@@ -98,8 +98,8 @@
 //     }
 
 //     // Update the state directly based on the input name
-//     if (name === "courseName") {
-//       setCourseName(value);
+//     if (name === "course_name") {
+//       setcourse_name(value);
 //     } else if (name === "courseId") {
 //       setCourseId(value);
 //     } else if (name === "classroom") {
@@ -118,7 +118,7 @@
 //   };
 //   const handleFormSubmit = async () => {
 //     const newErrorMessages = {
-//       courseName: courseName ? "" : "course name is required",
+//       course_name: course_name ? "" : "course name is required",
 //       courseId: courseId ? "" : "course ID is required",
 //       classroom: classroom ? "" : "classroom is required",
 //       labroom: labroom ? "" : "labroom is required",
@@ -139,7 +139,7 @@
 //       const response = await axios.post(
 //         `${BASE_URL}/inventory`,
 //         {
-//           courseName,
+//           course_name,
 //           courseId,
 //           classroom,
 //           labroom,
@@ -164,7 +164,7 @@
 //         setClassInstructor("");
 //         setClassroom("");
 //         setCourseId("");
-//         setCourseName("");
+//         setcourse_name("");
 //         setLabDays("");
 //         setLabInstructor("");
 //         setLabroom("");
@@ -246,13 +246,13 @@
 //                       label="Course Name"
 //                       variant="standard"
 //                       fullWidth
-//                       value={courseName}
-//                       name="courseName"
+//                       value={course_name}
+//                       name="course_name"
 //                       onChange={handleFormChange}
 //                       margin="normal"
 //                       required
-//                       error={!!errorMessages.courseName}
-//                       helperText={errorMessages.courseName}
+//                       error={!!errorMessages.course_name}
+//                       helperText={errorMessages.course_name}
 //                     />
 //                   </MDBox>
 //                   <MDBox mb={2}>
