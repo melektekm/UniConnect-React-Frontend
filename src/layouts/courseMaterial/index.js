@@ -39,7 +39,7 @@ function AddCourseMaterial() {
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken; // Assuming accessToken is available in user data
   const [formValues, setFormValues] = useState({
-    courseCode: "",
+    course_code: "",
     materialTitle: "",
     materialDescription: "",
     file: null,
@@ -72,7 +72,7 @@ function AddCourseMaterial() {
   const handleUploadMaterial = async () => {
     // Check if any of the input fields are empty
     const newErrorMessages = {
-      courseCode: formValues.courseCode ? "" : "Course is required",
+      course_code: formValues.course_code ? "" : "Course is required",
       materialTitle: formValues.materialTitle ? "" : "Title is required",
     };
 
@@ -80,14 +80,14 @@ function AddCourseMaterial() {
 
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
       setErrorMessage("All fields should be filled");
-      setDialogOpen(true);
+      setOpen(true);
       return;
     }
 
     setLoading(true);
     try {
       const materialData = {
-        code: formValues.courseCode,
+        code: formValues.course_code,
         title: formValues.materialTitle,
         description: formValues.materialDescription,
         file: formValues.file, // Assuming you want to send the file name only
@@ -182,9 +182,9 @@ function AddCourseMaterial() {
                   <FormControl variant="outlined" fullWidth style={{ marginTop: "16px" }}>
                     <InputLabel htmlFor="course">Course</InputLabel>
                     <Select
-                      value={formValues.courseCode}
+                      value={formValues.course_code}
                       onChange={(e) =>
-                        setFormValues({ ...formValues, courseCode: e.target.value })
+                        setFormValues({ ...formValues, course_code: e.target.value })
                       }
                       label="Course"
                       inputProps={{
@@ -202,8 +202,6 @@ function AddCourseMaterial() {
                     </Select>
                   </FormControl>
                 </MDBox>
-                <MDBox pt={2} pb={2} px={2}>
-                  <MDBox component="form" role="form">
                     <MDBox mb={2}>
                       <MDInput
                         type="text"
@@ -249,8 +247,6 @@ function AddCourseMaterial() {
                         {loading ? <CircularProgress /> : "Upload Material"}
                       </MDButton>
                     </MDBox>
-                  </MDBox>
-                </MDBox>
               </CardContent>
             </Card>
           </Grid>

@@ -122,7 +122,7 @@ function ViewAssignments() {
                             {assignment.Add_description}
                           </TableCell>
                           <TableCell align="center">
-                            {assignment.courseName}
+                            {assignment.course_name}
                           </TableCell>
                           <TableCell align="center">
                             {assignment.due_date}

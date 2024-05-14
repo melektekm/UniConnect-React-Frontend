@@ -222,7 +222,7 @@ function AssignmentsPage() {
                     {filteredAssignments.map((assignment) => (
                       <TableRow key={assignment.id}>
                         <TableCell>{assignment.ass_name}</TableCell>
-                        <TableCell>{assignment.courseName}</TableCell>
+                        <TableCell>{assignment.course_name}</TableCell>
                         <TableCell>{assignment.Add_description}</TableCell>
                         <TableCell>{assignment.due_date}</TableCell>
                         <TableCell>{assignment.status}</TableCell>

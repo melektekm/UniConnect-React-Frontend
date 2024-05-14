@@ -102,14 +102,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/showIngredientApproval",
       component: <ShowApproval />,
     },
-    {
-      type: "collapse",
-      name: "stock_Approval",
-      key: "stock_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/showApprovedStock",
-      component: <StockApproval />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "stock_Approval",
+    //   key: "stock_Approval",
+    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
+    //   route: "/showApprovedStock",
+    //   component: <StockApproval />,
+    // },
     {
       type: "collapse",
       name: "food menu",

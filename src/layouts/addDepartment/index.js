@@ -24,23 +24,26 @@ import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 function UploadCourse() {
-  const [courseCode, setCourseCode] = useState("");
-  const [courseName, setCourseName] = useState("");
-  const [courseDescription, setCourseDescription] = useState("");
-  const [creditHours, setCreditHours] = useState("");
+  const [course_code, setcourse_code] = useState("");
+  const [course_name, setcourse_name] = useState("");
+  const [course_description, setcourse_description] = useState("");
+  const [credit_hours, setcredit_hours] = useState("");
   const [year, setYear] = useState("");
   const [semester, setSemester] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
-
+  const electron = window.require("electron");
+  const ipcRenderer = electron.ipcRenderer;
+  const userData = ipcRenderer.sendSync("get-user");
+  const accessToken = userData.accessToken;
   const handleUploadCourse = async () => {
     // Check if any of the input fields are empty
     if (
-      !courseCode ||
-      !courseName ||
-      !courseDescription ||
-      !creditHours ||
+      !course_code ||
+      !course_name ||
+      !course_description ||
+      !credit_hours ||
       !year ||
       !semester
     ) {
@@ -52,19 +55,20 @@ function UploadCourse() {
     setLoading(true);
     try {
       const courseData = {
-        course_code: courseCode,
-        course_name: courseName,
-        course_description: courseDescription,
-        credit_hours: creditHours,
+        course_code: course_code,
+        course_name: course_name,
+        course_description: course_description,
+        credit_hours: credit_hours,
         year: year,
         semester: semester,
       };
 
       const response = await axios.post(
         `${BASE_URL}/upload-course`,
-        courseData,
+        JSON.stringify(courseData),
         {
           headers: {
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
         }
@@ -78,6 +82,11 @@ function UploadCourse() {
         setOpen(true);
       }
     } catch (error) {
+      if (error.response) {
+        console.error("Error status code:", error.response.status);
+      } else {
+        console.error("An error occurred while uploading the course:", error.message);
+      }
       setErrorMessage("An error occurred while uploading the course.");
       setOpen(true);
     } finally {
@@ -138,8 +147,8 @@ function UploadCourse() {
                         label="Course Code"
                         variant="outlined"
                         fullWidth
-                        value={courseCode}
-                        onChange={(e) => setCourseCode(e.target.value)}
+                        value={course_code}
+                        onChange={(e) => setcourse_code(e.target.value)}
                         margin="normal"
                         required
                       />
@@ -150,8 +159,8 @@ function UploadCourse() {
                         label="Course Name"
                         variant="outlined"
                         fullWidth
-                        value={courseName}
-                        onChange={(e) => setCourseName(e.target.value)}
+                        value={course_name}
+                        onChange={(e) => setcourse_name(e.target.value)}
                         margin="normal"
                         required
                       />
@@ -162,8 +171,8 @@ function UploadCourse() {
                         label="Course Description"
                         variant="outlined"
                         fullWidth
-                        value={courseDescription}
-                        onChange={(e) => setCourseDescription(e.target.value)}
+                        value={course_description}
+                        onChange={(e) => setcourse_description(e.target.value)}
                         margin="normal"
                         required
                       />
@@ -174,8 +183,8 @@ function UploadCourse() {
                         label="Credit Hours"
                         variant="outlined"
                         fullWidth
-                        value={creditHours}
-                        onChange={(e) => setCreditHours(e.target.value)}
+                        value={credit_hours}
+                        onChange={(e) => setcredit_hours(e.target.value)}
                         margin="normal"
                         required
                       />
