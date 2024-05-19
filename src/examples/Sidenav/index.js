@@ -10,6 +10,7 @@ import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
+import UploadAnnouncement from "../../layouts/announcements";
 import Tables from "../../layouts/tables";
 import Billing from "../../layouts/billing";
 import EmployeeList from "../../layouts/profile";
@@ -21,7 +22,7 @@ import InventoryEntry from "../../layouts/inventory";
 import InventoryList from "../../layouts/showInventory";
 import StockRequest from "../../layouts/stockRequest";
 import Approval from "../../layouts/stockApproval";
-import IngredientRequest from "../../layouts/ingredientRequest";
+import ScheduleRequest from "../../layouts/schedulePost";
 import IngredientApproval from "../../layouts/ingredientApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
@@ -66,14 +67,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const ipcRenderer = electron.ipcRenderer;
   const collapseName = location.pathname.replace("/", "");
 
-
   const handleLogout = async () => {
     try {
       await ipcRenderer.invoke("clear-user");
       navigate("/authentication/sign-in");
-    } catch (error) {
-   
-    }
+    } catch (error) {}
   };
   const routes = [
     {
@@ -92,6 +90,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/tables",
       component: <AssignmentsPage />,
     },
+
     {
       type: "collapse",
       name: "ግዢ መፍቀጃ",
@@ -104,7 +103,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       type: "collapse",
       name: "ከስቶረ ማውጫ መፍቀጃ",
       key: "stock_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small"  />,
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
       route: "/showApprovedStock",
       component: <StockApproval />,
     },
@@ -160,9 +159,17 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       type: "collapse",
       name: "ከስቶር ማውጫ ፎርም",
       key: "stock_request",
-      icon: <ShoppingCartIcon fontSize="small"  />,
+      icon: <ShoppingCartIcon fontSize="small" />,
       route: "/stockRequest",
       component: <StockRequest />,
+    },
+    {
+      type: "collapse",
+      name: "Announcement post",
+      key: "Announcement_post",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/announcements",
+      component: <UploadAnnouncement />,
     },
     // {
     //   type: "collapse",
@@ -174,11 +181,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     // },
     {
       type: "collapse",
-      name: "ግዢ ማስፈቀጃ ፎርም",
+      name: "Schedule Post",
       key: "ingredient_Request",
       icon: <KitchenIcon fontSize="small" />,
-      route: "/ingredientRequest",
-      component: <IngredientRequest />,
+      route: "/schedulePost",
+      component: <ScheduleRequest />,
     },
     {
       type: "collapse",
@@ -208,7 +215,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       type: "collapse",
       name: "ሰራተኛ  ዝርዝር",
       key: "profile",
-      icon: <PersonIcon fontSize="small"  />,
+      icon: <PersonIcon fontSize="small" />,
       route: "/profile",
       component: <EmployeeList />,
     },

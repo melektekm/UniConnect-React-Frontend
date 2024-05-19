@@ -16,7 +16,6 @@ function BuyFoodDepartment() {
     <DashboardLayout>
       <DashboardNavbar />
       <Sidenav />
-      {/* <CashierSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" /> */}
       <MDBox
         mx={2}
         mt={2}

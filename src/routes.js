@@ -59,6 +59,8 @@ import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
 import StockRequest from "./layouts/stockRequest";
 import Approval from "./layouts/stockApproval";
+import UploadAnnouncement from "./layouts/announcements";
+import ViewAnnouncement from "./layouts/viewAnnouncement";
 import ViewAssignments from "./layouts/showInventory";
 import ShowApproval from "./layouts/showIngredientApproval";
 import StockApproval from "./layouts/showApprovedStock";
@@ -69,7 +71,7 @@ import Department from "./layouts/departmentList";
 import Icon from "@mui/material/Icon";
 import SearchMenu from "./layouts/search/searchForCafeManager";
 import ViewCourses from "./layouts/report";
-import IngredientRequest from "./layouts/ingredientRequest";
+import ScheduleRequest from "./layouts/schedulePost";
 import IngredientApproval from "./layouts/ingredientApproval";
 import DepartmentBilling from "./layouts/billing/DepartmentBilling";
 import CafeManagerDashboard from "./layouts/dashboard/cafeManagerDashboard";
@@ -97,6 +99,7 @@ const routes = [
     route: "/food_menu",
     component: <FoodMenu />,
   },
+
   // {
   //   type: "collapse",
   //   name: " guest billing",
@@ -168,6 +171,22 @@ const routes = [
     icon: <Icon fontSize="small" />,
     route: "/cafeManagerDashboard",
     component: <CafeManagerDashboard />,
+  },
+  {
+    type: "collapse",
+    name: "Announcement post",
+    key: "Announcement_post",
+    icon: <Icon fontSize="small">Announcement </Icon>,
+    route: "/announcements",
+    component: <UploadAnnouncement />,
+  },
+  {
+    type: "collapse",
+    name: "Announcement View",
+    key: "Announcement_view",
+    icon: <Icon fontSize="small">Announcement </Icon>,
+    route: "/viewAnnouncement",
+    component: <ViewAnnouncement />,
   },
   {
     type: "collapse",
@@ -263,11 +282,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ግዢ ማስፈቀጃ ፎርም",
+    name: "Schedule Post",
     key: "ingredient_Request",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/ingredientRequest",
-    component: <IngredientRequest />,
+    route: "/schedulePost",
+    component: <ScheduleRequest />,
   },
   {
     type: "collapse",

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import List from "@mui/material/List";
@@ -21,15 +21,22 @@ import InventoryEntry from "../../layouts/inventory";
 // import InventoryList from "../../layouts/showInventory";
 import StockRequest from "../../layouts/stockRequest";
 import Approval from "../../layouts/stockApproval";
-import IngredientRequest from "../../layouts/ingredientRequest";
+import ScheduleRequest from "../../layouts/schedulePost";
 import IngredientApproval from "../../layouts/ingredientApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
 import ViewAssignments from "../../layouts/showInventory";
 import ShowApproval from "../../layouts/showIngredientApproval";
+import ViewAnnouncement from "../../layouts/viewAnnouncement";
 import StockApproval from "../../layouts/showApprovedStock";
 import AssignmentUpload from "../../layouts/buyFood/buyFoodDepartment";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { Icon } from "semantic-ui-react";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -56,8 +63,10 @@ import ViewCourses from "../../layouts/report";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import KitchenIcon from "@mui/icons-material/Kitchen";
 import UploadCourse from "../../layouts/addDepartment";
+import UploadAnnouncement from "../../layouts/announcements";
 import UploadAssignment from "../../layouts/assignmentUpload";
 import AddCourseMaterial from "../../layouts/courseMaterial";
+import AddMenuItem from "../../layouts/menuEntry";
 function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
@@ -96,11 +105,19 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ent_Approval",
-      key: "Ingredient_Approval",
+      name: "Announcement post",
+      key: "Announcement_post",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/showIngredientApproval",
-      component: <ShowApproval />,
+      route: "/announcements",
+      component: <UploadAnnouncement />,
+    },
+    {
+      type: "collapse",
+      name: "Announcement View",
+      key: "Announcement_view",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/viewAnnouncement",
+      component: <ViewAnnouncement />,
     },
     // {
     //   type: "collapse",
@@ -176,11 +193,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ingredient_Request",
+      name: "Schedule Post",
       key: "ingredient_Request",
       icon: <KitchenIcon fontSize="small" />,
-      route: "/ingredientRequest",
-      component: <IngredientRequest />,
+      route: "/schedulePost",
+      component: <ScheduleRequest />,
     },
     {
       type: "collapse",
@@ -250,7 +267,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       type: "collapse",
       name: "Course upload ",
       key: "Add-department",
-      icon: <AttachMoneyIcon fontSize="small"/>,
+      icon: <AttachMoneyIcon fontSize="small" />,
       route: "/addDepartment",
       component: <UploadCourse />,
     },
@@ -258,15 +275,23 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       type: "collapse",
       name: "Upload Assignment",
       key: "assignmentUpload",
-      icon: <AttachMoneyIcon fontSize="small"/>,
+      icon: <AttachMoneyIcon fontSize="small" />,
       route: "/assignmentUpload",
       component: <UploadAssignment />,
     },
     {
       type: "collapse",
+      name: "menu entry",
+      key: "add_food",
+      icon: <RestaurantMenuIcon fontSize="small" />,
+      route: "/addfood",
+      component: <AddMenuItem />,
+    },
+    {
+      type: "collapse",
       name: "Upload Course Material",
       key: "courseMaterial",
-      icon: <AttachMoneyIcon fontSize="small"/>,
+      icon: <AttachMoneyIcon fontSize="small" />,
       route: "/courseMaterial",
       component: <AddCourseMaterial />,
     },
@@ -422,12 +447,13 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
           (darkMode && !transparentSidenav && whiteSidenav)
         }
       />
-      <Dialog open={openLogoutDialog} onClose={() => setOpenLogoutDialog(false)}>
+      <Dialog
+        open={openLogoutDialog}
+        onClose={() => setOpenLogoutDialog(false)}
+      >
         <DialogTitle>Confirm Logout</DialogTitle>
         <DialogContent>
-          <MDTypography>
-            Are you sure you want to logout?
-          </MDTypography>
+          <MDTypography>Are you sure you want to logout?</MDTypography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenLogoutDialog(false)} color="primary">

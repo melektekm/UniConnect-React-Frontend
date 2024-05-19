@@ -13,7 +13,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { BASE_URL } from "../../appconfig";
 import { CardContent } from "@mui/material";
-import MainDashboard from "../../layouts/MainDashboard";
+import MainDashboard from "../MainDashboard";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -25,7 +25,7 @@ import TextField from "@mui/material/TextField"; // Import TextField
 import MDInput from "../../components/MDInput";
 import colors from "../../assets/theme/base/colors";
 
-function UploadAssignment() {
+function UploadAnnouncement() {
   const location = useLocation();
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -34,10 +34,10 @@ function UploadAssignment() {
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState([]);
   const [formValues, setFormValues] = useState({
-    course_code: "",
-    assignmentName: "",
-    assignmentDescription: "",
-    dueDate: "",
+    title: "",
+    content: "",
+    date: "",
+    category: "registration",
     file: null,
   });
   const [open, setOpen] = useState(false);
@@ -47,46 +47,18 @@ function UploadAssignment() {
   const [errorMessage, setErrorMessage] = useState("");
   const [file, setFile] = useState(null); // Define the file state variable
 
-  useEffect(() => {
-    // Fetch courses when the component mounts
-    getCourses();
-  }, []);
-  console.log(accessToken);
-  const getCourses = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/get-all-courses`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // Pass accessToken in headers
-        },
-      });
-      if (response.data) {
-        setCourses(response.data.courses);
-      } else {
-        setErrorMessage("Failed to fetch courses.");
-        setOpen(true);
-      }
-    } catch (error) {
-      setErrorMessage("Error fetching courses: " + error.message);
-      setOpen(true);
-    }
-  };
-
   const handleFileUpload = (event) => {
     const selectedFile = event.target.files[0];
     setFormValues({ ...formValues, file: selectedFile });
     setFile(selectedFile); // Set the file in the state
   };
 
-  const handleAddToAssignment = async () => {
+  const handlePostAnnouncement = async () => {
     const newErrorMessages = {
-      course_code: formValues.course_code ? "" : "Course is required",
-      assignmentName: formValues.assignmentName
-        ? ""
-        : "Assignment name is required",
-      assignmentDescription: formValues.assignmentDescription
-        ? ""
-        : "Assignment description is required",
-      dueDate: formValues.dueDate ? "" : "Due date is required",
+      title: formValues.title ? "" : "title is required",
+      category: formValues.category ? "" : "category name is required",
+      content: formValues.content ? "" : "content description is required",
+      date: formValues.date ? "" : "Due date is required",
     };
 
     setErrorMessages(newErrorMessages);
@@ -100,15 +72,15 @@ function UploadAssignment() {
     setLoading(true);
     try {
       const jsonData = {
-        course_code: formValues.course_code,
-        assignmentName: formValues.assignmentName,
-        assignmentDescription: formValues.assignmentDescription,
-        dueDate: formValues.dueDate,
+        title: formValues.title,
+        category: formValues.category,
+        content: formValues.content,
+        date: formValues.date,
         file: formValues.file,
       };
 
       const response = await axios.post(
-        `${BASE_URL}/upload-assignment`,
+        `${BASE_URL}/post-announcement`,
         jsonData,
         {
           headers: {
@@ -119,14 +91,14 @@ function UploadAssignment() {
       );
 
       if (response.data) {
-        setSuccessMessage("Assignment uploaded successfully!");
+        setSuccessMessage("Announcement posted successfully!");
         setDialogOpen(true);
       } else {
-        setErrorMessage("Failed to upload assignment. Please try again.");
+        setErrorMessage("Failed to post announcement. Please try again.");
         setDialogOpen(true);
       }
     } catch (error) {
-      setErrorMessage("An error occurred while uploading the assignment.");
+      setErrorMessage("An error occurred while posting the announcement.");
       setDialogOpen(true);
     } finally {
       setLoading(false);
@@ -145,7 +117,7 @@ function UploadAssignment() {
     padding: "10px 20px",
     backgroundColor: colors.dark.main,
     color: "white",
-    borderRadius: "5px",
+    borderRadius: "50px",
     border: "1px solid #007bff",
   };
 
@@ -185,114 +157,108 @@ function UploadAssignment() {
               mx={2}
               mt={2}
               mb={2}
-              py={3}
+              py={2}
               px={2}
               variant="gradient"
               bgColor="dark"
               borderRadius="lg"
               coloredShadow="info"
-              textAlign="center"
+              textAlign="left"
               // style={{ display: "flex", justifyContent: "space-between" }}
             >
               <MDTypography variant="h5" color="white">
-                Assignment Upload
+                post Announcement
               </MDTypography>
             </MDBox>
             <Card>
               <MDBox pt={3} pb={3} px={2}>
-                <MDBox component="form" role="form">
-                  <MDBox mb={2}>
-                    <FormControl
-                      variant="outlined"
-                      fullWidth
-                      style={{ marginTop: "16px" }}
-                    >
-                      <InputLabel htmlFor="course">Course</InputLabel>
-                      <Select
-                        value={formValues.course_code}
-                        onChange={(e) =>
-                          setFormValues({
-                            ...formValues,
-                            course_code: e.target.value,
-                          })
-                        }
-                        label="Course"
-                        inputProps={{
-                          name: "course_code",
-                          id: "course",
-                        }}
-                        style={{ minHeight: "45px" }}
-                      >
-                        <MenuItem value="">Select Course</MenuItem>
-                        {courses.map((course) => (
-                          <MenuItem key={course.id} value={course.code}>
-                            {course.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </MDBox>
-                </MDBox>
                 <MDBox mb={2}>
                   <MDInput
                     type="text"
-                    name="assignmentName"
-                    label="Assignment Name"
+                    name="title"
+                    label="Title"
                     variant="outlined"
                     fullWidth
-                    value={formValues.assignmentName}
+                    value={formValues.title}
                     onChange={(e) =>
                       setFormValues({
                         ...formValues,
-                        assignmentName: e.target.value,
+                        title: e.target.value,
                       })
                     }
                     margin="normal"
                     required
-                    error={!!errorMessages.assignmentName}
-                    helperText={errorMessages.assignmentName}
+                    error={!!errorMessages.title}
+                    helperText={errorMessages.title}
                   />
                 </MDBox>
                 <MDBox mb={2}>
                   <MDInput
                     type="text"
-                    name="assignmentDescription"
-                    label="Assignment Description"
+                    name="content"
+                    label="Content"
                     variant="outlined"
                     fullWidth
-                    value={formValues.assignmentDescription}
+                    value={formValues.content}
                     onChange={(e) =>
                       setFormValues({
                         ...formValues,
-                        assignmentDescription: e.target.value,
+                        content: e.target.value,
                       })
                     }
                     margin="normal"
                     required
-                    error={!!errorMessages.assignmentDescription}
-                    helperText={errorMessages.assignmentDescription}
+                    error={!!errorMessages.content}
+                    helperText={errorMessages.content}
                   />
                 </MDBox>
                 <MDBox mb={2}>
                   <TextField
-                    id="dueDate"
-                    name="dueDate"
-                    label="Due Date"
+                    id="date"
+                    name="date"
+                    label="Date"
                     type="date"
                     fullWidth
                     variant="outlined"
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    value={formValues.dueDate}
+                    value={formValues.date}
                     onChange={(e) =>
-                      setFormValues({ ...formValues, dueDate: e.target.value })
+                      setFormValues({
+                        ...formValues,
+                        date: e.target.value,
+                      })
                     }
                     margin="normal"
                     required
-                    error={!!errorMessages.dueDate}
-                    helperText={errorMessages.dueDate}
+                    error={!!errorMessages.date}
+                    helperText={errorMessages.date}
                   />
+                </MDBox>
+                <MDBox mb={2}>
+                  <select
+                    value={formValues.category}
+                    label="Category"
+                    onChange={(e) =>
+                      setFormValues({
+                        ...formValues,
+                        category: e.target.value,
+                      })
+                    }
+                    name="category"
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      border: "1px solid lightgray",
+                      height: "40px",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <option value="registration">Registration</option>
+                    <option value="upcoming_events">Upcoming Events</option>
+                    <option value="class_related">Academic</option>
+                  </select>
                 </MDBox>
                 <MDBox mb={2} style={{ display: "flex", alignItems: "center" }}>
                   <label htmlFor="fileUpload" style={fileInputStyle}>
@@ -302,7 +268,11 @@ function UploadAssignment() {
                       accept="application/pdf"
                       // name="imageUrl"
                       onChange={handleFileUpload}
-                      style={{ display: "none" }}
+                      style={{
+                        display: "none",
+                        height: "40px",
+                        borderRadius: "30px",
+                      }}
                     />
                     <span>&#128206; {file ? file.name : "Choose File:"}</span>
                   </label>
@@ -314,10 +284,10 @@ function UploadAssignment() {
                   <MDButton
                     variant="contained"
                     color="primary"
-                    onClick={handleAddToAssignment}
+                    onClick={handlePostAnnouncement}
                     disabled={loading}
                   >
-                    {loading ? "Uploading..." : "Upload Assignment"}
+                    {loading ? "Uploading..." : "Upload announcement"}
                   </MDButton>
                 </MDBox>
               </MDBox>
@@ -329,4 +299,4 @@ function UploadAssignment() {
   );
 }
 
-export default UploadAssignment;
+export default UploadAnnouncement;

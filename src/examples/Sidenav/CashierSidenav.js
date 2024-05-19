@@ -186,8 +186,8 @@
 //       name: "ingredient_Request",
 //       key: "ingredient_Request",
 //       icon: <KitchenIcon fontSize="small" />,
-//       route: "/ingredientRequest",
-//       component: <IngredientRequest />,
+//       route: "/schedulePost",
+//       component: <ScheduleRequest />,
 //     },
 //     {
 //       type: "collapse",

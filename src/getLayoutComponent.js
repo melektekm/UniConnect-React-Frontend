@@ -8,6 +8,7 @@ import BasicLayout from "./layouts/authentication/sign-in";
 import SignUpLayout from "./layouts/authentication/sign-up";
 import MainDashboard from "./layouts/MainDashboard";
 import AddEmployee from "./layouts/addEmployee";
+import UploadAnnouncement from "./layouts/announcements";
 import FoodMenu from "./layouts/foodMenu";
 import BuyFood from "./layouts/buyFood";
 import InventoryEntry from "./layouts/inventory";
@@ -20,7 +21,7 @@ import Deposit from "./layouts/deposit";
 import CafeCommetteDashboard from "./layouts/CafeCommetteDashboard";
 import CommetteDashboard from "./layouts/dashboard/cafeCommetteDashboard";
 import StockRequest from "./layouts/stockRequest";
-import IngredientRequest from "./layouts/ingredientRequest";
+import ScheduleRequest from "./layouts/schedulePost";
 import IngredientApproval from "./layouts/ingredientApproval";
 import InventoryList from "./layouts/showInventory";
 import Approval from "./layouts/stockApproval";
@@ -41,6 +42,7 @@ import Department from "./layouts/departmentList";
 import StockAmountTable from "./layouts/stokeAmount";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
+import ViewAnnouncement from "./layouts/viewAnnouncement";
 function getLayoutComponent(path) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -88,8 +90,12 @@ function getLayoutComponent(path) {
       return <MoneyTransaction />;
     case "/addFood":
       return <AddMenuItem />;
+    case "/viewAnnouncement":
+      return <ViewAnnouncement />;
     case "/showApprovedStock":
       return <StockApproval />;
+    case "/announcements":
+      return <UploadAnnouncement />;
     case "/showIngredientApproval":
       return <ShowApproval />;
     case "/buyFood":
@@ -102,8 +108,8 @@ function getLayoutComponent(path) {
       return <StockRequest />;
     case "/stockApproval":
       return <Approval />;
-    case "/ingredientRequest":
-      return <IngredientRequest />;
+    case "/schedulePost":
+      return <ScheduleRequest />;
     case "/ingredientApproval":
       return <IngredientApproval />;
     case "/showInventory":
@@ -153,9 +159,9 @@ function getLayoutComponent(path) {
     case "/authentication/sign-up":
       return <SignUpLayout />;
     case "/assignmentUpload":
-      return <UploadAssignment/>;
+      return <UploadAssignment />;
     case "/courseMaterial":
-      return <AddCourseMaterial/>;
+      return <AddCourseMaterial />;
     default:
       return null;
   }

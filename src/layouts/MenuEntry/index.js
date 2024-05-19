@@ -59,15 +59,15 @@ const AddMenuItem = () => {
       year: formValues.year ? "" : "Year is required",
       semester: formValues.semester ? "" : "Semester is required.",
     };
-  
+
     setErrorMessages(newErrorMessages);
-  
+
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
       setErrorMessage("Fill all required fields.");
       setDialogOpen(true);
       return;
     }
-  
+
     setLoading(true);
     try {
       const jsonData = {
@@ -78,18 +78,14 @@ const AddMenuItem = () => {
         year: formValues.year,
         semester: formValues.semester,
       };
-  
-      const response = await axios.post(
-        `${BASE_URL}/upload-course`,
-        jsonData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-  
+
+      const response = await axios.post(`${BASE_URL}/upload-course`, jsonData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
       // Handle success
       if (response.data.message) {
         setSuccessMessage(response.data.message);
@@ -108,7 +104,6 @@ const AddMenuItem = () => {
       setLoading(false);
     }
   };
-  
 
   const handleDialogClose = () => {
     setDialogOpen(false);

@@ -133,7 +133,7 @@ function IngredientApproval({ reqId }) {
 
   const handleEntry = (requestID) => {
     sessionStorage.setItem("preRouteData", requestID);
-    navigate("/ingredientRequest");
+    navigate("/schedulePost");
   };
   function convertToEthiopianDate(inputDate) {
     const parsedDate = new Date(inputDate);

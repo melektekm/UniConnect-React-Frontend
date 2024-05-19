@@ -65,18 +65,16 @@ function ScheduleRequest() {
     classInstructor: "",
   });
   const [type, setType] = useState("request"); // Default value is "request", you can change it if needed
-  const measuredInOptions = ["Option 1", "Option 2", "Option 3"];
+  const scheduleTypeOptions = ["Exam", "Class"];
 
   const [formList, setFormList] = useState({
     items: [],
-    total_price_request: "",
     requested_by: userData.user.id,
     recommendations: "",
   });
   const [formListEntry, setFormListEntry] = useState({
     items: [],
-    total_price_entry: "",
-    returned_amount: "",
+
     id: "",
     entry_approved_by: userData.user.id,
     recommendations: "",
@@ -108,40 +106,9 @@ function ScheduleRequest() {
       setType("entry");
       sessionStorage.removeItem("preRouteData");
     }
-
-    // Calculate total_price_request or total_price_entry based on the type
-    let totalPrice = 0;
-    if (
-      type === "request" &&
-      Array.isArray(formList.items) &&
-      formList.items.length > 0
-    ) {
-      totalPrice = formList.items.reduce((total, item) => {
-        const itemTotal =
-          parseFloat(item.quantity) * parseFloat(item.price_per_item);
-        return total + itemTotal;
-      }, 0);
-    } else if (
-      type === "entry" &&
-      Array.isArray(formListEntry.items) &&
-      formListEntry.items.length > 0
-    ) {
-      totalPrice = formListEntry.items.reduce((total, item) => {
-        const itemTotal =
-          parseFloat(item.quantity) * parseFloat(item.price_per_item);
-        return total + itemTotal;
-      }, 0);
-    }
-
-    if (type === "request") {
-      setFormList({
-        ...formList,
-      });
-    } else if (type === "entry") {
-      setFormListEntry({
-        ...formListEntry,
-      });
-    }
+    setFormList({
+      ...formList,
+    });
   }, [formList.items, formListEntry.items, type]);
 
   const [removeIndex, setRemoveIndex] = useState(null);
@@ -150,7 +117,6 @@ function ScheduleRequest() {
     setRemoveIndex(index);
   };
 
-  // Function to close the confirmation dialog for remove
   const closeRemoveDialog = () => {
     setRemoveIndex(null);
   };
@@ -178,35 +144,68 @@ function ScheduleRequest() {
     }
   };
 
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-
-    let finalValue;
-    if (name === "name" || name === "price_word" || name === "measured_in") {
-      finalValue = value;
-    } else if (name === "quantity") {
-      finalValue = parseFloat(value);
-      if (!(isNaN(finalValue) || isNaN(formData.price_per_item))) {
-        setTotalPrice(finalValue * formData.price_per_item);
+  const fetchCourseName = async (courseId) => {
+    try {
+      const response = await fetch(`${BASE_URL}/courses/${courseId}`);
+      const data = await response.json();
+      if (response.ok) {
+        // Return the course name from the response data
+        return data.course_name;
       } else {
-        setTotalPrice(0);
+        throw new Error(data.error);
       }
-    } else if (name === "price_per_item") {
-      finalValue = parseFloat(value);
-
-      if (!(isNaN(finalValue) || isNaN(formData.quantity))) {
-        setTotalPrice(finalValue * formData.quantity);
-      } else {
-        setTotalPrice(0);
-      }
+    } catch (error) {
+      console.error("Error fetching course name:", error);
+      throw error;
     }
-
-    setFormData({
-      ...formData,
-      [name]: finalValue,
-    });
   };
 
+  // const handleFormChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData({
+  //     ...formData,
+  //     [name]: finalValue,
+  //   });
+
+  //    if (name === 'courseId') {
+  //     try {
+  //       const courseName = await fetchCourseName(value);
+  //       setFormData({
+  //         ...formData,
+  //         course_name: courseName,
+  //       });
+  //     } catch (error) {
+  //       setErrorMessages({
+  //         ...errorMessages,
+  //         name: 'Error fetching course name.',
+  //       });
+  //     }
+  //   }
+  // };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    if (name === "courseId") {
+      fetchCourseName(value)
+        .then((courseName) => {
+          setFormData({
+            ...formData,
+            course_name: courseName,
+          });
+        })
+        .catch((error) => {
+          setErrorMessages({
+            ...errorMessages,
+            name: "Error fetching course name.",
+          });
+        });
+    }
+  };
   const accessToken = userData.accessToken;
 
   const addForm = () => {
@@ -228,25 +227,20 @@ function ScheduleRequest() {
       setOpen(true);
       return;
     }
-
-    if (type === "request") {
-      setFormList({
-        ...formList,
-        items: [...formList.items, formData],
-      });
-    } else if (type === "entry") {
-      setFormListEntry({
-        ...formListEntry,
-        items: [...formListEntry.items, formData],
-      });
-    }
-
+    setFormList({
+      ...formList,
+      items: [...formList.items, formData],
+    });
     setFormData({
-      name: "",
-      quantity: "",
-      measured_in: "",
-      price_per_item: "",
-      price_word: "",
+      course_name: "",
+      courseId: "",
+      classroom: "",
+      labroom: "",
+      classDays: "",
+      labDays: "",
+      labInstructor: "",
+      classInstructor: "",
+      scheduleType: "class",
     });
     setTotalPrice("");
   };
@@ -256,40 +250,23 @@ function ScheduleRequest() {
 
     try {
       let response;
-
-      if (type === "request") {
-        response = await axios.post(
-          `${BASE_URL}/request`,
-          JSON.stringify(formList),
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-      } else if (type === "entry") {
-        if (file) {
-        } else {
-          setErrorMessage("የደረሰኝ መረጃ ፋይል ያስገቡ");
-          setOpen(true);
-          return;
-        }
-        formListEntry.id = sId;
-        response = await axios.post(`${BASE_URL}/inventory`, formListEntry, {
+      response = await axios.post(
+        `${BASE_URL}/request`,
+        JSON.stringify(formList),
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
-        });
-      }
+        }
+      );
 
       setLoading(false);
-      setErrorMessage("ዝርዝሩ በተሳካ ሁኔታ ተልኳል!");
+      setErrorMessage("Schedule has been sent successfully");
       setOpen(true);
       handleTypeChange();
     } catch (error) {
-      setErrorMessage("ምዝገባው አልተሳካም፦" + error);
+      setErrorMessage("Error while sending schedule " + error);
       setOpen(true);
       setLoading(false);
     }
@@ -304,26 +281,26 @@ function ScheduleRequest() {
     setFile(null);
     setFormList({
       items: [],
-      total_price_request: "",
       requested_by: userData.user.id,
       recommendations: "",
     });
     setFormListEntry({
       items: [],
-      total_price_entry: "",
-      returned_amount: "",
       id: "",
       entry_approved_by: userData.user.id,
       recommendations: "",
     });
     setFormData({
-      name: "",
-      quantity: "",
-      measured_in: "",
-      price_per_item: "",
-      price_word: "",
+      course_name: "",
+      courseId: "",
+      classroom: "",
+      labroom: "",
+      classDays: "",
+      labDays: "",
+      labInstructor: "",
+      classInstructor: "",
+      scheduleType: "class",
     });
-    setTotalPrice("");
     setSId(null);
   };
 
@@ -336,7 +313,7 @@ function ScheduleRequest() {
         aria-describedby="alert-dialog-description"
         PaperProps={{ style: { padding: "15px" } }}
       >
-        <DialogTitle id="alert-dialog-title">{"ማስታወቂያ"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Notification"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {errorMessage}
@@ -352,7 +329,7 @@ function ScheduleRequest() {
             color="primary"
             style={{ borderRadius: "10%" }}
           >
-            መዝጊያ
+            close
           </MDButton>
         </DialogActions>
       </Dialog>
@@ -402,7 +379,7 @@ function ScheduleRequest() {
                   alignItems="center"
                   spacing={2}
                   justifyContent="space-between"
-                  paddingRight="20px"
+                  paddingRight="15px"
                 >
                   Schedule upload
                 </Grid>
@@ -412,11 +389,11 @@ function ScheduleRequest() {
                 <MDBox component="form" role="form">
                   <MDInput
                     type="text"
-                    name="name"
-                    label="የእቃው አይነት"
+                    name="courseId"
+                    label="Course Code"
                     variant="standard"
                     fullWidth
-                    value={formData.name}
+                    value={formData.courseId}
                     onChange={handleFormChange}
                     margin="dense"
                     required
@@ -424,81 +401,113 @@ function ScheduleRequest() {
                     helperText={errorMessages.name}
                   />
                   <MDInput
-                    type="number"
-                    name="quantity"
-                    label="ብዛት"
+                    type="text"
+                    name="course_name"
+                    label="Course Name"
                     variant="standard"
                     fullWidth
-                    value={formData.quantity}
+                    value={formData.course_name}
                     onChange={handleFormChange}
                     margin="dense"
                     required
-                    error={!!errorMessages.quantity}
-                    helperText={errorMessages.quantity}
+                    error={!!errorMessages.course_name}
+                    helperText={errorMessages.course_name}
                   />
-
-                  <MDInput
-                    type="number"
-                    name="price_per_item"
-                    label="የአንዱ ዋጋ"
-                    variant="standard"
-                    fullWidth
-                    value={formData.price_per_item}
-                    onChange={handleFormChange}
-                    margin="dense"
-                    required
-                    error={!!errorMessages.price_per_item}
-                    helperText={errorMessages.price_per_item}
-                  />
-                  <MDInput
-                    type="number"
-                    name="totalPrice"
-                    label="ጠቅላላ ዋጋ ብር"
-                    variant="standard"
-                    fullWidth
-                    value={totalPrice}
-                    margin="dense"
-                    required
-                    error={!!errorMessages.totalPrice}
-                    helperText={errorMessages.totalPrice}
-                    readOnly
-                    InputLabelProps={{
-                      shrink:
-                        totalPrice !== "" &&
-                        totalPrice !== undefined &&
-                        totalPrice !== null,
-                    }}
-                  />
-
                   <MDInput
                     type="text"
-                    name="price_word"
-                    label="የጠቅላላ ዋጋ በፊደል"
+                    name="classDays"
+                    label="class days"
                     variant="standard"
                     fullWidth
-                    value={formData.price_word}
+                    value={formData.classDays}
                     onChange={handleFormChange}
                     margin="dense"
                     required
-                    error={!!errorMessages.price_word}
-                    helperText={errorMessages.price_word}
+                    error={!!errorMessages.classDays}
+                    helperText={errorMessages.classDays}
                   />
+                  <MDInput
+                    type="text"
+                    name="classroom"
+                    label="classroom No"
+                    variant="standard"
+                    fullWidth
+                    value={formData.classroom}
+                    onChange={handleFormChange}
+                    margin="dense"
+                    required
+                    error={!!errorMessages.classroom}
+                    helperText={errorMessages.classroom}
+                  />
+                  <MDInput
+                    type="text"
+                    name="labroom"
+                    label="labroom"
+                    variant="standard"
+                    fullWidth
+                    value={formData.labroom}
+                    onChange={handleFormChange}
+                    margin="dense"
+                    required
+                    error={!!errorMessages.labroom}
+                    helperText={errorMessages.labroom}
+                  />
+                  <MDInput
+                    type="text"
+                    name="labInstructor"
+                    label="lab Instructor"
+                    variant="standard"
+                    fullWidth
+                    value={formData.labInstructor}
+                    onChange={handleFormChange}
+                    margin="dense"
+                    required
+                    error={!!errorMessages.labInstructor}
+                    helperText={errorMessages.labInstructor}
+                  />
+                  <MDInput
+                    type="text"
+                    name="classInstructor"
+                    label="class Instructor"
+                    variant="standard"
+                    fullWidth
+                    value={formData.classInstructor}
+                    onChange={handleFormChange}
+                    margin="dense"
+                    required
+                    error={!!errorMessages.classInstructor}
+                    helperText={errorMessages.classInstructor}
+                  />
+                  <MDInput
+                    type="text"
+                    name="labDays"
+                    label="Lab Days"
+                    variant="standard"
+                    fullWidth
+                    value={formData.labDays}
+                    onChange={handleFormChange}
+                    margin="dense"
+                    required
+                    error={!!errorMessages.labDays}
+                    helperText={errorMessages.labDays}
+                  />
+
                   <MDBox mb={2}>
                     <TextField
                       select
-                      label="መለኪያ"
+                      label="Schedule Type"
                       variant="standard"
                       fullWidth
-                      value={formData.measured_in || ""}
+                      value={formData.scheduleType || ""}
                       onChange={handleFormChange}
-                      name="measured_in"
+                      name="scheduleType"
                       margin="dense"
                       required
-                      error={!!errorMessages.measured_in}
-                      helperText={errorMessages.measured_in}
+                      error={!!errorMessages.scheduleType}
+                      helperText={errorMessages.scheduleType}
                     >
-                      <MenuItem value="">መለኪያ ይምረጡ</MenuItem>
-                      {measuredInOptions.map((option) => (
+                      <MenuItem value="">choose type of schedule</MenuItem>
+                      {scheduleTypeOptions.map((option) => (
                         <MenuItem key={option} value={option}>
                           {option}
                         </MenuItem>
@@ -513,7 +522,7 @@ function ScheduleRequest() {
                       onClick={addForm}
                       disabled={formList.length === 0 || loading}
                     >
-                      ጨምር
+                      Add
                     </MDButton>
                     <Dialog
                       open={confirmationOpen}
@@ -598,14 +607,13 @@ function ScheduleRequest() {
                   ).map((form, index) => (
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{form.name}</TableCell>
-                      <TableCell>{form.quantity}</TableCell>
-                      <TableCell>{form.measured_in}</TableCell>
-                      <TableCell>{form.price_per_item}</TableCell>
-                      <TableCell>
-                        {form.quantity * form.price_per_item}
-                      </TableCell>
-                      <TableCell>{form.price_word}</TableCell>
+                      <TableCell>{form.course_name}</TableCell>
+                      <TableCell>{form.courseId}</TableCell>
+                      <TableCell>{form.labroom}</TableCell>
+                      <TableCell>{form.classDays}</TableCell>
+                      <TableCell>{form.labDays}</TableCell>
+                      <TableCell>{form.classInstructor}</TableCell>
+                      <TableCell>{form.labInstructor}</TableCell>
                       <TableCell align="center">
                         <MDButton
                           variant="outlined"

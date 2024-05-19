@@ -20,7 +20,7 @@ import BuyFood from "../../layouts/buyFood";
 import InventoryEntry from "../../layouts/inventory";
 import StockRequest from "../../layouts/stockRequest";
 import Approval from "../../layouts/stockApproval";
-import IngredientRequest from "../../layouts/ingredientRequest";
+import ScheduleRequest from "../../layouts/schedulePost";
 import IngredientApproval from "../../layouts/ingredientApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
@@ -208,8 +208,8 @@ function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
       name: "ingredient_Request",
       key: "ingredient_Request",
       icon: <KitchenIcon fontSize="small" />,
-      route: "/ingredientRequest",
-      component: <IngredientRequest />,
+      route: "/schedulePost",
+      component: <ScheduleRequest />,
     },
     {
       type: "collapse",

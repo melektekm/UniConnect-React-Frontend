@@ -10,7 +10,7 @@ import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import StockRequest from "../../layouts/stockRequest";
-import IngredientRequest from "../../layouts/ingredientRequest";
+import ScheduleRequest from "../../layouts/schedulePost";
 import CafeManagerDashboard from "../../layouts/dashboard/cafeManagerDashboard";
 import { Icon } from "semantic-ui-react";
 
@@ -196,8 +196,8 @@ function storeKeeperSidenav({ brand, brandName, selectedMenu, ...rest }) {
       name: "ingredient_Request",
       key: "ingredient_Request",
       icon: <KitchenIcon fontSize="small" />,
-      route: "/ingredientRequest",
-      component: <IngredientRequest />,
+      route: "/schedulePost",
+      component: <ScheduleRequest />,
     },
     {
       type: "collapse",
