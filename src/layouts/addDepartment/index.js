@@ -7,6 +7,10 @@ import {
   DialogContentText,
   DialogTitle,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -22,6 +26,7 @@ import MDButton from "../../components/MDButton";
 import { BASE_URL } from "../../appconfig";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import colors from "../../assets/theme/base/colors";
 
 function UploadCourse() {
   const [course_code, setcourse_code] = useState("");
@@ -37,8 +42,8 @@ function UploadCourse() {
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
+
   const handleUploadCourse = async () => {
-    // Check if any of the input fields are empty
     if (
       !course_code ||
       !course_name ||
@@ -75,6 +80,7 @@ function UploadCourse() {
       );
 
       if (response.data) {
+        resetState();
         setErrorMessage("Course uploaded successfully!");
         setOpen(true);
       } else {
@@ -94,8 +100,20 @@ function UploadCourse() {
     }
   };
 
+  const resetState = () => {
+    setcourse_code("");
+    setcourse_description("");
+    setcourse_name("");
+    setcredit_hours("");
+    setYear("");
+    setSemester("");
+  };
+
   return (
     <DashboardLayout>
+      <DashboardNavbar />
+      <Sidenav />
+      <MainDashboard />
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
@@ -114,10 +132,6 @@ function UploadCourse() {
           </MDButton>
         </DialogActions>
       </Dialog>
-      {/* <AdminNavbar /> */}
-      <DashboardNavbar />
-      <Sidenav />
-      <MainDashboard />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
@@ -178,40 +192,47 @@ function UploadCourse() {
                       />
                     </MDBox>
                     <MDBox mb={1}>
-                      <MDInput
-                        type="number"
-                        label="Credit Hours"
-                        variant="outlined"
-                        fullWidth
-                        value={credit_hours}
-                        onChange={(e) => setcredit_hours(e.target.value)}
-                        margin="normal"
-                        required
-                      />
+                      <FormControl fullWidth variant="outlined" margin="normal">
+                        <InputLabel>Credit Hours</InputLabel>
+                        <Select
+                          value={credit_hours}
+                          onChange={(e) => setcredit_hours(e.target.value)}
+                          label="Credit Hours"
+                        >
+                          <MenuItem value={1}>1</MenuItem>
+                          <MenuItem value={2}>2</MenuItem>
+                          <MenuItem value={3}>3</MenuItem>
+                          <MenuItem value={4}>4</MenuItem>
+                        </Select>
+                      </FormControl>
                     </MDBox>
                     <MDBox mb={1}>
-                      <MDInput
-                        type="number"
-                        label="Year"
-                        variant="outlined"
-                        fullWidth
-                        value={year}
-                        onChange={(e) => setYear(e.target.value)}
-                        margin="normal"
-                        required
-                      />
+                      <FormControl fullWidth variant="outlined" margin="normal">
+                        <InputLabel>Year</InputLabel>
+                        <Select
+                          value={year}
+                          onChange={(e) => setYear(e.target.value)}
+                          label="Year"
+                        >
+                          <MenuItem value={1}>1</MenuItem>
+                          <MenuItem value={2}>2</MenuItem>
+                          <MenuItem value={3}>3</MenuItem>
+                          <MenuItem value={4}>4</MenuItem>
+                        </Select>
+                      </FormControl>
                     </MDBox>
                     <MDBox mb={1}>
-                      <MDInput
-                        type="number"
-                        label="Semester"
-                        variant="outlined"
-                        fullWidth
-                        value={semester}
-                        onChange={(e) => setSemester(e.target.value)}
-                        margin="normal"
-                        required
-                      />
+                      <FormControl fullWidth margin="normal" variant="outlined">
+                        <InputLabel>Semester</InputLabel>
+                        <Select
+                          value={semester}
+                          onChange={(e) => setSemester(e.target.value)}
+                          label="Semester"
+                        >
+                          <MenuItem value={1}>1</MenuItem>
+                          <MenuItem value={2}>2</MenuItem>
+                        </Select>
+                      </FormControl>
                     </MDBox>
                     <MDBox mt={2} mb={1} textAlign="center">
                       <MDButton color="primary" onClick={handleUploadCourse}>

@@ -28,59 +28,47 @@ import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
 
-function ViewAssignments() {
+function CourseMaterialsPage() {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
-  const [assignments, setAssignments] = useState([]);
+  const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
   const userData = ipcRenderer.sendSync("get-user");
 
   const [open, setOpen] = useState(false);
-  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
 
   const accessToken = userData.accessToken;
 
-  // const history = useHistory();
-
-  const fetchAssignments = async () => {
+  const fetchMaterial = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/getallassignments`, {
+      const response = await axios.get(`${BASE_URL}/getallmaterials`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      if (response.data && response.data.assignments) {
-        setAssignments(response.data.assignments);
+      if (response.data && response.data.materials) {
+        setMaterials(response.data.materials);
       }
     } catch (error) {
-      console.error("Error fetching assignments:", error);
+      console.error("Error fetching matrials:", error);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchAssignments();
+    fetchMaterial();
   }, []);
 
-  const handleAssignmentClick = (assignment) => {
-    setSelectedAssignment(assignment);
+  const handleMaterialClick = (material) => {
+    setSelectedMaterial(material);
     setOpen(true);
   };
 
   const handleCloseModal = () => {
     setOpen(false);
-    setSelectedAssignment(null);
-  };
-
-  const handleSubmitAssignment = (assignment) => {
-    // history.push({
-    //   pathname: "/submit-assignment",
-    //   state: {
-    //     assignmentName: assignment.ass_name,
-    //     courseName: assignment.course_name,
-    //   },
-    // });
+    setSelectedMaterial(null);
   };
 
   return (
@@ -103,7 +91,7 @@ function ViewAssignments() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h4" color="white">
-                  Assignment List
+                  Course Material List
                 </MDTypography>
               </MDBox>
               <Card style={{ marginTop: "20px" }}>
@@ -116,46 +104,34 @@ function ViewAssignments() {
                     <TableBody>
                       <TableRow sx={{ backgroundColor: "#" }}>
                         <TableCell align="center">
-                          <strong>Assignment Id</strong>
+                          <strong>Id</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Assignment Name</strong>
+                          <strong>Title</strong>
                         </TableCell>
-                        <TableCell align="center">
-                          <strong>Assignment Description</strong>
-                        </TableCell>
+                        {/* <TableCell align="center">
+                          <strong>Material Description</strong>
+                        </TableCell> */}
                         <TableCell align="center">
                           <strong>Course Name</strong>
-                        </TableCell>
-                        <TableCell align="center">
-                          <strong>Due Date</strong>
                         </TableCell>
                         <TableCell align="center">
                           <strong>Actions</strong>
                         </TableCell>
                       </TableRow>
-                      {assignments.map((assignment) => (
+                      {materials.map((material) => (
                         <TableRow key={assignment.id}>
-                          <TableCell align="center">{assignment.id}</TableCell>
-                          <TableCell align="center">{assignment.ass_name}</TableCell>
-                          <TableCell align="center">{assignment.Add_description}</TableCell>
-                          <TableCell align="center">{assignment.course_name}</TableCell>
-                          <TableCell align="center">{assignment.due_date}</TableCell>
+                          <TableCell align="center">{material.id}</TableCell>
+                          <TableCell align="center">{material.materialTitle}</TableCell>
+                          {/* <TableCell align="center">{material.materialDescription}</TableCell> */}
+                          <TableCell align="center">{material.course_name}</TableCell>
                           <TableCell align="center">
                             <Button
                               variant="contained"
                               color="primary"
                               onClick={() => handleAssignmentClick(assignment)}
                             >
-                              View Assignment
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              onClick={() => handleSubmitAssignment(assignment)}
-                              style={{ marginLeft: "10px" }}
-                            >
-                              Submit
+                              View Material
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -169,25 +145,22 @@ function ViewAssignments() {
                 <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
                   <Card>
                     <CardContent>
-                      {selectedAssignment && (
+                      {selectedMaterial && (
                         <>
                           <Typography variant="h5" component="div" gutterBottom>
-                            Assignment Details
+                            Course Material Details
                           </Typography>
                           <Typography variant="body1" gutterBottom>
-                            Assignment ID: {selectedAssignment.id}
+                            ID: {selectedMaterial.id}
                           </Typography>
                           <Typography variant="body1" gutterBottom>
-                            Assignment Name: {selectedAssignment.ass_name}
+                            Title: {selectedMaterial.materialTitle}
                           </Typography>
+                          {/* <Typography variant="body1" gutterBottom>
+                            Description: {selectedMaterial.materialDescription}
+                          </Typography> */}
                           <Typography variant="body1" gutterBottom>
-                            Description: {selectedAssignment.Add_description}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Course Name: {selectedAssignment.course_name}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Due Date: {selectedAssignment.due_date}
+                            Course Name: {selectedMaterial.course_name}
                           </Typography>
                           <Button
                             variant="contained"
@@ -213,4 +186,4 @@ function ViewAssignments() {
   );
 }
 
-export default ViewAssignments;
+export default CourseMaterialsPage;
