@@ -15,7 +15,7 @@ import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
-import { Card, Box } from "@mui/material";
+import { Card, Box, Button, Modal, Pagination, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 
 function ViewCourses() {
   const electron = window.require("electron");
@@ -26,33 +26,79 @@ function ViewCourses() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const itemsPerPage = 10; // Set the number of items to display per page
+  const [current_page, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
 
   const accessToken = userData.accessToken;
 
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/fetch-course`, {
+      const response = await axios.get(`${BASE_URL}/fetch-course?page=${current_page}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
         },
       });
       if (response.data && response.data.courses) {
         setCourses(response.data["courses"]);
+        setCurrentPage(response.data.current_page);
+        setLastPage(response.data.lastPage);
       }
-
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);
+      setErrorMessage("Failed to fetch courses.");
     }
-
     setLoading(false);
   };
 
   useEffect(() => {
     fetchCourses();
-  }, []);
+  }, [current_page]);
+
+  const handleViewDetails = (course) => {
+    setSelectedCourse(course);
+    setOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
+  const handleEnrollClick = (course) => {
+    setSelectedCourse(course);
+    setOpen(true);
+  };
+
+  const handleEnrollConfirm = async () => {
+    try {
+      // Update the course status and send it to the backend
+      const response = await axios.put(`${BASE_URL}/enroll/${selectedCourse.id}`, {
+        status: "enrolled",
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.data) {
+        setSuccessMessage("Enrolled successfully!");
+        setDialogOpen(true);
+      } else {
+        setErrorMessage("Failed to enroll. Please try again.");
+        setDialogOpen(true);
+      }
+    } catch (error) {
+      console.error("Error enrolling in the course:", error);
+      setDialogOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEnrollCancel = () => {
+    setOpen(false);
+  };
 
   return (
     <div style={{ display: "flex" }}>
@@ -104,6 +150,9 @@ function ViewCourses() {
                         <TableCell align="center">
                           <strong>Description</strong>
                         </TableCell>
+                        <TableCell align="center">
+                          <strong>Actions</strong>
+                        </TableCell>
                       </TableRow>
                       {courses.map((course) => (
                         <TableRow key={course.id}>
@@ -123,17 +172,132 @@ function ViewCourses() {
                           <TableCell align="center">
                             {course.course_description}
                           </TableCell>
+                          <TableCell align="center">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handleViewDetails(course)}
+                            >
+                              View Details
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handleEnrollClick(course)}
+                              style={{ marginLeft: 8 }}
+                            >
+                              Enroll
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
+                {loading && (
+                  <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+                    <Typography variant="body1">Loading...</Typography>
+                  </Box>
+                )}
+                {errorMessage && (
+                  <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+                    <Typography variant="body1" color="error">
+                      {errorMessage}
+                    </Typography>
+                  </Box>
+                )}
+                <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+                  <Pagination
+                    count={lastPage}
+                    page={current_page}
+                    onChange={(event, page) => setCurrentPage(page)}
+                    variant="outlined"
+                    color="primary"
+                  />
+                </Box>
                 <Footer />
               </Card>
             </Grid>
           </Grid>
         </MDBox>
       </div>
+      {/* Modal for displaying detailed course information */}
+      <Modal open={open} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            borderRadius: "8px",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Course Details
+          </Typography>
+          {selectedCourse && (
+            <>
+              <Typography variant="body1">
+                Course Name: {selectedCourse.course_name}
+              </Typography>
+              <Typography variant="body1">
+                Course Code: {selectedCourse.course_code}
+              </Typography>
+              <Typography variant="body1">
+                Credit Hour: {selectedCourse.credit_hours}
+              </Typography>
+              <Typography variant="body1">
+                Year: {selectedCourse.year}
+              </Typography>
+              <Typography variant="body1">
+                Semester: {selectedCourse.semester}
+              </Typography>
+              <Typography variant="body1">
+                Description: {selectedCourse.course_description}
+              </Typography>
+            </>
+          )}
+          <Button variant="contained" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Box>
+      </Modal>
+      {/* Course Details Dialog */}
+      <Dialog open={open} onClose={handleCloseModal}>
+        <DialogTitle>Course Details</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <strong>Course Code:</strong> {selectedCourse?.course_code}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Course Name:</strong> {selectedCourse?.course_name}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Credit Hour:</strong> {selectedCourse?.credit_hours}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Year:</strong> {selectedCourse?.year}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Semester:</strong> {selectedCourse?.semester}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Description:</strong> {selectedCourse?.course_description}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEnrollConfirm} color="primary">
+            Enroll
+          </Button>
+          <Button onClick={handleEnrollCancel} color="secondary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

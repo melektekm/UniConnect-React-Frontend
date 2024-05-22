@@ -41,6 +41,10 @@ import Department from "./layouts/departmentList";
 import StockAmountTable from "./layouts/stokeAmount";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
+import AssignmentsPage from "./layouts/assignmentList";
+import CourseMaterialsPage from "./layouts/CourseMaterialList";
+import SubmitAssignment from "./layouts/submitAssignment";
+
 function getLayoutComponent(path) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -156,6 +160,12 @@ function getLayoutComponent(path) {
       return <UploadAssignment/>;
     case "/courseMaterial":
       return <AddCourseMaterial/>;
+    case "/assignmentList":
+      return <AssignmentsPage/>;
+    case "/CourseMaterialList":
+        return <CourseMaterialsPage/>;
+    case "/submitAssignment":
+        return <SubmitAssignment/>;
     default:
       return null;
   }
