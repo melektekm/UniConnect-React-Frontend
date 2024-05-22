@@ -259,7 +259,7 @@ function SubmitAssignment() {
                                             helperText={errorMessages.assignmentName}
                                         />
                                     </MDBox>
-                                    <MDBox mb={2}>
+                                    {/* <MDBox mb={2}>
                                         <MDInput
                                             type="text"
                                             name="assignmentDescription"
@@ -275,7 +275,7 @@ function SubmitAssignment() {
                                             error={!!errorMessages.assignmentDescription}
                                             helperText={errorMessages.assignmentDescription}
                                         />
-                                    </MDBox>
+                                    </MDBox> */}
                                     <MDBox mb={2}>
                                         <TextField
                                             id="dueDate"
