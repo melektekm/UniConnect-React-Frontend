@@ -64,7 +64,7 @@ function ScheduleRequest() {
     labInstructor: "",
     classInstructor: "",
   });
-  const [type, setType] = useState("request"); // Default value is "request", you can change it if needed
+  // Default value is "request", you can change it if needed
   const scheduleTypeOptions = ["Exam", "Class"];
 
   const [formList, setFormList] = useState({
