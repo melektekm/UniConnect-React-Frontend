@@ -12,23 +12,23 @@ import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
 import UploadAnnouncement from "../../layouts/announcements";
 import Tables from "../../layouts/tables";
-import Billing from "../../layouts/billing";
+
 import EmployeeList from "../../layouts/profile";
 import AddEmployee from "../../layouts/addEmployee";
 import AddMenuItem from "../../layouts/menuEntry";
 import FoodMenu from "../../layouts/foodMenu";
-import BuyFood from "../../layouts/buyFood";
+
 import InventoryEntry from "../../layouts/inventory";
 import InventoryList from "../../layouts/assignmentView";
 import StockRequest from "../../layouts/stockRequest";
-import Approval from "../../layouts/stockApproval";
+import Approval from "../../layouts/DisplaySchedule";
 import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
 import InventoryList from "../../layouts/assignmentView";
 import ShowApproval from "../../layouts/showIngredientApproval";
-import StockApproval from "../../layouts/showApprovedStock";
+import DisplaySchedule from "../../layouts/scheduleView";
 import BuyFoodDepartment from "../../layouts/buyFood/buyFoodDepartment";
 
 import { Icon } from "semantic-ui-react";
@@ -104,8 +104,8 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       name: "ከስቶረ ማውጫ መፍቀጃ",
       key: "stock_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/showApprovedStock",
-      component: <StockApproval />,
+      route: "/scheduleView",
+      component: <DisplaySchedule />,
     },
     {
       type: "collapse",
@@ -120,25 +120,25 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       name: "Upload Courses",
       key: "add_food",
       icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/courseUpload",
+      route: "/addFood",
       component: <UploadCourse />,
     },
-    {
-      type: "collapse",
-      name: "ምግብ መግዣ",
-      key: "buy_food",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/buyFood",
-      component: <BuyFood />,
-    },
-    {
-      type: "collapse",
-      name: "Upload Assignments",
-      key: "buy_food_department",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/buyFoodDepartment",
-      component: <AssignmentUpload />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "ምግብ መግዣ",
+    //   key: "buy_food",
+    //   icon: <ShoppingCartIcon fontSize="small" />,
+    //   route: "/buyFood",
+    //   component: <BuyFood />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "Upload Assignments",
+    //   key: "buy_food_department",
+    //   icon: <ShoppingCartIcon fontSize="small" />,
+    //   route: "/buyFoodDepartment",
+    //   component: <AssignmentUpload />,
+    // },
     {
       type: "collapse",
       name: "Inventory",
@@ -176,7 +176,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   name: "Stock Approval",
     //   key: "stock_Approval",
     //   icon: <Icon fontSize="small" />,
-    //   route: "/stockApproval",
+    //   route: "/DisplaySchedule",
     //   component: <Approval />,
     // },
     {
@@ -197,7 +197,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ሰራተኛ ማስገቢያ",
+      name: "add user",
       key: "Add-employee",
       icon: <AddIcon fontSize="small" />,
       route: "/addEmployee",
@@ -237,11 +237,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "የመተግበሪያ ገጽታ",
+      name: "Display Schedule",
       key: "stock_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/showApprovedStock",
-      component: <StockApproval />,
+      route: "/scheduleView",
+      component: <DisplaySchedule />,
     },
     {
       type: "collapse",

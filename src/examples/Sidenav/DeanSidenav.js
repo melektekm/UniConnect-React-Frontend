@@ -11,20 +11,9 @@ import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
 import Tables from "../../layouts/tables";
-import Billing from "../../layouts/billing";
-import EmployeeList from "../../layouts/profile";
-import AddEmployee from "../../layouts/addEmployee";
-import AddMenuItem from "../../layouts/menuEntry";
-import FoodMenu from "../../layouts/foodMenu";
-import BuyFood from "../../layouts/buyFood";
-import InventoryEntry from "../../layouts/inventory";
-import StockRequest from "../../layouts/stockRequest";
-import Approval from "../../layouts/stockApproval";
 import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
-import Constraint from "../../layouts/constraints";
-import Deposit from "../../layouts/deposit";
-import InventoryList from "../../layouts/assignmentView";
+
 import CafeManagerDashboard from "../../layouts/dashboard/cafeManagerDashboard";
 import { Icon } from "semantic-ui-react";
 // import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
@@ -44,10 +33,9 @@ import {
 } from "@mui/icons-material";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import KitchenIcon from "@mui/icons-material/Kitchen";
-// import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import ShowApproval from "../../layouts/showIngredientApproval";
+
 import colors from "../../assets/theme/base/colors";
-import StockApproval from "../../layouts/showApprovedStock";
+import DisplaySchedule from "../../layouts/scheduleView";
 import {
   useMaterialUIController,
   setMiniSidenav,
@@ -55,8 +43,6 @@ import {
   setWhiteSidenav,
 } from "../../context";
 import ReportList from "../../layouts/report";
-import CommetteDashboard from "../../layouts/dashboard/cafeCommetteDashboard";
-import DepartmentBilling from "../../layouts/billing/DepartmentBilling";
 import MDButton from "../../components/MDButton";
 import {
   Dialog,
@@ -67,7 +53,7 @@ import {
   Button,
 } from "@mui/material";
 
-function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
+function DeanSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } =
@@ -120,30 +106,16 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/tables",
       component: <Tables />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "ent_Approval",
-    //   key: "Ingredient_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showIngredientApproval",
-    //   component: <ShowApproval />,
-    // },
+
     {
       type: "collapse",
       name: "stock_Approval",
       key: "stock_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/showApprovedStock",
-      component: <StockApproval />,
+      route: "/scheduleView",
+      component: <DisplaySchedule />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "food menu",
-    //   key: "food_menu",
-    //   icon: <FastfoodIcon fontSize="small" />,
-    //   route: "/food_menu",
-    //   component: <FoodMenu />,
-    // },
+
     {
       type: "collapse",
       name: "menu entry",
@@ -152,54 +124,6 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/addfood",
       component: <AddMenuItem />,
     },
-    {
-      type: "collapse",
-      name: "buy food",
-      key: "buy_food",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/buyFood",
-      component: <BuyFood />,
-    },
-    {
-      type: "collapse",
-      name: "Upload Assignments",
-      key: "buy_food_department",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/buyFoodDepartment",
-      component: <BuyFoodDepartment />,
-    },
-    {
-      type: "collapse",
-      name: "Inventory",
-      key: "inventory",
-      icon: <InventoryIcon fontSize="small" />,
-      route: "/inventory",
-      component: <InventoryEntry />,
-    },
-    {
-      type: "collapse",
-      name: "assignmentView",
-      key: "list",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/assignmentView",
-      component: <InventoryList />,
-    },
-    // {
-    //   type: "collapse",
-    //   name: "stock_request",
-    //   key: "stock_request",
-    //   icon: <ShoppingCartIcon fontSize="small" />,
-    //   route: "/stockRequest",
-    //   component: <StockRequest />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "Stock Approval",
-    //   key: "stock_Approval",
-    //   icon: <Icon fontSize="small" />,
-    //   route: "/stockApproval",
-    //   component: <Approval />,
-    // },
     {
       type: "collapse",
       name: "ingredient_Request",
@@ -226,54 +150,30 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
     // },
     // {
     //   type: "collapse",
-    //   name: " guest billing",
-    //   key: "billing",
-    //   icon: <ReceiptLongIcon fontSize="small" />,
-    //   route: "/billing",
-    //   component: <Billing />,
-    // },
-    // {
-    //   type: "collapse",
     //   name: "employee list",
     //   key: "profile",
     //   icon: <PersonIcon fontSize="small" />,
     //   route: "/profile",
     //   component: <EmployeeList />,
     // },
+    // {
+    //   type: "collapse",
+    //   name: "report",
+    //   key: "report",
+    //   icon: <AssessmentIcon fontSize="small" />,
+    //   route: "/report",
+    //   component: <ReportList />,
+    // },
+
     {
       type: "collapse",
-      name: "report",
-      key: "report",
-      icon: <AssessmentIcon fontSize="small" />,
-      route: "/report",
-      component: <ReportList />,
+      name: "Display Schedule",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/scheduleView",
+      component: <DisplaySchedule />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "ገደቦች",
-    //   key: "constraint",
-    //   icon: <ManageAccountsIcon fontSize="small" />,
-    //   route: "/constraint",
-    //   component: <Constraint />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "የመተግበሪያ ገጽታ",
-    //   key: "stock_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showApprovedStock",
-    //   component: <StockApproval />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "የገንዘብ አያያዝ",
-    //   key: "deposit",
-    //   icon: <AttachMoneyIcon fontSize="small" />,
-    //   route: "/deposit",
-    //   component: <Deposit />,
-    // },
   ];
-
   let textColor = "white";
 
   if (transparentSidenav || (whiteSidenav && !darkMode)) {
@@ -428,10 +328,10 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
         aria-describedby="alert-dialog-description"
         PaperProps={{ style: { padding: "15px" } }}
       >
-        <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Notification</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
+            Are you sure you want to log-out
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{ justifyContent: "space-between" }}>
@@ -440,14 +340,14 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
             color="info"
             style={{ borderRadius: "15%" }}
           >
-            አይ
+            no
           </MDButton>
           <MDButton
             onClick={handleLogoutConfirmed}
             color="error"
             style={{ borderRadius: "15%" }}
           >
-            ውጣ
+            yes
           </MDButton>
         </DialogActions>
       </Dialog>
@@ -455,12 +355,12 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
   );
 }
 
-CafeManagerSidenav.defaultProps = {
+DeanSidenav.defaultProps = {
   color: "info",
   brand: "",
 };
 
-CafeManagerSidenav.propTypes = {
+DeanSidenav.propTypes = {
   color: PropTypes.oneOf([
     "primary",
     "secondary",
@@ -474,4 +374,4 @@ CafeManagerSidenav.propTypes = {
   brandName: PropTypes.string.isRequired,
 };
 
-export default CafeManagerSidenav;
+export default DeanSidenav;

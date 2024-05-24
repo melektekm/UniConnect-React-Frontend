@@ -55,7 +55,7 @@ function AnnouncementItemCard({ item, onDelete, userData }) {
         <MDTypography variant="body2">{item.category}</MDTypography>
 
         <MDBox textAlign="center" mb={2} mt={2}>
-          {userData.user.role === "communittee_admin" && (
+          {userData.user.role === "student" && (
             <Segment clearing basic>
               <MDButton
                 color="primary"

@@ -14,15 +14,15 @@ import ReportsLineChart from "../../../examples/Charts/LineCharts/ReportsLineCha
 import ComplexStatisticsCard from "../../../examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import MainDashboard from "../../MainDashboard";
 import reportsLineChartData from "../data/reportsLineChartData";
-import NavbarForCommette from "../../../examples/Navbars/NavBarForCommette";
+import StudentNavBar from "../../../examples/Navbars/StudentNavBar";
 import axios from "axios";
 import { BASE_URL } from "../../../appconfig";
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { Dropdown } from "@mui/base/Dropdown";
 import TodayOrders from "../../tables/order_menu_tables"; // Assuming you are using axios for API requests
-import CashierDashboard from "../../CashierDashboard";
-import CafeCommetteDashboard from "../../CafeCommetteDashboard";
-function CommetteDashboard() {
+import CoordinatorDashboard from "../../CoordinatorDashboard";
+import StudentDashboard from "../../StudentDashboard";
+function StudentDashboard() {
   const [selectedTimeRange, setSelectedTimeRange] = useState("today");
   const [dashboardData, setDashboardData] = useState(null);
   const electron = window.require("electron");
@@ -68,12 +68,12 @@ function CommetteDashboard() {
       <DashboardNavbar />
       <Sidenav />
       {/* ) : (
-        <NavbarForCommette />
+        <StudentNavBar />
       )}
       {userData.user.role == "coordinator" ? (
-        <CashierDashboard />
+        <CoordinatorDashboard />
       ) : (
-        <CafeCommetteDashboard />
+        <StudentDashboard />
       )} */}
       <MDBox py={3}>
         <div style={{ display: "flex" }}>

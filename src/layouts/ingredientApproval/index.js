@@ -7,7 +7,7 @@
 // import axios from "axios";
 // import { BASE_URL } from "../../appconfig";
 // import { useLocation, useNavigate } from "react-router-dom";
-// import CafeCommetteDashboard from "../CafeCommetteDashboard";
+// import StudentDashboard from "../StudentDashboard";
 // import TableContainer from "@mui/material/TableContainer";
 // import Table from "@mui/material/Table";
 // import TableBody from "@mui/material/TableBody";
@@ -24,13 +24,13 @@
 // import MenuItem from "@mui/material/MenuItem";
 // import Button from "@mui/material/Button";
 // import Input from "@mui/material/Input";
-// import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
+// import StudentNavBar from "../../examples/Navbars/StudentNavBar";
 // import InventoryList from "../assignmentView/index";
 // import Link from "@mui/material/Link";
 // import Sidenav from "../../examples/Sidenav/AdminSidenav";
-// import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
+// import DeanNavBar from "../../examples/Navbars/DeanNavBar";
 // // import Sidenav from "../../examples/Sidenav/AdminSidenav";
-// import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
+// import StudentSidenav from "../../examples/Sidenav/StudentSidenav";
 // import {
 //   EthDateTime,
 //   dayOfWeekString,
@@ -469,27 +469,27 @@
 //       <DashboardLayout>
 //         <DashboardNavbar />
 //         {/* {userData.user.role == "student" ? (
-//           <NavbarForCommette />
+//           <StudentNavBar />
 //         ) : userData.user.role == "dean" ? (
-//           <CafeManagerDashboardNavbar />
+//           <DeanNavBar />
 //         ) : (
-//           <NavbarForCommette />
+//           <StudentNavBar />
 //         )}
 
 //         {userData.user.role == "student" ? (
-//           <CafeCommetteeSidenav
+//           <StudentSidenav
 //             color="dark"
 //             brand=""
 //             brandName="የኮሚቴ ክፍል መተገበሪያ"
 //           />
 //         ) : userData.user.role == "dean" ? (
-//           <CafeManagerSidenav
+//           <DeanSidenav
 //             color="dark"
 //             brand=""
 //             brandName="የምግብ ዝግጅት ክፍል መተገበሪያ"
 //           />
 //         ) : (
-//           <storeKeeperSidenav
+//           <StudentSidenav
 //             color="dark"
 //             brand=""
 //             brandName=" የስቶር ክፍል መተግበሪያ"

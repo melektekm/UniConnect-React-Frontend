@@ -18,15 +18,15 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import CashierDashboard from "../CashierDashboard";
+import CoordinatorDashboard from "../CoordinatorDashboard";
 import menuItem from "../../examples/Items/NotificationItem/styles";
-import CafeCommetteDashboard from "../CafeCommetteDashboard";
-import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
-import CafeManagerSidenav from "../../examples/Sidenav/CafeManagerSidenav";
-import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
-import CafeCommetteeSidenav from "../../examples/Sidenav/CafeCommeteeSidenav";
-import StoreKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
-import CashierSidenav from "../../examples/Sidenav/CashierSidenav";
+import StudentDashboard from "../StudentDashboard";
+import StudentNavBar from "../../examples/Navbars/StudentNavBar";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
+import DeanNavBar from "../../examples/Navbars/DeanNavBar";
+import StudentSidenav from "../../examples/Sidenav/StudentSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDTypography from "../../components/MDTypography";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
@@ -142,27 +142,27 @@ function ViewAnnouncement() {
 
   return (
     <DashboardLayout>
-      {/* {userData.user.role == "communittee_admin" ? (
-        <NavbarForCommette />
+      {/* {userData.user.role == "student" ? (
+        <StudentNavBar />
       ) : userData.user.role == "cafeManager_admin" ? (
-        <CafeManagerDashboardNavbar />
+        <DeanNavBar />
       ) : ( */}
       <DashboardNavbar />
       {/* )} */}
-      {/* {userData.user.role == "communittee_admin" ? (
-        <CafeCommetteeSidenav
+      {/* {userData.user.role == "student" ? (
+        <StudentSidenav
           color="dark"
           brand=""
           brandName="የኮሚቴ ክፍል መተግበሪያ"
         />
       ) : userData.user.role == "cafeManager_admin" ? (
-        <CafeManagerSidenav
+        <DeanSidenav
           color="dark"
           brand=""
           brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
         />
       ) : (
-        <CashierSidenav
+        <CoordinatorSidenav
           color="dark"
           brand=""
           brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ"

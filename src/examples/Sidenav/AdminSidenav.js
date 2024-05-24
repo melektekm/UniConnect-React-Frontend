@@ -11,24 +11,22 @@ import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
 import AssignmentsPage from "../../layouts/assignmentList";
-import Billing from "../../layouts/billing";
-import EmployeeList from "../../layouts/profile";
+// import EmployeeList from "../../layouts/profile";
 import AddEmployee from "../../layouts/addEmployee";
-import FoodMenu from "../../layouts/foodMenu";
-import BuyFood from "../../layouts/buyFood";
-import InventoryEntry from "../../layouts/inventory";
-// import InventoryList from "../../layouts/assignmentView";
-import StockRequest from "../../layouts/stockRequest";
-import Approval from "../../layouts/stockApproval";
 import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
-import Constraint from "../../layouts/constraints";
-import Deposit from "../../layouts/deposit";
+import ViewCourses from "../../layouts/report";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import KitchenIcon from "@mui/icons-material/Kitchen";
+import UploadCourse from "../../layouts/courseUpload";
+import UploadAnnouncement from "../../layouts/announcements";
+import UploadAssignment from "../../layouts/assignmentUpload";
+import AddCourseMaterial from "../../layouts/courseMaterial";
+import CourseMaterialsPage from "../../layouts/CourseMaterialList";
+import SubmitAssignment from "../../layouts/submitAssignment";
 import ViewAssignments from "../../layouts/assignmentView";
-import ShowApproval from "../../layouts/showIngredientApproval";
 import ViewAnnouncement from "../../layouts/viewAnnouncement";
-import StockApproval from "../../layouts/showApprovedStock";
-import AssignmentUpload from "../../layouts/buyFood/buyFoodDepartment";
+import DisplaySchedule from "../../layouts/scheduleView";
 import {
   Dialog,
   DialogTitle,
@@ -58,15 +56,6 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "../../context";
-import ViewCourses from "../../layouts/report";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import KitchenIcon from "@mui/icons-material/Kitchen";
-import UploadCourse from "../../layouts/courseUpload";
-import UploadAnnouncement from "../../layouts/announcements";
-import UploadAssignment from "../../layouts/assignmentUpload";
-import AddCourseMaterial from "../../layouts/courseMaterial";
-import CourseMaterialsPage from "../../layouts/CourseMaterialList";
-import SubmitAssignment from "../../layouts/submitAssignment";
 
 function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
@@ -104,62 +93,17 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/assignmentList",
       component: <AssignmentsPage />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "ent_Approval",
-    //   key: "Ingredient_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showIngredientApproval",
-    //   component: <ShowApproval />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "stock_Approval",
-    //   key: "stock_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showApprovedStock",
-    //   component: <StockApproval />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "food menu",
-    //   key: "food_menu",
-    //   icon: <FastfoodIcon fontSize="small" />,
-    //   route: "/food_menu",
-    //   component: <FoodMenu />,
-    // },
+
     {
       type: "collapse",
       name: "Upload Courses",
       key: "add_food",
       icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/addfood",
+      route: "/addFood",
       component: <UploadCourse />,
     },
     // {
-    //   type: "collapse",
-    //   name: "buy food",
-    //   key: "buy_food",
-    //   icon: <ShoppingCartIcon fontSize="small" />,
-    //   route: "/buyFood",
-    //   component: <BuyFood />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "Upload Assignments",
-    //   key: "buy_food_department",
-    //   icon: <ShoppingCartIcon fontSize="small" />,
-    //   route: "/buyFoodDepartment",
-    //   component: <AssignmentUpload />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "Inventory",
-    //   key: "inventory",
-    //   icon: <InventoryIcon fontSize="small" />,
-    //   route: "/inventory",
-    //   component: <InventoryEntry />,
-    // },
+
     {
       type: "collapse",
       name: "Schedule Post",
@@ -176,30 +120,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/assignmentView",
       component: <ViewAssignments />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "stock_request",
-    //   key: "stock_request",
-    //   icon: <ShoppingCartIcon fontSize="small" />,
-    //   route: "/stockRequest",
-    //   component: <StockRequest />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "Stock Approval",
-    //   key: "stockApproval",
-    //   icon: <Icon fontSize="small" />,
-    //   route: "/stockApproval",
-    //   component: <Approval />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "ingredient_Request",
-    //   key: "ingredient_Request",
-    //   icon: <KitchenIcon fontSize="small" />,
-    //   route: "/ingredientRequest",
-    //   component: <IngredientRequest />,
-    // },
+
     {
       type: "collapse",
       name: "schedule approval",
@@ -216,22 +137,15 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/addEmployee",
       component: <AddEmployee />,
     },
+
     // {
     //   type: "collapse",
-    //   name: " guest billing",
-    //   key: "billing",
-    //   icon: <ReceiptLongIcon fontSize="small" />,
-    //   route: "/billing",
-    //   component: <Billing />,
+    //   name: "employee list",
+    //   key: "profile",
+    //   icon: <PersonIcon fontSize="small" />,
+    //   route: "/profile",
+    //   component: <EmployeeList />,
     // },
-    {
-      type: "collapse",
-      name: "employee list",
-      key: "profile",
-      icon: <PersonIcon fontSize="small" />,
-      route: "/profile",
-      component: <EmployeeList />,
-    },
     {
       type: "collapse",
       name: "Course List",
@@ -240,30 +154,16 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/report",
       component: <ViewCourses />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "ገደቦች",
-    //   key: "constraint",
-    //   icon: <ManageAccountsIcon fontSize="small" />,
-    //   route: "/constraint",
-    //   component: <Constraint />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "የመተግበሪያ ገጽታ",
-    //   key: "stock_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showApprovedStock",
-    //   component: <StockApproval />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "የገንዘብ አያያዝ",
-    //   key: "deposit",
-    //   icon: <AttachMoneyIcon fontSize="small" />,
-    //   route: "/deposit",
-    //   component: <Deposit />,
-    // },
+    //
+    {
+      type: "collapse",
+      name: "Display Schedule",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/scheduleView",
+      component: <DisplaySchedule />,
+    },
+
     {
       type: "collapse",
       name: "Upload Assignment",
@@ -288,14 +188,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/announcements",
       component: <UploadAnnouncement />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "menu entry",
-    //   key: "add_food",
-    //   icon: <RestaurantMenuIcon fontSize="small" />,
-    //   route: "/addfood",
-    //   component: <AddMenuItem />,
-    // },
+
     {
       type: "collapse",
       name: "Upload Course Material",
@@ -344,9 +237,6 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       );
     }
 
-    /**
-     The event listener that's calling the handleMiniSidenav function when resizing the window.
-    */
     window.addEventListener("resize", handleMiniSidenav);
 
     // Call the handleMiniSidenav function to set the state with the initial value.
