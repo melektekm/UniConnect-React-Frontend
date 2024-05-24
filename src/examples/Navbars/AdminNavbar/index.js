@@ -201,7 +201,7 @@ function AdminNavbar({ absolute, light, isMini }) {
                   const currentRoute = location.pathname; // Get the current route
 
                   sessionStorage.setItem("previousRoute", currentRoute);
-                  navigate("/searchForAdmin");
+                  navigate("/addfood");
                 }}
               >
                 ፈልግ

@@ -20,11 +20,11 @@ import BuyFood from "../../layouts/buyFood";
 import InventoryEntry from "../../layouts/inventory";
 import StockRequest from "../../layouts/stockRequest";
 import Approval from "../../layouts/stockApproval";
-import IngredientRequest from "../../layouts/ingredientRequest";
-import IngredientApproval from "../../layouts/ingredientApproval";
+import ScheduleRequest from "../../layouts/schedulePost";
+import ApproveScheduleRequest from "../../layouts/scheduleApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
-import InventoryList from "../../layouts/showInventory";
+import InventoryList from "../../layouts/assignmentView";
 import CafeManagerDashboard from "../../layouts/dashboard/cafeManagerDashboard";
 import { Icon } from "semantic-ui-react";
 // import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
@@ -178,10 +178,10 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "showInventory",
+      name: "assignmentView",
       key: "list",
       icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/showInventory",
+      route: "/assignmentView",
       component: <InventoryList />,
     },
     // {
@@ -203,18 +203,18 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
     {
       type: "collapse",
       name: "ingredient_Request",
-      key: "ingredient_Request",
+      key: "schedule_post",
       icon: <KitchenIcon fontSize="small" />,
-      route: "/ingredientRequest",
-      component: <IngredientRequest />,
+      route: "/schedulePost",
+      component: <ScheduleRequest />,
     },
     {
       type: "collapse",
       name: "ingredient_Approval",
       key: "ingredient_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/ingredientApproval",
-      component: <IngredientApproval />,
+      route: "/scheduleApproval",
+      component: <ApproveScheduleRequest />,
     },
     // {
     //   type: "collapse",

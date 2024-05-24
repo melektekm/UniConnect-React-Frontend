@@ -159,10 +159,10 @@
 //     },
 //     {
 //       type: "collapse",
-//       name: "showInventory",
+//       name: "assignmentView",
 //       key: "list",
 //       icon: <ShoppingCartIcon fontSize="small" />,
-//       route: "/showInventory",
+//       route: "/assignmentView",
 //       component: <InventoryList />,
 //     },
 //     {
@@ -186,16 +186,16 @@
 //       name: "ingredient_Request",
 //       key: "ingredient_Request",
 //       icon: <KitchenIcon fontSize="small" />,
-//       route: "/ingredientRequest",
-//       component: <IngredientRequest />,
+//       route: "/schedulePost",
+//       component: <ScheduleRequest />,
 //     },
 //     {
 //       type: "collapse",
 //       name: "ingredient_Approval",
 //       key: "ingredient_Approval",
 //       icon: <AssignmentTurnedInIcon fontSize="small" />,
-//       route: "/ingredientApproval",
-//       component: <IngredientApproval />,
+//       route: "/scheduleApproval",
+//       component: <ApproveScheduleRequest />,
 //     },
 //     {
 //       type: "collapse",

@@ -8,6 +8,7 @@ import BasicLayout from "./layouts/authentication/sign-in";
 import SignUpLayout from "./layouts/authentication/sign-up";
 import MainDashboard from "./layouts/MainDashboard";
 import AddEmployee from "./layouts/addEmployee";
+import UploadAnnouncement from "./layouts/announcements";
 import FoodMenu from "./layouts/foodMenu";
 import BuyFood from "./layouts/buyFood";
 import InventoryEntry from "./layouts/inventory";
@@ -20,12 +21,12 @@ import Deposit from "./layouts/deposit";
 import CafeCommetteDashboard from "./layouts/CafeCommetteDashboard";
 import CommetteDashboard from "./layouts/dashboard/cafeCommetteDashboard";
 import StockRequest from "./layouts/stockRequest";
-import IngredientRequest from "./layouts/ingredientRequest";
-import IngredientApproval from "./layouts/ingredientApproval";
-import InventoryList from "./layouts/showInventory";
+import ScheduleRequest from "./layouts/schedulePost";
+import ApproveScheduleRequest from "./layouts/scheduleApproval";
+import InventoryList from "./layouts/assignmentView";
 import Approval from "./layouts/stockApproval";
 import MoneyTransaction from "./layouts/deposit";
-import AddDepartment from "./layouts/addDepartment";
+import courseUpload from "./layouts/courseUpload";
 import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
 import BuyFoodDepartment from "./layouts/buyFood/buyFoodDepartment";
@@ -41,10 +42,11 @@ import Department from "./layouts/departmentList";
 import StockAmountTable from "./layouts/stokeAmount";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
+import ViewAnnouncement from "./layouts/viewAnnouncement";
 import AssignmentsPage from "./layouts/assignmentList";
 import CourseMaterialsPage from "./layouts/CourseMaterialList";
 import SubmitAssignment from "./layouts/submitAssignment";
-
+// import ScheduleRequest from "../../layouts/schedulePost";
 function getLayoutComponent(path) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -80,8 +82,8 @@ function getLayoutComponent(path) {
       return <MainDashboard />;
     case "/addEmployee":
       return <AddEmployee />;
-    case "/addDepartment":
-      return <AddDepartment />;
+    case "/courseUpload":
+      return <courseUpload />;
     case "/departmentList":
       return <Department />;
     case "/food_menu":
@@ -92,8 +94,12 @@ function getLayoutComponent(path) {
       return <MoneyTransaction />;
     case "/addFood":
       return <AddMenuItem />;
+    case "/viewAnnouncement":
+      return <ViewAnnouncement />;
     case "/showApprovedStock":
       return <StockApproval />;
+    case "/announcements":
+      return <UploadAnnouncement />;
     case "/showIngredientApproval":
       return <ShowApproval />;
     case "/buyFood":
@@ -106,11 +112,11 @@ function getLayoutComponent(path) {
       return <StockRequest />;
     case "/stockApproval":
       return <Approval />;
-    case "/ingredientRequest":
-      return <IngredientRequest />;
-    case "/ingredientApproval":
-      return <IngredientApproval />;
-    case "/showInventory":
+    case "/schedulePost":
+      return <ScheduleRequest />;
+    case "/scheduleApproval":
+      return <ApproveScheduleRequest />;
+    case "/assignmentView":
       return <InventoryList />;
     case "/dashboard":
       return <Dashboard />;
@@ -157,15 +163,15 @@ function getLayoutComponent(path) {
     case "/authentication/sign-up":
       return <SignUpLayout />;
     case "/assignmentUpload":
-      return <UploadAssignment/>;
+      return <UploadAssignment />;
     case "/courseMaterial":
-      return <AddCourseMaterial/>;
+      return <AddCourseMaterial />;
     case "/assignmentList":
-      return <AssignmentsPage/>;
+      return <AssignmentsPage />;
     case "/CourseMaterialList":
-        return <CourseMaterialsPage/>;
+      return <CourseMaterialsPage />;
     case "/submitAssignment":
-        return <SubmitAssignment/>;
+      return <SubmitAssignment />;
     default:
       return null;
   }

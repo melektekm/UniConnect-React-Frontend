@@ -11,7 +11,7 @@ import MDTypography from "../../components/MDTypography";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
-import OrderTables from "../../layouts/tables/ordertables";
+import OrderTables from "./assignmentList";
 import CashierDashboard from "../CashierDashboard";
 import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";

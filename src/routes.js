@@ -54,12 +54,14 @@ import Deposit from "./layouts/deposit";
 import CashierDashboard from "./layouts/CashierDashboard";
 import CafeCommetteDashboard from "./layouts/CafeCommetteDashboard";
 import CommetteDashboard from "./layouts/dashboard/cafeCommetteDashboard";
-import AddDepartment from "./layouts/addDepartment";
+import courseUpload from "./layouts/courseUpload";
 import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
 import StockRequest from "./layouts/stockRequest";
 import Approval from "./layouts/stockApproval";
-import ViewAssignments from "./layouts/showInventory";
+import UploadAnnouncement from "./layouts/announcements";
+import ViewAnnouncement from "./layouts/viewAnnouncement";
+import ViewAssignments from "./layouts/assignmentView";
 import ShowApproval from "./layouts/showIngredientApproval";
 import StockApproval from "./layouts/showApprovedStock";
 import AssignmentUpload from "./layouts/buyFood/buyFoodDepartment";
@@ -69,8 +71,8 @@ import Department from "./layouts/departmentList";
 import Icon from "@mui/material/Icon";
 import SearchMenu from "./layouts/search/searchForCafeManager";
 import ViewCourses from "./layouts/report";
-import IngredientRequest from "./layouts/ingredientRequest";
-import IngredientApproval from "./layouts/ingredientApproval";
+// import ScheduleRequest from "./layouts/schedulePost";
+import ApproveScheduleRequest from "./layouts/scheduleApproval";
 import DepartmentBilling from "./layouts/billing/DepartmentBilling";
 import CafeManagerDashboard from "./layouts/dashboard/cafeManagerDashboard";
 import SearchMenuForCashier from "./layouts/search/searchForCashier";
@@ -82,7 +84,7 @@ import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
 import CourseMaterialsPage from "./layouts/CourseMaterialList";
 import SubmitAssignment from "./layouts/submitAssignment";
-
+import ScheduleRequest from "./layouts/schedulePost";
 const routes = [
   {
     type: "collapse",
@@ -100,6 +102,7 @@ const routes = [
     route: "/food_menu",
     component: <FoodMenu />,
   },
+
   // {
   //   type: "collapse",
   //   name: " guest billing",
@@ -174,6 +177,22 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Announcement post",
+    key: "Announcement_post",
+    icon: <Icon fontSize="small">Announcement </Icon>,
+    route: "/announcements",
+    component: <UploadAnnouncement />,
+  },
+  {
+    type: "collapse",
+    name: "Announcement View",
+    key: "Announcement_view",
+    icon: <Icon fontSize="small">Announcement </Icon>,
+    route: "/viewAnnouncement",
+    component: <ViewAnnouncement />,
+  },
+  {
+    type: "collapse",
     name: "Upload Courses",
     key: "add_food",
     icon: <Icon fontSize="small">table_view</Icon>,
@@ -201,8 +220,8 @@ const routes = [
     name: "Course upload ",
     key: "Add-department",
     icon: <Icon fontSize="small">login</Icon>,
-    route: "/addDepartment",
-    component: <AddDepartment />,
+    route: "/courseUpload",
+    component: <courseUpload />,
   },
   {
     type: "collapse",
@@ -266,26 +285,26 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ግዢ ማስፈቀጃ ፎርም",
-    key: "ingredient_Request",
+    name: "Schedule Post",
+    key: "schedule_post",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/ingredientRequest",
-    component: <IngredientRequest />,
+    route: "/schedulePost",
+    component: <ScheduleRequest />,
   },
   {
     type: "collapse",
-    name: "ግዢ መፍቀጃ ",
+    name: "Schedule Approval ",
     key: "ingredient_Approval",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/ingredientApproval",
-    component: <IngredientApproval />,
+    route: "/scheduleApproval",
+    component: <ApproveScheduleRequest />,
   },
   {
     type: "collapse",
     name: "View Assignment",
     key: "list",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/showInventory",
+    route: "/assignmentView",
     component: <ViewAssignments />,
   },
   {

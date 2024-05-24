@@ -39,7 +39,7 @@ import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
 // import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-function IngredientRequest() {
+function ScheduleRequest() {
   const [course_name, setcourse_name] = useState("");
   const [courseId, setCourseId] = useState("");
   const [classroom, setClassroom] = useState("");
@@ -682,4 +682,4 @@ function IngredientRequest() {
   );
 }
 
-export default IngredientRequest;
+export default ScheduleRequest;

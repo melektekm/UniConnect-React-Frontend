@@ -10,7 +10,7 @@ import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import StockRequest from "../../layouts/stockRequest";
-import IngredientRequest from "../../layouts/ingredientRequest";
+import ScheduleRequest from "../../layouts/schedulePost";
 import CafeManagerDashboard from "../../layouts/dashboard/cafeManagerDashboard";
 import { Icon } from "semantic-ui-react";
 
@@ -40,7 +40,7 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "../../context";
-import InventoryList from "../../layouts/showInventory";
+import InventoryList from "../../layouts/assignmentView";
 import InventoryEntry from "../../layouts/inventory";
 import StoreIcon from "@mui/icons-material/Store";
 import ListIcon from "@mui/icons-material/List";
@@ -53,7 +53,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import IngredientApproval from "../../layouts/ingredientApproval";
+import ApproveScheduleRequest from "../../layouts/scheduleApproval";
 import StockAmountTable from "../../layouts/stokeAmount";
 import MDButton from "../../components/MDButton";
 
@@ -169,10 +169,10 @@ function storeKeeperSidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "showInventory",
+      name: "assignmentView",
       key: "list",
       icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/showInventory",
+      route: "/assignmentView",
       component: <InventoryList />,
     },
     {
@@ -196,16 +196,16 @@ function storeKeeperSidenav({ brand, brandName, selectedMenu, ...rest }) {
       name: "ingredient_Request",
       key: "ingredient_Request",
       icon: <KitchenIcon fontSize="small" />,
-      route: "/ingredientRequest",
-      component: <IngredientRequest />,
+      route: "/schedulePost",
+      component: <ScheduleRequest />,
     },
     {
       type: "collapse",
-      name: "ingredient_Approval",
+      name: "schedule_Approval",
       key: "ingredient_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/ingredientApproval",
-      component: <IngredientApproval />,
+      route: "/scheduleApproval",
+      component: <ApproveScheduleRequest />,
     },
     {
       type: "collapse",
