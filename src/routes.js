@@ -46,7 +46,6 @@ import SignIn from "./layouts/authentication/sign-in";
 import SignUp from "./layouts/authentication/sign-up";
 import MainDashboard from "./layouts/MainDashboard";
 import AddEmployee from "./layouts/addEmployee";
-import CourseUpload from "./layouts/menuEntry";
 import FoodMenu from "./layouts/foodMenu";
 import BuyFood from "./layouts/buyFood";
 import Constraint from "./layouts/constraints";
@@ -54,7 +53,7 @@ import Deposit from "./layouts/deposit";
 import CashierDashboard from "./layouts/CashierDashboard";
 import CafeCommetteDashboard from "./layouts/CafeCommetteDashboard";
 import CommetteDashboard from "./layouts/dashboard/cafeCommetteDashboard";
-import courseUpload from "./layouts/courseUpload";
+import UploadCourse from "./layouts/courseUpload";
 import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
 import StockRequest from "./layouts/stockRequest";
@@ -65,7 +64,6 @@ import ViewAssignments from "./layouts/assignmentView";
 import ShowApproval from "./layouts/showIngredientApproval";
 import StockApproval from "./layouts/showApprovedStock";
 import AssignmentUpload from "./layouts/buyFood/buyFoodDepartment";
-import Department from "./layouts/departmentList";
 // import Billing from "./layouts/billing";
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -197,7 +195,7 @@ const routes = [
     key: "add_food",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/addFood",
-    component: <CourseUpload />,
+    component: <UploadCourse />,
   },
   {
     type: "collapse",
@@ -221,15 +219,7 @@ const routes = [
     key: "Add-department",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/courseUpload",
-    component: <courseUpload />,
-  },
-  {
-    type: "collapse",
-    name: "ዲፓርትመንት ዝርዝር",
-    key: "Department-List",
-    icon: <Icon fontSize="small">login</Icon>,
-    route: "/departmentList",
-    component: <Department />,
+    component: <UploadCourse />,
   },
   {
     type: "collapse",
@@ -323,14 +313,6 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/stokeAmount",
     component: <StockAmountTable />,
-  },
-  {
-    type: "collapse",
-    name: "ለዲፓርትመንት ደረሰኝ",
-    key: "Department_billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/departmentBilling",
-    component: <DepartmentBilling />,
   },
   {
     type: "collapse",

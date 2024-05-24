@@ -120,8 +120,8 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       name: "Upload Courses",
       key: "add_food",
       icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/addfood",
-      component: <CourseUpload />,
+      route: "/courseUpload",
+      component: <UploadCourse />,
     },
     {
       type: "collapse",

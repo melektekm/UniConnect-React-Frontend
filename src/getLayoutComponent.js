@@ -26,7 +26,7 @@ import ApproveScheduleRequest from "./layouts/scheduleApproval";
 import InventoryList from "./layouts/assignmentView";
 import Approval from "./layouts/stockApproval";
 import MoneyTransaction from "./layouts/deposit";
-import courseUpload from "./layouts/courseUpload";
+import UploadCourse from "./layouts/courseUpload";
 import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
 import BuyFoodDepartment from "./layouts/buyFood/buyFoodDepartment";
@@ -38,7 +38,6 @@ import CashierOrder from "./layouts/tables/CashierOrderView";
 import SearchMenuForCashier from "./layouts/search/searchForCashier";
 import storeKeeperDashboard from "./layouts/dashboard/storeKeeperDashboard";
 import Sidenav from "./examples/Sidenav/AdminSidenav";
-import Department from "./layouts/departmentList";
 import StockAmountTable from "./layouts/stokeAmount";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
@@ -83,9 +82,7 @@ function getLayoutComponent(path) {
     case "/addEmployee":
       return <AddEmployee />;
     case "/courseUpload":
-      return <courseUpload />;
-    case "/departmentList":
-      return <Department />;
+      return <UploadCourse />;
     case "/food_menu":
       return <FoodMenu />;
     case "/constraint":
