@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
@@ -17,13 +17,10 @@ import MainDashboard from "../../layouts/MainDashboard";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import FormControl from "@mui/material/FormControl"; // Import FormControl
-import InputLabel from "@mui/material/InputLabel"; // Import InputLabel
-import Select from "@mui/material/Select"; // Import Select
-import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
-import TextField from "@mui/material/TextField"; // Import TextField
+import TextField from "@mui/material/TextField";
 import MDInput from "../../components/MDInput";
 import colors from "../../assets/theme/base/colors";
+import FormControl from "@mui/material/FormControl";
 
 function UploadAssignment() {
   const location = useLocation();
@@ -32,7 +29,7 @@ function UploadAssignment() {
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken; // Assuming accessToken is available in user data
   const [loading, setLoading] = useState(false);
-  const [courses, setCourses] = useState([]);
+  const [courseName, setCourseName] = useState("");
   const [formValues, setFormValues] = useState({
     course_code: "",
     assignmentName: "",
@@ -47,39 +44,15 @@ function UploadAssignment() {
   const [errorMessage, setErrorMessage] = useState("");
   const [file, setFile] = useState(null); // Define the file state variable
 
-  useEffect(() => {
-    // Fetch courses when the component mounts
-    getCourses();
-  }, []);
-  console.log(accessToken);
-  const getCourses = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/get-all-courses`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // Pass accessToken in headers
-        },
-      });
-      if (response.data) {
-        setCourses(response.data.courses);
-      } else {
-        setErrorMessage("Failed to fetch courses.");
-        setOpen(true);
-      }
-    } catch (error) {
-      setErrorMessage("Error fetching courses: " + error.message);
-      setOpen(true);
-    }
-  };
-
   const handleFileUpload = (event) => {
     const selectedFile = event.target.files[0];
     setFormValues({ ...formValues, file: selectedFile });
     setFile(selectedFile); // Set the file in the state
   };
-
+  console.log(accessToken);
   const handleAddToAssignment = async () => {
     const newErrorMessages = {
-      course_code: formValues.course_code ? "" : "Course is required",
+      course_code: formValues.course_code ? "" : "Course code is required",
       assignmentName: formValues.assignmentName
         ? ""
         : "Assignment name is required",
@@ -104,12 +77,12 @@ function UploadAssignment() {
         assignmentName: formValues.assignmentName,
         assignmentDescription: formValues.assignmentDescription,
         dueDate: formValues.dueDate,
-        file: formValues.file,
+        file: formValues.file, // Assuming the file object is needed in JSON format
       };
 
       const response = await axios.post(
         `${BASE_URL}/upload-assignment`,
-        jsonData,
+        JSON.stringify(jsonData),
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -119,6 +92,7 @@ function UploadAssignment() {
       );
 
       if (response.data) {
+        resetState();
         setSuccessMessage("Assignment uploaded successfully!");
         setDialogOpen(true);
       } else {
@@ -139,6 +113,38 @@ function UploadAssignment() {
     setErrorMessage("");
   };
 
+  const handleCourseCodeChange = async (event) => {
+    const course_code = event.target.value;
+    setFormValues({ ...formValues, course_code });
+
+    if (course_code) {
+      try {
+        const response = await axios.get(`${BASE_URL}/get-course-name`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            course_code,
+          },
+        });
+
+        if (response.data && response.data.course_name) {
+          setCourseName(response.data.course_name);
+        } else {
+          setCourseName("");
+          setErrorMessage("Course not found.");
+          setOpen(true);
+        }
+      } catch (error) {
+        setCourseName("");
+        setErrorMessage("Error fetching course name: " + error.message);
+        setOpen(true);
+      }
+    } else {
+      setCourseName("");
+    }
+  };
+
   const fileInputStyle = {
     display: "inline-block",
     cursor: "pointer",
@@ -147,6 +153,17 @@ function UploadAssignment() {
     color: "white",
     borderRadius: "5px",
     border: "1px solid #007bff",
+  };
+
+  const resetState = () => {
+    setFormValues({
+      course_code: "",
+      assignmentName: "",
+      assignmentDescription: "",
+      dueDate: "",
+      file: null,
+    });
+    setFile(null);
   };
 
   return (
@@ -192,7 +209,6 @@ function UploadAssignment() {
               borderRadius="lg"
               coloredShadow="info"
               textAlign="center"
-              // style={{ display: "flex", justifyContent: "space-between" }}
             >
               <MDTypography variant="h5" color="white">
                 Assignment Upload
@@ -207,118 +223,128 @@ function UploadAssignment() {
                       fullWidth
                       style={{ marginTop: "16px" }}
                     >
-                      <InputLabel htmlFor="course">Course</InputLabel>
-                      <Select
+                      <MDInput
+                        type="text"
+                        name="course_code"
+                        label="Course Code"
+                        variant="outlined"
+                        fullWidth
                         value={formValues.course_code}
-                        onChange={(e) =>
-                          setFormValues({
-                            ...formValues,
-                            course_code: e.target.value,
-                          })
-                        }
-                        label="Course"
+                        onChange={handleCourseCodeChange}
+                        margin="normal"
+                        required
                         inputProps={{
                           name: "course_code",
-                          id: "course",
+                          id: "course_code",
                         }}
-                        style={{ minHeight: "45px" }}
-                      >
-                        <MenuItem value="">Select Course</MenuItem>
-                        {courses.map((course) => (
-                          <MenuItem key={course.id} value={course.code}>
-                            {course.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                      />
                     </FormControl>
                   </MDBox>
-                </MDBox>
-                <MDBox mb={2}>
-                  <MDInput
-                    type="text"
-                    name="assignmentName"
-                    label="Assignment Name"
-                    variant="outlined"
-                    fullWidth
-                    value={formValues.assignmentName}
-                    onChange={(e) =>
-                      setFormValues({
-                        ...formValues,
-                        assignmentName: e.target.value,
-                      })
-                    }
-                    margin="normal"
-                    required
-                    error={!!errorMessages.assignmentName}
-                    helperText={errorMessages.assignmentName}
-                  />
-                </MDBox>
-                <MDBox mb={2}>
-                  <MDInput
-                    type="text"
-                    name="assignmentDescription"
-                    label="Assignment Description"
-                    variant="outlined"
-                    fullWidth
-                    value={formValues.assignmentDescription}
-                    onChange={(e) =>
-                      setFormValues({
-                        ...formValues,
-                        assignmentDescription: e.target.value,
-                      })
-                    }
-                    margin="normal"
-                    required
-                    error={!!errorMessages.assignmentDescription}
-                    helperText={errorMessages.assignmentDescription}
-                  />
-                </MDBox>
-                <MDBox mb={2}>
-                  <TextField
-                    id="dueDate"
-                    name="dueDate"
-                    label="Due Date"
-                    type="date"
-                    fullWidth
-                    variant="outlined"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    value={formValues.dueDate}
-                    onChange={(e) =>
-                      setFormValues({ ...formValues, dueDate: e.target.value })
-                    }
-                    margin="normal"
-                    required
-                    error={!!errorMessages.dueDate}
-                    helperText={errorMessages.dueDate}
-                  />
-                </MDBox>
-                <MDBox mb={2} style={{ display: "flex", alignItems: "center" }}>
-                  <label htmlFor="fileUpload" style={fileInputStyle}>
-                    <input
-                      type="file"
-                      id="fileUpload"
-                      accept="application/pdf"
-                      // name="imageUrl"
-                      onChange={handleFileUpload}
-                      style={{ display: "none" }}
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      label="Course Name"
+                      variant="outlined"
+                      fullWidth
+                      value={courseName}
+                      margin="normal"
+                      InputProps={{
+                        readOnly: true,
+                      }}
                     />
-                    <span>&#128206; {file ? file.name : "Choose File:"}</span>
-                  </label>
-                  <MDTypography variant="body2" ml={1}>
-                    File must be 4 MB in PDF format.
-                  </MDTypography>
-                </MDBox>
-                <MDBox mt={2} mb={1} textAlign="center">
-                  <MDButton
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddToAssignment}
-                    disabled={loading}
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      name="assignmentName"
+                      label="Assignment Name"
+                      variant="outlined"
+                      fullWidth
+                      value={formValues.assignmentName}
+                      onChange={(e) =>
+                        setFormValues({
+                          ...formValues,
+                          assignmentName: e.target.value,
+                        })
+                      }
+                      margin="normal"
+                      required
+                      error={!!errorMessages.assignmentName}
+                      helperText={errorMessages.assignmentName}
+                    />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      name="assignmentDescription"
+                      label="Assignment Description"
+                      variant="outlined"
+                      fullWidth
+                      value={formValues.assignmentDescription}
+                      onChange={(e) =>
+                        setFormValues({
+                          ...formValues,
+                          assignmentDescription: e.target.value,
+                        })
+                      }
+                      margin="normal"
+                      required
+                      error={!!errorMessages.assignmentDescription}
+                      helperText={errorMessages.assignmentDescription}
+                    />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <TextField
+                      id="dueDate"
+                      name="dueDate"
+                      label="Due Date"
+                      type="date"
+                      fullWidth
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={formValues.dueDate}
+                      onChange={(e) =>
+                        setFormValues({
+                          ...formValues,
+                          dueDate: e.target.value,
+                        })
+                      }
+                      margin="normal"
+                      required
+                      error={!!errorMessages.dueDate}
+                      helperText={errorMessages.dueDate}
+                    />
+                  </MDBox>
+                  <MDBox
+                    mb={2}
+                    style={{ display: "flex", alignItems: "center" }}
                   >
-                    {loading ? "Uploading..." : "Upload Assignment"}
-                  </MDButton>
+                    <label htmlFor="fileUpload" style={fileInputStyle}>
+                      <input
+                        type="file"
+                        id="fileUpload"
+                        accept="application/pdf"
+                        onChange={handleFileUpload}
+                        style={{ display: "none" }}
+                      />
+                      <span>&#128206; {file ? file.name : "Choose File:"}</span>
+                    </label>
+                    <MDTypography variant="body2" ml={1}>
+                      File must be 4 MB in PDF format.
+                    </MDTypography>
+                  </MDBox>
+                  <MDBox mt={2} mb={1} textAlign="center">
+                    <MDButton
+                      variant="contained"
+                      color="primary"
+                      onClick={handleAddToAssignment}
+                      disabled={loading}
+                    >
+                      {loading ? "Uploading..." : "Upload Assignment"}
+                    </MDButton>
+                  </MDBox>
                 </MDBox>
               </MDBox>
             </Card>

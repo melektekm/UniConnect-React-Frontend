@@ -38,7 +38,7 @@ Coded by www.creative-tim.com
 // Material Dashboard 2 React layouts
 import React from "react";
 import Dashboard from "./layouts/dashboard";
-import AssignmentsPage from "./layouts/tables";
+import AssignmentsPage from "./layouts/assignmentList";
 import Billing from "./layouts/billing";
 import Notifications from "./layouts/notifications";
 import EmployeeList from "./layouts/profile";
@@ -54,7 +54,7 @@ import Deposit from "./layouts/deposit";
 import CashierDashboard from "./layouts/CashierDashboard";
 import CafeCommetteDashboard from "./layouts/CafeCommetteDashboard";
 import CommetteDashboard from "./layouts/dashboard/cafeCommetteDashboard";
-import AddDepartment from "./layouts/addDepartment";
+import courseUpload from "./layouts/courseUpload";
 import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
 import StockRequest from "./layouts/stockRequest";
@@ -71,7 +71,7 @@ import Department from "./layouts/departmentList";
 import Icon from "@mui/material/Icon";
 import SearchMenu from "./layouts/search/searchForCafeManager";
 import ViewCourses from "./layouts/report";
-import ScheduleRequest from "./layouts/schedulePost";
+// import ScheduleRequest from "./layouts/schedulePost";
 import IngredientApproval from "./layouts/ingredientApproval";
 import DepartmentBilling from "./layouts/billing/DepartmentBilling";
 import CafeManagerDashboard from "./layouts/dashboard/cafeManagerDashboard";
@@ -82,6 +82,9 @@ import StockAmountTable from "./layouts/stokeAmount";
 import InventoryEntry from "./layouts/inventory";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
+import CourseMaterialsPage from "./layouts/CourseMaterialList";
+import SubmitAssignment from "./layouts/submitAssignment";
+import ScheduleRequest from "./layouts/schedulePost";
 const routes = [
   {
     type: "collapse",
@@ -199,9 +202,9 @@ const routes = [
   {
     type: "collapse",
     name: "Assignment List",
-    key: "orders",
+    key: "assignment-list",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
+    route: "/assignmentList",
     component: <AssignmentsPage />,
   },
   {
@@ -217,8 +220,8 @@ const routes = [
     name: "Course upload ",
     key: "Add-department",
     icon: <Icon fontSize="small">login</Icon>,
-    route: "/addDepartment",
-    component: <AddDepartment />,
+    route: "/courseUpload",
+    component: <courseUpload />,
   },
   {
     type: "collapse",
@@ -283,7 +286,7 @@ const routes = [
   {
     type: "collapse",
     name: "Schedule Post",
-    key: "ingredient_Request",
+    key: "schedule_post",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/schedulePost",
     component: <ScheduleRequest />,
@@ -458,6 +461,22 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/courseMaterial",
     component: <AddCourseMaterial />,
+  },
+  {
+    type: "collapse",
+    name: "Course Material List",
+    key: "courseMaterialList",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/CourseMaterialList",
+    component: <CourseMaterialsPage />,
+  },
+  {
+    type: "collapse",
+    name: "Submit Assignment",
+    key: "submitAssignment",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/submitAssignment",
+    component: <SubmitAssignment />,
   },
 ];
 

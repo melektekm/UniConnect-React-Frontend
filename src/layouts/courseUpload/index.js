@@ -91,7 +91,10 @@ function UploadCourse() {
       if (error.response) {
         console.error("Error status code:", error.response.status);
       } else {
-        console.error("An error occurred while uploading the course:", error.message);
+        console.error(
+          "An error occurred while uploading the course:",
+          error.message
+        );
       }
       setErrorMessage("An error occurred while uploading the course.");
       setOpen(true);

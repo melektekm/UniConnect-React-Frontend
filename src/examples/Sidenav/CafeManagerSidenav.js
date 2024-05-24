@@ -203,7 +203,7 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
     {
       type: "collapse",
       name: "ingredient_Request",
-      key: "ingredient_Request",
+      key: "schedule_post",
       icon: <KitchenIcon fontSize="small" />,
       route: "/schedulePost",
       component: <ScheduleRequest />,

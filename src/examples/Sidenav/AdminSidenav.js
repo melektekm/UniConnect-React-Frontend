@@ -10,7 +10,7 @@ import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
-import AssignmentsPage from "../../layouts/tables";
+import AssignmentsPage from "../../layouts/assignmentList";
 import Billing from "../../layouts/billing";
 import EmployeeList from "../../layouts/profile";
 import AddEmployee from "../../layouts/addEmployee";
@@ -62,11 +62,13 @@ import {
 import ViewCourses from "../../layouts/report";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import KitchenIcon from "@mui/icons-material/Kitchen";
-import UploadCourse from "../../layouts/addDepartment";
+import UploadCourse from "../../layouts/courseUpload";
 import UploadAnnouncement from "../../layouts/announcements";
 import UploadAssignment from "../../layouts/assignmentUpload";
 import AddCourseMaterial from "../../layouts/courseMaterial";
-import AddMenuItem from "../../layouts/menuEntry";
+import CourseMaterialsPage from "../../layouts/CourseMaterialList";
+import SubmitAssignment from "../../layouts/submitAssignment";
+
 function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
@@ -98,27 +100,19 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     {
       type: "collapse",
       name: "Assignment List",
-      key: "orders",
-      icon: <TableViewOutlinedIcon fontSize="small" />,
-      route: "/tables",
+      key: "assignment-list",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/assignmentList",
       component: <AssignmentsPage />,
     },
-    {
-      type: "collapse",
-      name: "Announcement post",
-      key: "Announcement_post",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/announcements",
-      component: <UploadAnnouncement />,
-    },
-    {
-      type: "collapse",
-      name: "Announcement View",
-      key: "Announcement_view",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/viewAnnouncement",
-      component: <ViewAnnouncement />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "ent_Approval",
+    //   key: "Ingredient_Approval",
+    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
+    //   route: "/showIngredientApproval",
+    //   component: <ShowApproval />,
+    // },
     // {
     //   type: "collapse",
     //   name: "stock_Approval",
@@ -127,45 +121,53 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/showApprovedStock",
     //   component: <StockApproval />,
     // },
+    // {
+    //   type: "collapse",
+    //   name: "food menu",
+    //   key: "food_menu",
+    //   icon: <FastfoodIcon fontSize="small" />,
+    //   route: "/food_menu",
+    //   component: <FoodMenu />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "Upload Courses",
+    //   key: "add_food",
+    //   icon: <RestaurantMenuIcon fontSize="small" />,
+    //   route: "/addfood",
+    //   component: <CourseUpload />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "buy food",
+    //   key: "buy_food",
+    //   icon: <ShoppingCartIcon fontSize="small" />,
+    //   route: "/buyFood",
+    //   component: <BuyFood />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "Upload Assignments",
+    //   key: "buy_food_department",
+    //   icon: <ShoppingCartIcon fontSize="small" />,
+    //   route: "/buyFoodDepartment",
+    //   component: <AssignmentUpload />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "Inventory",
+    //   key: "inventory",
+    //   icon: <InventoryIcon fontSize="small" />,
+    //   route: "/inventory",
+    //   component: <InventoryEntry />,
+    // },
     {
       type: "collapse",
-      name: "food menu",
-      key: "food_menu",
-      icon: <FastfoodIcon fontSize="small" />,
-      route: "/food_menu",
-      component: <FoodMenu />,
-    },
-    {
-      type: "collapse",
-      name: "Upload Courses",
-      key: "add_food",
-      icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/addfood",
-      component: <CourseUpload />,
-    },
-    {
-      type: "collapse",
-      name: "buy food",
-      key: "buy_food",
+      name: "Schedule Post",
+      key: "schedule_post",
       icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/buyFood",
-      component: <BuyFood />,
-    },
-    {
-      type: "collapse",
-      name: "Upload Assignments",
-      key: "buy_food_department",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/buyFoodDepartment",
-      component: <AssignmentUpload />,
-    },
-    {
-      type: "collapse",
-      name: "Inventory",
-      key: "inventory",
-      icon: <InventoryIcon fontSize="small" />,
-      route: "/inventory",
-      component: <InventoryEntry />,
+      route: "/schedulePost",
+      component: <ScheduleRequest />,
     },
     {
       type: "collapse",
@@ -175,38 +177,38 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/showInventory",
       component: <ViewAssignments />,
     },
-    {
-      type: "collapse",
-      name: "stock_request",
-      key: "stock_request",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/stockRequest",
-      component: <StockRequest />,
-    },
-    {
-      type: "collapse",
-      name: "Stock Approval",
-      key: "stockApproval",
-      icon: <Icon fontSize="small" />,
-      route: "/stockApproval",
-      component: <Approval />,
-    },
-    {
-      type: "collapse",
-      name: "Schedule Post",
-      key: "ingredient_Request",
-      icon: <KitchenIcon fontSize="small" />,
-      route: "/schedulePost",
-      component: <ScheduleRequest />,
-    },
-    {
-      type: "collapse",
-      name: "ingredient_Approval",
-      key: "ingredient_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/ingredientApproval",
-      component: <IngredientApproval />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "stock_request",
+    //   key: "stock_request",
+    //   icon: <ShoppingCartIcon fontSize="small" />,
+    //   route: "/stockRequest",
+    //   component: <StockRequest />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "Stock Approval",
+    //   key: "stockApproval",
+    //   icon: <Icon fontSize="small" />,
+    //   route: "/stockApproval",
+    //   component: <Approval />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "ingredient_Request",
+    //   key: "ingredient_Request",
+    //   icon: <KitchenIcon fontSize="small" />,
+    //   route: "/ingredientRequest",
+    //   component: <IngredientRequest />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "ingredient_Approval",
+    //   key: "ingredient_Approval",
+    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
+    //   route: "/ingredientApproval",
+    //   component: <IngredientApproval />,
+    // },
     {
       type: "collapse",
       name: "Add-employee",
@@ -247,28 +249,28 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/constraint",
     //   component: <Constraint />,
     // },
-    {
-      type: "collapse",
-      name: "የመተግበሪያ ገጽታ",
-      key: "stock_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/showApprovedStock",
-      component: <StockApproval />,
-    },
-    {
-      type: "collapse",
-      name: "የገንዘብ አያያዝ",
-      key: "deposit",
-      icon: <AttachMoneyIcon fontSize="small" />,
-      route: "/deposit",
-      component: <Deposit />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "የመተግበሪያ ገጽታ",
+    //   key: "stock_Approval",
+    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
+    //   route: "/showApprovedStock",
+    //   component: <StockApproval />,
+    // },
+    // {
+    //   type: "collapse",
+    //   name: "የገንዘብ አያያዝ",
+    //   key: "deposit",
+    //   icon: <AttachMoneyIcon fontSize="small" />,
+    //   route: "/deposit",
+    //   component: <Deposit />,
+    // },
     {
       type: "collapse",
       name: "Course upload ",
       key: "Add-department",
       icon: <AttachMoneyIcon fontSize="small" />,
-      route: "/addDepartment",
+      route: "/courseUpload",
       component: <UploadCourse />,
     },
     {
@@ -279,14 +281,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/assignmentUpload",
       component: <UploadAssignment />,
     },
-    {
-      type: "collapse",
-      name: "menu entry",
-      key: "add_food",
-      icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/addfood",
-      component: <AddMenuItem />,
-    },
+    // {
+    //   type: "collapse",
+    //   name: "menu entry",
+    //   key: "add_food",
+    //   icon: <RestaurantMenuIcon fontSize="small" />,
+    //   route: "/addfood",
+    //   component: <AddMenuItem />,
+    // },
     {
       type: "collapse",
       name: "Upload Course Material",
@@ -294,6 +296,22 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       icon: <AttachMoneyIcon fontSize="small" />,
       route: "/courseMaterial",
       component: <AddCourseMaterial />,
+    },
+    {
+      type: "collapse",
+      name: "Course Material List",
+      key: "courseMaterialList",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/CourseMaterialList",
+      component: <CourseMaterialsPage />,
+    },
+    {
+      type: "collapse",
+      name: "Submit Assignment",
+      key: "submitAssignment",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/submitAssignment",
+      component: <SubmitAssignment />,
     },
   ];
 

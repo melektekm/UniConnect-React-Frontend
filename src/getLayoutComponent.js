@@ -26,7 +26,7 @@ import IngredientApproval from "./layouts/ingredientApproval";
 import InventoryList from "./layouts/showInventory";
 import Approval from "./layouts/stockApproval";
 import MoneyTransaction from "./layouts/deposit";
-import AddDepartment from "./layouts/addDepartment";
+import courseUpload from "./layouts/courseUpload";
 import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
 import BuyFoodDepartment from "./layouts/buyFood/buyFoodDepartment";
@@ -43,6 +43,10 @@ import StockAmountTable from "./layouts/stokeAmount";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
 import ViewAnnouncement from "./layouts/viewAnnouncement";
+import AssignmentsPage from "./layouts/assignmentList";
+import CourseMaterialsPage from "./layouts/CourseMaterialList";
+import SubmitAssignment from "./layouts/submitAssignment";
+// import ScheduleRequest from "../../layouts/schedulePost";
 function getLayoutComponent(path) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -78,8 +82,8 @@ function getLayoutComponent(path) {
       return <MainDashboard />;
     case "/addEmployee":
       return <AddEmployee />;
-    case "/addDepartment":
-      return <AddDepartment />;
+    case "/courseUpload":
+      return <courseUpload />;
     case "/departmentList":
       return <Department />;
     case "/food_menu":
@@ -162,6 +166,12 @@ function getLayoutComponent(path) {
       return <UploadAssignment />;
     case "/courseMaterial":
       return <AddCourseMaterial />;
+    case "/assignmentList":
+      return <AssignmentsPage />;
+    case "/CourseMaterialList":
+      return <CourseMaterialsPage />;
+    case "/submitAssignment":
+      return <SubmitAssignment />;
     default:
       return null;
   }

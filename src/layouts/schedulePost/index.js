@@ -160,29 +160,6 @@ function ScheduleRequest() {
     }
   };
 
-  // const handleFormChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     [name]: finalValue,
-  //   });
-
-  //    if (name === 'courseId') {
-  //     try {
-  //       const courseName = await fetchCourseName(value);
-  //       setFormData({
-  //         ...formData,
-  //         course_name: courseName,
-  //       });
-  //     } catch (error) {
-  //       setErrorMessages({
-  //         ...errorMessages,
-  //         name: 'Error fetching course name.',
-  //       });
-  //     }
-  //   }
-  // };
-
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData({

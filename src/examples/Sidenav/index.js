@@ -182,7 +182,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     {
       type: "collapse",
       name: "Schedule Post",
-      key: "ingredient_Request",
+      key: "schedule_post",
       icon: <KitchenIcon fontSize="small" />,
       route: "/schedulePost",
       component: <ScheduleRequest />,

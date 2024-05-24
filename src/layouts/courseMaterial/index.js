@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   Dialog,
@@ -23,56 +23,29 @@ import { BASE_URL } from "../../appconfig";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import colors from "../../assets/theme/base/colors";
-import FormControl from "@mui/material/FormControl"; // Import FormControl
-import InputLabel from "@mui/material/InputLabel"; // Import InputLabel
-import Select from "@mui/material/Select"; // Import Select
-import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 
 function AddCourseMaterial() {
-  const [courses, setCourses] = useState([]);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
+  const [courseName, setCourseName] = useState("");
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
-  const accessToken = userData.accessToken; // Assuming accessToken is available in user data
+  const accessToken = userData.accessToken;
   const [formValues, setFormValues] = useState({
     course_code: "",
     materialTitle: "",
-    materialDescription: "",
     file: null,
-});
+  });
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    getCourses();
-  }, []);
-
-  const getCourses = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/get-all-courses`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // Pass accessToken in headers
-        },
-      });
-      if (response.data) {
-        setCourses(response.data.courses);
-      } else {
-        setErrorMessage("Failed to fetch courses.");
-        setOpen(true);
-      }
-    } catch (error) {
-      setErrorMessage("Error fetching courses: " + error.message);
-      setOpen(true);
-    }
-  };
-
   const handleUploadMaterial = async () => {
-    // Check if any of the input fields are empty
     const newErrorMessages = {
-      course_code: formValues.course_code ? "" : "Course is required",
+      course_code: formValues.course_code ? "" : "Course code is required",
       materialTitle: formValues.materialTitle ? "" : "Title is required",
     };
 
@@ -89,13 +62,12 @@ function AddCourseMaterial() {
       const materialData = {
         code: formValues.course_code,
         title: formValues.materialTitle,
-        description: formValues.materialDescription,
-        file: formValues.file, // Assuming you want to send the file name only
+        file: formValues.file,
       };
 
       const response = await axios.post(
         `${BASE_URL}/upload-material`,
-        materialData,
+        JSON.stringify(materialData),
         {
           headers: {
             "Content-Type": "application/json",
@@ -121,8 +93,41 @@ function AddCourseMaterial() {
   const handleFileUpload = (event) => {
     const selectedFile = event.target.files[0];
     setFormValues({ ...formValues, file: selectedFile });
-    setFile(selectedFile); // Set the file in the state
+    setFile(selectedFile);
   };
+
+  const handleCourseCodeChange = async (event) => {
+    const course_code = event.target.value;
+    setFormValues({ ...formValues, course_code });
+
+    if (course_code) {
+      try {
+        const response = await axios.get(`${BASE_URL}/get-course-name`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            course_code,
+          },
+        });
+
+        if (response.data && response.data.course_name) {
+          setCourseName(response.data.course_name);
+        } else {
+          setCourseName("");
+          setErrorMessage("Course not found.");
+          setOpen(true);
+        }
+      } catch (error) {
+        setCourseName("");
+        setErrorMessage("Error fetching course name: " + error.message);
+        setOpen(true);
+      }
+    } else {
+      setCourseName("");
+    }
+  };
+
   const fileInputStyle = {
     display: "inline-block",
     cursor: "pointer",
@@ -153,7 +158,6 @@ function AddCourseMaterial() {
           </MDButton>
         </DialogActions>
       </Dialog>
-      {/* <AdminNavbar /> */}
       <DashboardNavbar />
       <Sidenav />
       <MainDashboard />
@@ -180,73 +184,68 @@ function AddCourseMaterial() {
               <CardContent>
                 <MDBox mb={2}>
                   <FormControl variant="outlined" fullWidth style={{ marginTop: "16px" }}>
-                    <InputLabel htmlFor="course">Course</InputLabel>
-                    <Select
+                    {/* <InputLabel htmlFor="course_code">Course Code</InputLabel> */}
+                    <MDInput
+                      type="text"
+                      label="Course Code"
+                      variant="outlined"
+                      fullWidth
                       value={formValues.course_code}
-                      onChange={(e) =>
-                        setFormValues({ ...formValues, course_code: e.target.value })
-                      }
-                      label="Course"
+                      onChange={handleCourseCodeChange}
+                      margin="normal"
+                      required
                       inputProps={{
                         name: "course_code",
-                        id: "course",
+                        id: "course_code",
                       }}
-                      style={{ minHeight: "45px" }}
-                    >
-                      <MenuItem value="">Select Course</MenuItem>
-                      {courses.map((course) => (
-                        <MenuItem key={course.id} value={course.code}>
-                          {course.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    />
                   </FormControl>
                 </MDBox>
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        label="Material Title"
-                        variant="outlined"
-                        fullWidth
-                        value={formValues.materialTitle}
-                        onChange={(e) => setFormValues({ ...formValues, materialTitle: e.target.value })}
-                        margin="normal"
-                        required
-                      />
-                    </MDBox>
-                    <MDBox mb={1}>
-                      <MDInput
-                        type="text"
-                        label="Material Description"
-                        variant="outlined"
-                        fullWidth
-                        value={formValues.materialDescription}
-                        onChange={(e) => setFormValues({ ...formValues, materialDescription: e.target.value })}
-                        margin="normal"
-                        required
-                      />
-                    </MDBox>
-                    <MDBox mb={2} style={{ display: 'flex', alignItems: 'center' }}>
-                      <label htmlFor="fileUpload" style={fileInputStyle}>
-                        <input
-                          type="file"
-                          id="fileUpload"
-                          accept="application/pdf"
-                          // name="imageUrl"
-                          onChange={handleFileUpload}
-                          style={{ display: "none" }}
-                        />
-                        <span>&#128206; {file ? file.name : "Choose File:"}</span>
-                      </label>
-                      <MDTypography variant="body2" ml={1}>
-                        File must be 4 MB in PDF format.
-                      </MDTypography>
-                    </MDBox>
-                    <MDBox mt={2} mb={1} textAlign="center">
-                      <MDButton color="primary" onClick={handleUploadMaterial}>
-                        {loading ? <CircularProgress /> : "Upload Material"}
-                      </MDButton>
-                    </MDBox>
+                <MDBox mb={2}>
+                  <MDInput
+                    type="text"
+                    label="Course Name"
+                    variant="outlined"
+                    fullWidth
+                    value={courseName}
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </MDBox>
+                <MDBox mb={2}>
+                  <MDInput
+                    type="text"
+                    label="Material Title"
+                    variant="outlined"
+                    fullWidth
+                    value={formValues.materialTitle}
+                    onChange={(e) => setFormValues({ ...formValues, materialTitle: e.target.value })}
+                    margin="normal"
+                    required
+                  />
+                </MDBox>
+                <MDBox mb={2} style={{ display: 'flex', alignItems: 'center' }}>
+                  <label htmlFor="fileUpload" style={fileInputStyle}>
+                    <input
+                      type="file"
+                      id="fileUpload"
+                      accept="application/pdf"
+                      onChange={handleFileUpload}
+                      style={{ display: "none" }}
+                    />
+                    <span>&#128206; {file ? file.name : "Choose File:"}</span>
+                  </label>
+                  <MDTypography variant="body2" ml={1}>
+                    File must be 4 MB in PDF format.
+                  </MDTypography>
+                </MDBox>
+                <MDBox mt={2} mb={1} textAlign="center">
+                  <MDButton color="primary" onClick={handleUploadMaterial}>
+                    {loading ? <CircularProgress /> : "Upload Material"}
+                  </MDButton>
+                </MDBox>
               </CardContent>
             </Card>
           </Grid>
