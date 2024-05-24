@@ -22,8 +22,8 @@ import CafeCommetteDashboard from "./layouts/CafeCommetteDashboard";
 import CommetteDashboard from "./layouts/dashboard/cafeCommetteDashboard";
 import StockRequest from "./layouts/stockRequest";
 import ScheduleRequest from "./layouts/schedulePost";
-import IngredientApproval from "./layouts/ingredientApproval";
-import InventoryList from "./layouts/showInventory";
+import ApproveScheduleRequest from "./layouts/scheduleApproval";
+import InventoryList from "./layouts/assignmentView";
 import Approval from "./layouts/stockApproval";
 import MoneyTransaction from "./layouts/deposit";
 import courseUpload from "./layouts/courseUpload";
@@ -114,9 +114,9 @@ function getLayoutComponent(path) {
       return <Approval />;
     case "/schedulePost":
       return <ScheduleRequest />;
-    case "/ingredientApproval":
-      return <IngredientApproval />;
-    case "/showInventory":
+    case "/scheduleApproval":
+      return <ApproveScheduleRequest />;
+    case "/assignmentView":
       return <InventoryList />;
     case "/dashboard":
       return <Dashboard />;

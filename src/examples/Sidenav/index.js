@@ -19,14 +19,14 @@ import AddMenuItem from "../../layouts/menuEntry";
 import FoodMenu from "../../layouts/foodMenu";
 import BuyFood from "../../layouts/buyFood";
 import InventoryEntry from "../../layouts/inventory";
-import InventoryList from "../../layouts/showInventory";
+import InventoryList from "../../layouts/assignmentView";
 import StockRequest from "../../layouts/stockRequest";
 import Approval from "../../layouts/stockApproval";
 import ScheduleRequest from "../../layouts/schedulePost";
-import IngredientApproval from "../../layouts/ingredientApproval";
+import ApproveScheduleRequest from "../../layouts/scheduleApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
-import InventoryList from "../../layouts/showInventory";
+import InventoryList from "../../layouts/assignmentView";
 import ShowApproval from "../../layouts/showIngredientApproval";
 import StockApproval from "../../layouts/showApprovedStock";
 import BuyFoodDepartment from "../../layouts/buyFood/buyFoodDepartment";
@@ -152,7 +152,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       name: "View Assignment",
       key: "list",
       icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/showInventory",
+      route: "/assignmentView",
       component: <ViewAssignments />,
     },
     {
@@ -189,11 +189,11 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ግዢ መፍቀጃ ",
+      name: "Appove schedule  ",
       key: "ingredient_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/ingredientApproval",
-      component: <IngredientApproval />,
+      route: "/scheduleApproval",
+      component: <ApproveScheduleRequest />,
     },
     {
       type: "collapse",

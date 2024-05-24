@@ -21,10 +21,10 @@ import InventoryEntry from "../../layouts/inventory";
 import StockRequest from "../../layouts/stockRequest";
 import Approval from "../../layouts/stockApproval";
 import ScheduleRequest from "../../layouts/schedulePost";
-import IngredientApproval from "../../layouts/ingredientApproval";
+import ApproveScheduleRequest from "../../layouts/scheduleApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
-import InventoryList from "../../layouts/showInventory";
+import InventoryList from "../../layouts/assignmentView";
 import { Icon } from "semantic-ui-react";
 import CafeCommetteDashboard from "../../layouts/CafeCommetteDashboard";
 import {
@@ -181,10 +181,10 @@ function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "showInventory",
+      name: "assignmentView",
       key: "list",
       icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/showInventory",
+      route: "/assignmentView",
       component: <InventoryList />,
     },
     // {
@@ -213,11 +213,11 @@ function CafeCommetteeSidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ingredient_Approval",
+      name: "schedule_Approval",
       key: "ingredient_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/ingredientApproval",
-      component: <IngredientApproval />,
+      route: "/scheduleApproval",
+      component: <ApproveScheduleRequest />,
     },
     // {
     //   type: "collapse",

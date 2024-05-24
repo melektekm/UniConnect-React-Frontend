@@ -61,7 +61,7 @@ import StockRequest from "./layouts/stockRequest";
 import Approval from "./layouts/stockApproval";
 import UploadAnnouncement from "./layouts/announcements";
 import ViewAnnouncement from "./layouts/viewAnnouncement";
-import ViewAssignments from "./layouts/showInventory";
+import ViewAssignments from "./layouts/assignmentView";
 import ShowApproval from "./layouts/showIngredientApproval";
 import StockApproval from "./layouts/showApprovedStock";
 import AssignmentUpload from "./layouts/buyFood/buyFoodDepartment";
@@ -72,7 +72,7 @@ import Icon from "@mui/material/Icon";
 import SearchMenu from "./layouts/search/searchForCafeManager";
 import ViewCourses from "./layouts/report";
 // import ScheduleRequest from "./layouts/schedulePost";
-import IngredientApproval from "./layouts/ingredientApproval";
+import ApproveScheduleRequest from "./layouts/scheduleApproval";
 import DepartmentBilling from "./layouts/billing/DepartmentBilling";
 import CafeManagerDashboard from "./layouts/dashboard/cafeManagerDashboard";
 import SearchMenuForCashier from "./layouts/search/searchForCashier";
@@ -293,18 +293,18 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ግዢ መፍቀጃ ",
+    name: "Schedule Approval ",
     key: "ingredient_Approval",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/ingredientApproval",
-    component: <IngredientApproval />,
+    route: "/scheduleApproval",
+    component: <ApproveScheduleRequest />,
   },
   {
     type: "collapse",
     name: "View Assignment",
     key: "list",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/showInventory",
+    route: "/assignmentView",
     component: <ViewAssignments />,
   },
   {

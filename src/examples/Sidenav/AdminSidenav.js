@@ -18,14 +18,14 @@ import CourseUpload from "../../layouts/menuEntry";
 import FoodMenu from "../../layouts/foodMenu";
 import BuyFood from "../../layouts/buyFood";
 import InventoryEntry from "../../layouts/inventory";
-// import InventoryList from "../../layouts/showInventory";
+// import InventoryList from "../../layouts/assignmentView";
 import StockRequest from "../../layouts/stockRequest";
 import Approval from "../../layouts/stockApproval";
 import ScheduleRequest from "../../layouts/schedulePost";
-import IngredientApproval from "../../layouts/ingredientApproval";
+import ApproveScheduleRequest from "../../layouts/scheduleApproval";
 import Constraint from "../../layouts/constraints";
 import Deposit from "../../layouts/deposit";
-import ViewAssignments from "../../layouts/showInventory";
+import ViewAssignments from "../../layouts/assignmentView";
 import ShowApproval from "../../layouts/showIngredientApproval";
 import ViewAnnouncement from "../../layouts/viewAnnouncement";
 import StockApproval from "../../layouts/showApprovedStock";
@@ -174,7 +174,7 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       name: "View Assignment",
       key: "list",
       icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/showInventory",
+      route: "/assignmentView",
       component: <ViewAssignments />,
     },
     // {
@@ -201,14 +201,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/ingredientRequest",
     //   component: <IngredientRequest />,
     // },
-    // {
-    //   type: "collapse",
-    //   name: "ingredient_Approval",
-    //   key: "ingredient_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/ingredientApproval",
-    //   component: <IngredientApproval />,
-    // },
+    {
+      type: "collapse",
+      name: "schedule approval",
+      key: "ingredient_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/scheduleApproval",
+      component: <ApproveScheduleRequest />,
+    },
     {
       type: "collapse",
       name: "Add-employee",
@@ -280,6 +280,22 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       icon: <AttachMoneyIcon fontSize="small" />,
       route: "/assignmentUpload",
       component: <UploadAssignment />,
+    },
+    {
+      type: "collapse",
+      name: "Announcement View",
+      key: "Announcement_view",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/viewAnnouncement",
+      component: <ViewAnnouncement />,
+    },
+    {
+      type: "collapse",
+      name: "Announcement post",
+      key: "Announcement_post",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/announcements",
+      component: <UploadAnnouncement />,
     },
     // {
     //   type: "collapse",
