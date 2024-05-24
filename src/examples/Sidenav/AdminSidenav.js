@@ -14,7 +14,6 @@ import AssignmentsPage from "../../layouts/assignmentList";
 import Billing from "../../layouts/billing";
 import EmployeeList from "../../layouts/profile";
 import AddEmployee from "../../layouts/addEmployee";
-import CourseUpload from "../../layouts/menuEntry";
 import FoodMenu from "../../layouts/foodMenu";
 import BuyFood from "../../layouts/buyFood";
 import InventoryEntry from "../../layouts/inventory";
@@ -129,14 +128,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/food_menu",
     //   component: <FoodMenu />,
     // },
-    // {
-    //   type: "collapse",
-    //   name: "Upload Courses",
-    //   key: "add_food",
-    //   icon: <RestaurantMenuIcon fontSize="small" />,
-    //   route: "/addfood",
-    //   component: <CourseUpload />,
-    // },
+    {
+      type: "collapse",
+      name: "Upload Courses",
+      key: "add_food",
+      icon: <RestaurantMenuIcon fontSize="small" />,
+      route: "/addfood",
+      component: <UploadCourse />,
+    },
     // {
     //   type: "collapse",
     //   name: "buy food",
@@ -265,14 +264,6 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/deposit",
     //   component: <Deposit />,
     // },
-    {
-      type: "collapse",
-      name: "Course upload ",
-      key: "Add-department",
-      icon: <AttachMoneyIcon fontSize="small" />,
-      route: "/courseUpload",
-      component: <UploadCourse />,
-    },
     {
       type: "collapse",
       name: "Upload Assignment",
