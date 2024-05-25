@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import { BASE_URL } from "../../appconfig";
 import colors from "../../assets/theme/base/colors";
-import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
+import StudentNavBar from "../../examples/Navbars/StudentNavBar";
 import {
   Dialog,
   DialogActions,
@@ -32,9 +32,9 @@ import {
 import { Button, TextField } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
+import DeanNavBar from "../../examples/Navbars/DeanNavBar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
-import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
+import StudentSidenav from "../../examples/Sidenav/StudentSidenav";
 // import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
@@ -356,26 +356,26 @@ function ScheduleRequest() {
         </DialogActions>
       </Dialog>
       {/* {userData.user.role == "student" ? (
-        <NavbarForCommette />
+        <StudentNavBar />
       ) : userData.user.role == "dean" ? (
-        <CafeManagerDashboardNavbar />
+        <DeanNavBar />
       ) : (
-        <NavbarForCommette />
+        <StudentNavBar />
       )}
       {userData.user.role == "student" ? (
-        <CafeCommetteeSidenav
+        <StudentSidenav
           color="dark"
           brand=""
           brandName="የኮሚቴ ክፍል መተገበሪያ"
         />
       ) : userData.user.role == "dean" ? (
-        <CafeManagerSidenav
+        <DeanSidenav
           color="dark"
           brand=""
           brandName="የምግብ ዝግጅት ክፍል መተግበሪያ"
         />
       ) : (
-        <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" />
+        <StudentSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" />
       )} */}
       <DashboardNavbar />
       <Sidenav />

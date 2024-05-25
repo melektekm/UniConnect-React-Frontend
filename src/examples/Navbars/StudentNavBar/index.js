@@ -65,8 +65,7 @@ import {
   DialogActions,
 } from "@mui/material";
 
-
-function NavbarForCommette({ absolute, light, isMini }) {
+function StudentNavBar({ absolute, light, isMini }) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
@@ -85,16 +84,13 @@ function NavbarForCommette({ absolute, light, isMini }) {
   const route = useLocation().pathname.split("/").slice(1);
   const navigate = useNavigate();
 
-
   const handleLogout = async () => {
     try {
       await ipcRenderer.invoke("clear-user");
       navigate("/authentication/sign-in");
-    } catch (error) {
-    
-    }
+    } catch (error) {}
   };
- 
+
   const handleCloseLogoutDialog = () => {
     setOpenLogoutDialog(false);
   };
@@ -121,7 +117,7 @@ function NavbarForCommette({ absolute, light, isMini }) {
       />
     </Menu>
   );
-  let routeName = '';
+  let routeName = "";
 
   routes.forEach((route) => {
     if (useLocation().pathname === route.route) {
@@ -235,7 +231,9 @@ function NavbarForCommette({ absolute, light, isMini }) {
               </IconButton>
               {renderMenu()}
 
-              <MDTypography style = {{fontSize: "0.67em"}}>Hello,{userData.user.name}</MDTypography>
+              <MDTypography style={{ fontSize: "0.67em" }}>
+                Hello,{userData.user.name}
+              </MDTypography>
               <IconButton
                 size="small"
                 disableRipple
@@ -252,44 +250,51 @@ function NavbarForCommette({ absolute, light, isMini }) {
         )}
       </Toolbar>
       <Dialog
-  open={openLogoutDialog}
-  onClose={handleCloseLogoutDialog}
-  aria-labelledby="alert-dialog-title"
-  aria-describedby="alert-dialog-description"
-  PaperProps={{ style: { padding: "15px" } }}
->
-  <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
-  <DialogContent>
-    <DialogContentText id="alert-dialog-description">
-      እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
-    </DialogContentText>
-  </DialogContent>
-  <DialogActions style={{ justifyContent: "space-between" }}>
-    <MDButton onClick={handleCloseLogoutDialog} color="info" style={{ borderRadius: "15%" }}>
-      አይ
-    </MDButton>
-    <MDButton onClick={handleLogout} color="error" style={{ borderRadius: "15%" }}>
-      ውጣ
-    </MDButton>
-  </DialogActions>
-</Dialog>
+        open={openLogoutDialog}
+        onClose={handleCloseLogoutDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{ style: { padding: "15px" } }}
+      >
+        <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ justifyContent: "space-between" }}>
+          <MDButton
+            onClick={handleCloseLogoutDialog}
+            color="info"
+            style={{ borderRadius: "15%" }}
+          >
+            አይ
+          </MDButton>
+          <MDButton
+            onClick={handleLogout}
+            color="error"
+            style={{ borderRadius: "15%" }}
+          >
+            ውጣ
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </AppBar>
-    
   );
 }
 
 // Setting default values for the props of DashboardNavbar
-NavbarForCommette.defaultProps = {
+StudentNavBar.defaultProps = {
   absolute: false,
   light: false,
   isMini: false,
 };
 
 // Typechecking props for the DashboardNavbar
-NavbarForCommette.propTypes = {
+StudentNavBar.propTypes = {
   absolute: PropTypes.bool,
   light: PropTypes.bool,
   isMini: PropTypes.bool,
 };
 
-export default NavbarForCommette;
+export default StudentNavBar;

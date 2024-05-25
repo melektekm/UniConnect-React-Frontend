@@ -10,15 +10,11 @@
 // import SidenavRoot from "./SidenavRoot";
 // import sidenavLogoLabel from "./styles/sidenav";
 // import Dashboard from "../../layouts/dashboard";
-// import Billing from "../../layouts/billing";
-// import BuyFood from "../../layouts/buyFood";
-// import Constraint from "../../layouts/constraints";
 // import colors from "../../assets/theme/base/colors";
 // import Deposit from "../../layouts/deposit";
 // import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 // import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-// import BuyFoodDepartment from "../../layouts/buyFood/buyFoodDepartment";
-// import DepartmentBilling from "../../layouts/billing/DepartmentBilling";
+
 // import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 // import {
 //   Dashboard as DashboardIcon,
@@ -50,10 +46,10 @@
 // } from "@mui/material";
 // import CashierOrder from "../../layouts/tables/CashierOrderView";
 // import FoodMenu from "../../layouts/foodMenu";
-// import StockApproval from "../../layouts/showApprovedStock";
+// import DisplaySchedule from "../../layouts/scheduleView";
 // import MDButton from "../../components/MDButton";
 
-// function CashierSidenav({ brand, brandName, selectedMenu, ...rest }) {
+// function CoordinatorSidenav({ brand, brandName, selectedMenu, ...rest }) {
 //   const navigate = useNavigate();
 //   const [controller, dispatch] = useMaterialUIController();
 //   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } =
@@ -93,71 +89,15 @@
 //       route: "/dashboard",
 //       component: <Dashboard />,
 //     },
-//     // {
-//     //   type: "collapse",
-//     //   name: "orders",
-//     //   key: "orders",
-//     //   icon: <TableViewOutlinedIcon fontSize="small" />,
-//     //   route: "/tables",
-//     //   component: <Tables />,
-//     // },
+//
 //     {
 //       type: "collapse",
-//       name: "ent_Approval",
-//       key: "Ingredient_Approval",
-//       icon: <AssignmentTurnedInIcon fontSize="small" />,
-//       route: "/showIngredientApproval",
-//       component: <ShowApproval />,
-//     },
-//     {
-//       type: "collapse",
-//       name: "stock_Approval",
+//       name: "schedule View",
 //       key: "stock_Approval",
 //       icon: <AssignmentTurnedInIcon fontSize="small" />,
-//       route: "/showApprovedStock",
-//       component: <StockApproval />,
+//       route: "/scheduleView",
+//       component: <DisplaySchedule />,
 //     },
-//     {
-//       type: "collapse",
-//       name: "food menu",
-//       key: "food_menu",
-//       icon: <FastfoodIcon fontSize="small" />,
-//       route: "/food_menu",
-//       component: <FoodMenu />,
-//     },
-//     {
-//       type: "collapse",
-//       name: "menu entry",
-//       key: "add_food",
-//       icon: <RestaurantMenuIcon fontSize="small" />,
-//       route: "/addfood",
-//       component: <AddMenuItem />,
-//     },
-//     {
-//       type: "collapse",
-//       name: "buy food",
-//       key: "buy_food",
-//       icon: <ShoppingCartIcon fontSize="small" />,
-//       route: "/buyFood",
-//       component: <BuyFood />,
-//     },
-//     {
-//       type: "collapse",
-//       name: "dept but food",
-//       key: "buy_food_department",
-//       icon: <ShoppingCartIcon fontSize="small" />,
-//       route: "/buyFoodDepartment",
-//       component: <BuyFoodDepartment />,
-//     },
-//     {
-//       type: "collapse",
-//       name: "Inventory",
-//       key: "inventory",
-//       icon: <InventoryIcon fontSize="small" />,
-//       route: "/inventory",
-//       component: <InventoryEntry />,
-//     },
-//     {
 //       type: "collapse",
 //       name: "assignmentView",
 //       key: "list",
@@ -178,7 +118,7 @@
 //     //   name: "Stock Approval",
 //     //   key: "stock_Approval",
 //     //   icon: <Icon fontSize="small" />,
-//     //   route: "/stockApproval",
+//     //   route: "/DisplaySchedule",
 //     //   component: <Approval />,
 //     // },
 //     {
@@ -237,14 +177,14 @@
 //     //   route: "/constraint",
 //     //   component: <Constraint />,
 //     // },
-//     // {
-//     //   type: "collapse",
-//     //   name: "የመተግበሪያ ገጽታ",
-//     //   key: "stock_Approval",
-//     //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-//     //   route: "/showApprovedStock",
-//     //   component: <StockApproval />,
-//     // },
+// {
+//   type: "collapse",
+//   name: "የመተግበሪያ ገጽታ",
+//   key: "stock_Approval",
+//   icon: <AssignmentTurnedInIcon fontSize="small" />,
+//   route: "/scheduleView",
+//   component: <DisplaySchedule />,
+// },
 //     // {
 //     //   type: "collapse",
 //     //   name: "የገንዘብ አያያዝ",
@@ -446,13 +386,13 @@
 // }
 
 // // Setting default values for the props of Sidenav
-// CashierSidenav.defaultProps = {
+// CoordinatorSidenav.defaultProps = {
 //   color: "info",
 //   brand: "",
 // };
 
 // // Typechecking props for the Sidenav
-// CashierSidenav.propTypes = {
+// CoordinatorSidenav.propTypes = {
 //   color: PropTypes.oneOf([
 //     "primary",
 //     "secondary",
@@ -466,4 +406,4 @@
 //   brandName: PropTypes.string.isRequired,
 // };
 
-// export default CashierSidenav;
+// export default CoordinatorSidenav;

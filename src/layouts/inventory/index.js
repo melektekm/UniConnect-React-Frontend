@@ -13,8 +13,8 @@ import Footer from "../../examples/Footer";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 
-import CafeCommetteDashboard from "../CafeCommetteDashboard";
-import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
+import StudentDashboard from "../StudentDashboard";
+import StudentNavBar from "../../examples/Navbars/StudentNavBar";
 import {
   Dialog,
   DialogActions,
@@ -25,7 +25,7 @@ import {
 import { Button, TextField } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import storeKeeperSidenav from "../../examples/Sidenav/storeKeeperSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 function InventoryEntry() {
   const [name, setItemName] = useState("");
@@ -170,8 +170,8 @@ function InventoryEntry() {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* <NavbarForCommette />
-      <storeKeeperSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" /> */}
+      {/* <StudentNavBar />
+      <StudentSidenav color="dark" brand="" brandName="የስቶር ክፍል መተግበሪያ" /> */}
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>

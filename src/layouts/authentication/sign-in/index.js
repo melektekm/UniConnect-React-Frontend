@@ -34,7 +34,7 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import { BASE_URL } from "../../../appconfig";
-import CashierDashboard from "../../CashierDashboard";
+import CoordinatorDashboard from "../../CoordinatorDashboard";
 import Store from "electron-store";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -76,18 +76,18 @@ function Basic() {
         user: response.data.user,
       });
       if (response.data.user.role == "coordinator") {
-        navigate("/cashierDashboard");
+        navigate("/CoordinatorDashboard");
       } else if (response.data.user.role == "admin") {
         navigate("/mainDashboard");
       } else if (response.data.user.role == "student") {
-        navigate("/cafeCommetteDashboard");
+        navigate("/StudentDashboard");
       } else if (response.data.user.role == "dean") {
         navigate("/cafeManagerDashboard");
       } else if (response.data.user.role == "instructor") {
         navigate("/storeKeeperdashboard");
       }
       setLoading(false);
-console.log(response.data.user.role);
+      console.log(response.data.user.role);
       //ceNlXlqqa27MYEJsUE8hey352DeXrEdQJmqDEbaV
       // Redirect or perform other actions as needed
     } catch (error) {

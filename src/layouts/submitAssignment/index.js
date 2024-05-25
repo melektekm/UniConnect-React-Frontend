@@ -51,12 +51,13 @@ function SubmitAssignment() {
     console.log(accessToken);
     const handleAddToAssignment = async () => {
         const newErrorMessages = {
-            course_code: formValues.course_code ? "" : "Course code is required",
-            assignmentName: formValues.assignmentName ? "" : "Assignment name is required",
-            assignmentDescription: formValues.assignmentDescription
+            course_name: formValues.course_name ? "" : "Course name is required",
+            ass_name: formValues.ass_name ? "" : "Assignment name is required",
+            student_name: formValues.student_name
                 ? ""
-                : "Assignment description is required",
-            dueDate: formValues.dueDate ? "" : "Due date is required",
+                : "Name is required",
+            student_id: formValues.student_id ? "" : "ID is required",
+            file: formValues.file ? "" : "File is required",
         };
 
         setErrorMessages(newErrorMessages);
@@ -71,9 +72,9 @@ function SubmitAssignment() {
         try {
             const jsonData = {
                 course_code: formValues.course_code,
-                assignmentName: formValues.assignmentName,
-                assignmentDescription: formValues.assignmentDescription,
-                dueDate: formValues.dueDate,
+                ass_name: formValues.ass_name,
+                student_name: formValues.student_name,
+                student_id: formValues.student_id,
                 file: formValues.file, // Assuming the file object is needed in JSON format
             };
 
@@ -106,37 +107,37 @@ function SubmitAssignment() {
         setErrorMessage("");
     };
 
-    const handleCourseCodeChange = async (event) => {
-        const course_code = event.target.value;
-        setFormValues({ ...formValues, course_code });
+    // const handleCourseCodeChange = async (event) => {
+    //     const course_code = event.target.value;
+    //     setFormValues({ ...formValues, course_code });
 
-        if (course_code) {
-            try {
-                const response = await axios.get(`${BASE_URL}/get-course-name`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                    params: {
-                        course_code,
-                    },
-                });
+    //     if (course_code) {
+    //         try {
+    //             const response = await axios.get(`${BASE_URL}/get-course-name`, {
+    //                 headers: {
+    //                     Authorization: `Bearer ${accessToken}`,
+    //                 },
+    //                 params: {
+    //                     course_code,
+    //                 },
+    //             });
 
-                if (response.data && response.data.course_name) {
-                    setCourseName(response.data.course_name);
-                } else {
-                    setCourseName("");
-                    setErrorMessage("Course not found.");
-                    setOpen(true);
-                }
-            } catch (error) {
-                setCourseName("");
-                setErrorMessage("Error fetching course name: " + error.message);
-                setOpen(true);
-            }
-        } else {
-            setCourseName("");
-        }
-    };
+    //             if (response.data && response.data.course_name) {
+    //                 setCourseName(response.data.course_name);
+    //             } else {
+    //                 setCourseName("");
+    //                 setErrorMessage("Course not found.");
+    //                 setOpen(true);
+    //             }
+    //         } catch (error) {
+    //             setCourseName("");
+    //             setErrorMessage("Error fetching course name: " + error.message);
+    //             setOpen(true);
+    //         }
+    //     } else {
+    //         setCourseName("");
+    //     }
+    // };
 
     const fileInputStyle = {
         display: "inline-block",
@@ -151,9 +152,9 @@ function SubmitAssignment() {
     const resetState = () => {
         setFormValues({
             course_code: "",
-            assignmentName: "",
-            assignmentDescription: "",
-            dueDate: "",
+            ass_name: "",
+            student_name: "",
+            student_id: "",
             file: null,
         });
         setFile(null);
@@ -214,22 +215,22 @@ function SubmitAssignment() {
                                         <FormControl variant="outlined" fullWidth style={{ marginTop: "16px" }}>
                                             <MDInput
                                                 type="text"
-                                                name="course_code"
-                                                label="Course Code"
+                                                name="course_name"
+                                                label="Course Name"
                                                 variant="outlined"
                                                 fullWidth
-                                                value={formValues.course_code}
-                                                onChange={handleCourseCodeChange}
+                                                value={formValues.course_name}
+                                                onChange={(e) =>
+                                                    setFormValues({ ...formValues, course_name: e.target.value })
+                                                }
                                                 margin="normal"
                                                 required
-                                                inputProps={{
-                                                    name: "course_code",
-                                                    id: "course_code",
-                                                }}
+                                                error={!!errorMessages.course_name}
+                                                helperText={errorMessages.course_name}
                                             />
                                         </FormControl>
                                     </MDBox>
-                                    <MDBox mb={2}>
+                                    {/* <MDBox mb={2}>
                                         <MDInput
                                             type="text"
                                             label="Course Name"
@@ -241,60 +242,56 @@ function SubmitAssignment() {
                                                 readOnly: true,
                                             }}
                                         />
-                                    </MDBox>
+                                    </MDBox> */}
                                     <MDBox mb={2}>
                                         <MDInput
                                             type="text"
-                                            name="assignmentName"
+                                            name="ass_name"
                                             label="Assignment Name"
                                             variant="outlined"
                                             fullWidth
-                                            value={formValues.assignmentName}
+                                            value={formValues.ass_name}
                                             onChange={(e) =>
-                                                setFormValues({ ...formValues, assignmentName: e.target.value })
+                                                setFormValues({ ...formValues, ass_name: e.target.value })
                                             }
                                             margin="normal"
                                             required
-                                            error={!!errorMessages.assignmentName}
-                                            helperText={errorMessages.assignmentName}
+                                            error={!!errorMessages.ass_name}
+                                            helperText={errorMessages.ass_name}
                                         />
                                     </MDBox>
-                                    {/* <MDBox mb={2}>
+                                    <MDBox mb={2}>
                                         <MDInput
                                             type="text"
-                                            name="assignmentDescription"
-                                            label="Assignment Description"
+                                            name="student_name"
+                                            label="Student Name"
                                             variant="outlined"
                                             fullWidth
-                                            value={formValues.assignmentDescription}
+                                            value={formValues.student_name}
                                             onChange={(e) =>
-                                                setFormValues({ ...formValues, assignmentDescription: e.target.value })
+                                                setFormValues({ ...formValues, student_name: e.target.value })
                                             }
                                             margin="normal"
                                             required
-                                            error={!!errorMessages.assignmentDescription}
-                                            helperText={errorMessages.assignmentDescription}
+                                            error={!!errorMessages.student_name}
+                                            helperText={errorMessages.student_name}
                                         />
-                                    </MDBox> */}
+                                    </MDBox>
                                     <MDBox mb={2}>
                                         <TextField
-                                            id="dueDate"
-                                            name="dueDate"
-                                            label="Due Date"
-                                            type="date"
+                                            type="text"
+                                            name="student_id"
+                                            label="Student ID"
                                             fullWidth
                                             variant="outlined"
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                            value={formValues.dueDate}
+                                            value={formValues.student_id}
                                             onChange={(e) =>
-                                                setFormValues({ ...formValues, dueDate: e.target.value })
+                                                setFormValues({ ...formValues, student_id: e.target.value })
                                             }
                                             margin="normal"
                                             required
-                                            error={!!errorMessages.dueDate}
-                                            helperText={errorMessages.dueDate}
+                                            error={!!errorMessages.student_id}
+                                            helperText={errorMessages.student_id}
                                         />
                                     </MDBox>
                                     <MDBox mb={2} style={{ display: 'flex', alignItems: 'center' }}>

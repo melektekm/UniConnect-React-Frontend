@@ -12,13 +12,13 @@ import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout"
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import Footer from "../../../examples/Footer";
 import OrderTables from "../assignmentList";
-import CashierDashboard from "../../CashierDashboard";
-import CashierSidenav from "../../../examples/Sidenav/CashierSidenav";
+import CoordinatorDashboard from "../../CoordinatorDashboard";
+import CoordinatorSidenav from "../../../examples/Sidenav/CoordinatorSidenav";
 import Sidenav from "../../../examples/Sidenav/AdminSidenav";
 // Data
 
-import CafeManagerDashboardNavbar from "../../../examples/Navbars/CafeManagerNavbar";
-import CafeManagerSidenav from "../../../examples/Sidenav/CafeManagerSidenav";
+import DeanNavBar from "../../../examples/Navbars/DeanNavBar";
+import DeanSidenav from "../../../examples/Sidenav/DeanSidenav";
 
 function CashierOrder() {
   const electron = window.require("electron");
@@ -27,7 +27,7 @@ function CashierOrder() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {/* <CashierSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" /> */}
+      {/* <CoordinatorSidenav color="dark" brand="" brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ" /> */}
       <Sidenav />
       <MDBox pt={6} pb={3}>
         <OrderTables showEditColumn={false} />

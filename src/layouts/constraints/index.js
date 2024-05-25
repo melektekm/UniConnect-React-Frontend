@@ -5,9 +5,9 @@
 // import MDTypography from "../../components/MDTypography";
 // import MainDashboard from "../../layouts/MainDashboard";
 // import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-// import CashierDashboard from "../CashierDashboard";
+// import CoordinatorDashboard from "../CoordinatorDashboard";
 // import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-// import NavbarForCommette from "../../examples/Navbars/NavBarForCommette";
+// import StudentNavBar from "../../examples/Navbars/StudentNavBar";
 // import Footer from "../../examples/Footer";
 // import MDInput from "../../components/MDInput";
 // import MDButton from "../../components/MDButton";
@@ -26,7 +26,7 @@
 // import Box from "@mui/material/Box";
 // import Divider from "@mui/material/Divider";
 // import Sidenav from "../../examples/Sidenav/AdminSidenav";
-// import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
+// import DeanNavBar from "../../examples/Navbars/DeanNavBar";
 // import Sidenav from "../../examples/Sidenav/AdminSidenav";
 // import Sidenav from "../../examples/Sidenav/AdminSidenav";
 
@@ -192,26 +192,26 @@
 //   return (
 //     <DashboardLayout>
 //       {userData.user.role == "student" ? (
-//         <NavbarForCommette />
+//         <StudentNavBar />
 //       ) : userData.user.role == "dean" ? (
-//         <CafeManagerDashboardNavbar />
+//         <DeanNavBar />
 //       ) : (
 //         <DashboardNavbar />
 //       )}
 //       {userData.user.role == "student" ? (
-//         <CafeCommetteeSidenav
+//         <StudentSidenav
 //           color="dark"
 //           brand=""
 //           brandName="የኮሚቴ ክፍል መተገበሪያ"
 //         />
 //       ) : userData.user.role == "dean" ? (
-//         <CafeManagerSidenav
+//         <DeanSidenav
 //           color="dark"
 //           brand=""
 //           brandName="የምግብ ዝግጅት ክፍል መተገበሪያ"
 //         />
 //       ) : (
-//         <CashierSidenav
+//         <CoordinatorSidenav
 //           color="dark"
 //           brand=""
 //           brandName="የገንዘብ ተቀባይ ክፍል መተግበሪያ"

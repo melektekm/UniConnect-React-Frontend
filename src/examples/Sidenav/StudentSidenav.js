@@ -11,23 +11,13 @@ import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
 import Tables from "../../layouts/tables";
-import Billing from "../../layouts/billing";
-import EmployeeList from "../../layouts/profile";
-import AddEmployee from "../../layouts/addEmployee";
-import AddMenuItem from "../../layouts/menuEntry";
-import FoodMenu from "../../layouts/foodMenu";
-import BuyFood from "../../layouts/buyFood";
-import InventoryEntry from "../../layouts/inventory";
-import StockRequest from "../../layouts/stockRequest";
-import Approval from "../../layouts/stockApproval";
+
 import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
-import Constraint from "../../layouts/constraints";
-import Deposit from "../../layouts/deposit";
+
 import InventoryList from "../../layouts/assignmentView";
-import CafeManagerDashboard from "../../layouts/dashboard/cafeManagerDashboard";
 import { Icon } from "semantic-ui-react";
-// import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import StudentDashboard from "../../layouts/StudentDashboard";
 import {
   Dashboard as DashboardIcon,
   Add as AddIcon,
@@ -44,20 +34,17 @@ import {
 } from "@mui/icons-material";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import KitchenIcon from "@mui/icons-material/Kitchen";
-// import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import ShowApproval from "../../layouts/showIngredientApproval";
-import colors from "../../assets/theme/base/colors";
-import StockApproval from "../../layouts/showApprovedStock";
+
+import DisplaySchedule from "../../layouts/scheduleView";
+// import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import {
   useMaterialUIController,
   setMiniSidenav,
   setTransparentSidenav,
   setWhiteSidenav,
 } from "../../context";
-import ReportList from "../../layouts/report";
-import CommetteDashboard from "../../layouts/dashboard/cafeCommetteDashboard";
-import DepartmentBilling from "../../layouts/billing/DepartmentBilling";
-import MDButton from "../../components/MDButton";
+import ReportList from "../../layouts/courseList";
+
 import {
   Dialog,
   DialogTitle,
@@ -66,8 +53,13 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
-function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
+import colors from "../../assets/theme/base/colors";
+
+import MDButton from "../../components/MDButton";
+
+function StudentSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } =
@@ -83,6 +75,7 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const iconStyle = {
     color: colors.badgeColors.primary.main,
   };
+
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
   const handleOpenLogoutDialog = () => {
@@ -112,69 +105,22 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/dashboard",
       component: <Dashboard />,
     },
-    {
-      type: "collapse",
-      name: "orders",
-      key: "orders",
-      icon: <TableViewOutlinedIcon fontSize="small" />,
-      route: "/tables",
-      component: <Tables />,
-    },
     // {
     //   type: "collapse",
-    //   name: "ent_Approval",
-    //   key: "Ingredient_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showIngredientApproval",
-    //   component: <ShowApproval />,
+    //   name: "orders",
+    //   key: "orders",
+    //   icon: <TableViewOutlinedIcon fontSize="small" />,
+    //   route: "/tables",
+    //   component: <Tables />,
     // },
+    //
     {
       type: "collapse",
       name: "stock_Approval",
       key: "stock_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/showApprovedStock",
-      component: <StockApproval />,
-    },
-    // {
-    //   type: "collapse",
-    //   name: "food menu",
-    //   key: "food_menu",
-    //   icon: <FastfoodIcon fontSize="small" />,
-    //   route: "/food_menu",
-    //   component: <FoodMenu />,
-    // },
-    {
-      type: "collapse",
-      name: "menu entry",
-      key: "add_food",
-      icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/addfood",
-      component: <AddMenuItem />,
-    },
-    {
-      type: "collapse",
-      name: "buy food",
-      key: "buy_food",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/buyFood",
-      component: <BuyFood />,
-    },
-    {
-      type: "collapse",
-      name: "Upload Assignments",
-      key: "buy_food_department",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/buyFoodDepartment",
-      component: <BuyFoodDepartment />,
-    },
-    {
-      type: "collapse",
-      name: "Inventory",
-      key: "inventory",
-      icon: <InventoryIcon fontSize="small" />,
-      route: "/inventory",
-      component: <InventoryEntry />,
+      route: "/scheduleView",
+      component: <DisplaySchedule />,
     },
     {
       type: "collapse",
@@ -184,25 +130,10 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/assignmentView",
       component: <InventoryList />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "stock_request",
-    //   key: "stock_request",
-    //   icon: <ShoppingCartIcon fontSize="small" />,
-    //   route: "/stockRequest",
-    //   component: <StockRequest />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "Stock Approval",
-    //   key: "stock_Approval",
-    //   icon: <Icon fontSize="small" />,
-    //   route: "/stockApproval",
-    //   component: <Approval />,
-    // },
+
     {
       type: "collapse",
-      name: "ingredient_Request",
+      name: "schedule_post",
       key: "schedule_post",
       icon: <KitchenIcon fontSize="small" />,
       route: "/schedulePost",
@@ -210,7 +141,7 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "ingredient_Approval",
+      name: "schedule_Approval",
       key: "ingredient_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
       route: "/scheduleApproval",
@@ -226,52 +157,21 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
     // },
     // {
     //   type: "collapse",
-    //   name: " guest billing",
-    //   key: "billing",
-    //   icon: <ReceiptLongIcon fontSize="small" />,
-    //   route: "/billing",
-    //   component: <Billing />,
+    //   name: "report",
+    //   key: "report",
+    //   icon: <AssessmentIcon fontSize="small" />,
+    //   route: "/report",
+    //   component: <ReportList />,
     // },
-    // {
-    //   type: "collapse",
-    //   name: "employee list",
-    //   key: "profile",
-    //   icon: <PersonIcon fontSize="small" />,
-    //   route: "/profile",
-    //   component: <EmployeeList />,
-    // },
+
     {
       type: "collapse",
-      name: "report",
-      key: "report",
-      icon: <AssessmentIcon fontSize="small" />,
-      route: "/report",
-      component: <ReportList />,
+      name: "Display Schedule",
+      key: "stock_Approval",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/scheduleView",
+      component: <DisplaySchedule />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "ገደቦች",
-    //   key: "constraint",
-    //   icon: <ManageAccountsIcon fontSize="small" />,
-    //   route: "/constraint",
-    //   component: <Constraint />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "የመተግበሪያ ገጽታ",
-    //   key: "stock_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/showApprovedStock",
-    //   component: <StockApproval />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "የገንዘብ አያያዝ",
-    //   key: "deposit",
-    //   icon: <AttachMoneyIcon fontSize="small" />,
-    //   route: "/deposit",
-    //   component: <Deposit />,
-    // },
   ];
 
   let textColor = "white";
@@ -455,12 +355,12 @@ function CafeManagerSidenav({ brand, brandName, selectedMenu, ...rest }) {
   );
 }
 
-CafeManagerSidenav.defaultProps = {
+StudentSidenav.defaultProps = {
   color: "info",
   brand: "",
 };
 
-CafeManagerSidenav.propTypes = {
+StudentSidenav.propTypes = {
   color: PropTypes.oneOf([
     "primary",
     "secondary",
@@ -474,4 +374,4 @@ CafeManagerSidenav.propTypes = {
   brandName: PropTypes.string.isRequired,
 };
 
-export default CafeManagerSidenav;
+export default StudentSidenav;

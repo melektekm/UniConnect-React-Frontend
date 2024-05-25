@@ -1,51 +1,29 @@
 import React from "react";
 import Dashboard from "./layouts/dashboard";
 import Tables from "./layouts/tables";
-import Billing from "./layouts/billing";
+import ViewAssignments from "./layouts/assignmentView";
 import Notifications from "./layouts/notifications";
-import EmployeeList from "./layouts/profile";
+import ScheduleRequest from "./layouts/schedulePost";
 import BasicLayout from "./layouts/authentication/sign-in";
 import SignUpLayout from "./layouts/authentication/sign-up";
 import MainDashboard from "./layouts/MainDashboard";
 import AddEmployee from "./layouts/addEmployee";
 import UploadAnnouncement from "./layouts/announcements";
-import FoodMenu from "./layouts/foodMenu";
-import BuyFood from "./layouts/buyFood";
-import InventoryEntry from "./layouts/inventory";
-import AddMenuItem from "./layouts/menuEntry";
-import SearchMenu from "./layouts/search/searchForCafeManager";
-import ReportList from "./layouts/report";
-import CashierDashboard from "./layouts/CashierDashboard";
-import Constraint from "./layouts/constraints";
-import Deposit from "./layouts/deposit";
-import CafeCommetteDashboard from "./layouts/CafeCommetteDashboard";
-import CommetteDashboard from "./layouts/dashboard/cafeCommetteDashboard";
-import StockRequest from "./layouts/stockRequest";
-import ScheduleRequest from "./layouts/schedulePost";
-import ApproveScheduleRequest from "./layouts/scheduleApproval";
-import InventoryList from "./layouts/assignmentView";
-import Approval from "./layouts/stockApproval";
-import MoneyTransaction from "./layouts/deposit";
 import UploadCourse from "./layouts/courseUpload";
-import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
-import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
-import BuyFoodDepartment from "./layouts/buyFood/buyFoodDepartment";
-import DepartmentBilling from "./layouts/billing/DepartmentBilling";
+import CoordinatorDashboard from "./layouts/CoordinatorDashboard";
+import StudentDashboard from "./layouts/StudentDashboard";
 import CafeManagerDashboard from "./layouts/dashboard/cafeManagerDashboard";
-import ShowApproval from "./layouts/showIngredientApproval";
-import StockApproval from "./layouts/showApprovedStock";
-import CashierOrder from "./layouts/tables/CashierOrderView";
-import SearchMenuForCashier from "./layouts/search/searchForCashier";
-import storeKeeperDashboard from "./layouts/dashboard/storeKeeperDashboard";
+import DisplaySchedule from "./layouts/scheduleView";
 import Sidenav from "./examples/Sidenav/AdminSidenav";
-import StockAmountTable from "./layouts/stokeAmount";
 import UploadAssignment from "./layouts/assignmentUpload";
+import ViewCourses from "./layouts/courseList";
 import AddCourseMaterial from "./layouts/courseMaterial";
 import ViewAnnouncement from "./layouts/viewAnnouncement";
 import AssignmentsPage from "./layouts/assignmentList";
 import CourseMaterialsPage from "./layouts/CourseMaterialList";
 import SubmitAssignment from "./layouts/submitAssignment";
 // import ScheduleRequest from "../../layouts/schedulePost";
+import ApproveScheduleRequest from "./layouts/scheduleApproval";
 import SubmittedAssignments from "./layouts/viewSubmittedAssignment";
 
 function getLayoutComponent(path) {
@@ -59,10 +37,10 @@ function getLayoutComponent(path) {
     switch (userData.user.role) {
       case "admin":
         return <MainDashboard />;
-      case "cashier":
-        return <CashierDashboard />;
+      case "coordinator":
+        return <CoordinatorDashboard />;
       case "student": // Assuming this is the role name
-        return <CafeCommetteDashboard />;
+        return <StudentDashboard />;
       case "dean":
         return <CafeManagerDashboard />;
       case "storeKeeper":
@@ -83,80 +61,44 @@ function getLayoutComponent(path) {
       return <MainDashboard />;
     case "/addEmployee":
       return <AddEmployee />;
-    case "/courseUpload":
-      return <UploadCourse />;
-    case "/food_menu":
-      return <FoodMenu />;
-    case "/constraint":
-      return <Constraint />;
-    case "/deposit":
-      return <MoneyTransaction />;
     case "/addFood":
-      return <AddMenuItem />;
+      return <UploadCourse />;
     case "/viewAnnouncement":
       return <ViewAnnouncement />;
-    case "/showApprovedStock":
-      return <StockApproval />;
+    case "/scheduleView":
+      return <DisplaySchedule />;
     case "/announcements":
       return <UploadAnnouncement />;
-    case "/showIngredientApproval":
-      return <ShowApproval />;
-    case "/buyFood":
-      return <BuyFood />;
-    case "/buyFoodDepartment":
-      return <BuyFoodDepartment />;
-    case "/inventory":
-      return <InventoryEntry />;
-    case "/stockRequest":
-      return <StockRequest />;
-    case "/stockApproval":
-      return <Approval />;
     case "/schedulePost":
       return <ScheduleRequest />;
     case "/scheduleApproval":
       return <ApproveScheduleRequest />;
-    case "/assignmentView":
-      return <InventoryList />;
+    // case "/assignmentView":
+    //   return <InventoryList />;
     case "/dashboard":
       return <Dashboard />;
+    case "/report":
+      return <ViewCourses />;
     case "/cafeManagerDashboard":
       return <CafeManagerDashboard />;
-    case "/commetteDashboard":
-      return <CommetteDashboard />;
-    case "/cashierdashboard":
-      return <CashierDashboard />;
+    case "/StudentDashboard":
+      return <StudentDashboard />;
+    case "/CoordinatorDashboard":
+      return <CoordinatorDashboard />;
     case "/storeKeeperdashboard":
       return <storeKeeperDashboard />;
-    case "/cafeCommetteDashboard":
-      return <CafeCommetteDashboard />;
-    case "/stokeAmount":
-      return <StockAmountTable />;
-    case "/tables":
-      return <Tables />;
-    case "/cashierOrder":
-      return <CashierOrder />;
-    case "/billing":
-      return <Billing />;
-    case "/billingManager":
-      return <Billing showEditColumn={true} />;
-    case "/billingCashier":
-      return <Billing showEditColumn={false} />;
-    case "/departmentBilling":
-      return <DepartmentBilling />;
-    case "/search":
-      return <SearchMenu />;
-    case "/searchForInventory":
-      return <SearchMenuForInvnetory />;
-    case "/searchForCashier":
-      return <SearchMenuForCashier />;
-    case "/searchForAdmin":
-      return <SearchMenuForAdmin />;
-    case "/report":
-      return <ReportList />;
-    case "/notifications":
-      return <Notifications />;
-    case "/profile":
-      return <EmployeeList />;
+    case "/StudentDashboard":
+      return <StudentDashboard />;
+    // case "/stokeAmount":
+    //   return <StockAmountTable />;
+    // case "/search":
+    //   return <SearchMenu />;
+    // case "/searchForInventory":
+    //   return <SearchMenuForInvnetory />;
+    // case "/searchForCashier":
+    //   return <SearchMenuForCashier />;
+    // case "/searchForAdmin":
+    //   return <SearchMenuForAdmin />;
     case "/authentication/sign-in":
       return <BasicLayout />;
     case "/authentication/sign-up":
@@ -171,6 +113,8 @@ function getLayoutComponent(path) {
       return <CourseMaterialsPage />;
     case "/submitAssignment":
       return <SubmitAssignment />;
+    case "/assignmentView":
+      return <ViewAssignments />;
     case "/viewSubmittedAssignment":
         return <SubmittedAssignments />;
     default:

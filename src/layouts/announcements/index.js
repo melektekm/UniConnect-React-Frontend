@@ -157,17 +157,17 @@ function UploadAnnouncement() {
               mx={2}
               mt={2}
               mb={2}
-              py={2}
+              py={3}
               px={2}
               variant="gradient"
               bgColor="dark"
               borderRadius="lg"
               coloredShadow="info"
-              textAlign="left"
+              textAlign="center"
               // style={{ display: "flex", justifyContent: "space-between" }}
             >
               <MDTypography variant="h5" color="white">
-                post Announcement
+                Post Announcement
               </MDTypography>
             </MDBox>
             <Card>
