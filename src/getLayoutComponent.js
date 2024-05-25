@@ -46,6 +46,8 @@ import AssignmentsPage from "./layouts/assignmentList";
 import CourseMaterialsPage from "./layouts/CourseMaterialList";
 import SubmitAssignment from "./layouts/submitAssignment";
 // import ScheduleRequest from "../../layouts/schedulePost";
+import SubmittedAssignments from "./layouts/viewSubmittedAssignment";
+
 function getLayoutComponent(path) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -169,6 +171,8 @@ function getLayoutComponent(path) {
       return <CourseMaterialsPage />;
     case "/submitAssignment":
       return <SubmitAssignment />;
+    case "/viewSubmittedAssignment":
+        return <SubmittedAssignments />;
     default:
       return null;
   }

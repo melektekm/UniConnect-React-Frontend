@@ -67,6 +67,7 @@ import UploadAssignment from "../../layouts/assignmentUpload";
 import AddCourseMaterial from "../../layouts/courseMaterial";
 import CourseMaterialsPage from "../../layouts/CourseMaterialList";
 import SubmitAssignment from "../../layouts/submitAssignment";
+import SubmittedAssignments from "../../layouts/viewSubmittedAssignment";
 
 function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
@@ -319,6 +320,14 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       icon: <AttachMoneyIcon fontSize="small" />,
       route: "/submitAssignment",
       component: <SubmitAssignment />,
+    },
+    {
+      type: "collapse",
+      name: "Submitted Assignment",
+      key: "submittedAssignment",
+      icon: <RestaurantMenuIcon fontSize="small" />,
+      route: "/viewSubmittedAssignment",
+      component: <SubmittedAssignments />,
     },
   ];
 

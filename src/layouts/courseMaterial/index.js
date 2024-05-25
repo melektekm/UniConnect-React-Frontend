@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Dialog,
@@ -7,6 +7,13 @@ import {
   DialogContentText,
   DialogTitle,
   CircularProgress,
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  FormControl,
+  Button,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -23,8 +30,6 @@ import { BASE_URL } from "../../appconfig";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import colors from "../../assets/theme/base/colors";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 
 function AddCourseMaterial() {
   const [file, setFile] = useState(null);
@@ -42,32 +47,58 @@ function AddCourseMaterial() {
     file: null,
   });
   const [open, setOpen] = useState(false);
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [removeIndex, setRemoveIndex] = useState(null);
+  const [formList, setFormList] = useState({
+    items: [],
+  });
 
-  const handleUploadMaterial = async () => {
-    const newErrorMessages = {
-      course_code: formValues.course_code ? "" : "Course code is required",
-      materialTitle: formValues.materialTitle ? "" : "Title is required",
-    };
+  useEffect(() => {
+    const previousRoute = sessionStorage.getItem("preRouteData");
+    if (previousRoute) {
+      setFormList({
+        ...formList,
+        id: parseInt(previousRoute),
+        type: "entry",
+      });
+      sessionStorage.removeItem("preRouteData");
+    }
+  }, []);
+
+  const addForm = () => {
+    const newErrorMessages = {};
+    ["course_code", "materialTitle", "file"].forEach((field) => {
+      if (!formValues[field]) {
+        newErrorMessages[field] = `${field.replace(/([A-Z])/g, " $1")} is required`;
+      }
+    });
 
     setErrorMessages(newErrorMessages);
 
-    if (Object.values(newErrorMessages).some((message) => message !== "")) {
-      setErrorMessage("All fields should be filled");
+    if (Object.keys(newErrorMessages).length > 0) {
+      setErrorMessage("Please fill in all fields");
       setOpen(true);
       return;
     }
 
+    setFormList({
+      ...formList,
+      items: [...formList.items, formValues],
+    });
+    setFormValues({
+      course_code: "",
+      materialTitle: "",
+      file: null,
+    });
+    setFile(null);
+  };
+
+  const handleUploadMaterial = async () => {
     setLoading(true);
     try {
-      const materialData = {
-        code: formValues.course_code,
-        title: formValues.materialTitle,
-        file: formValues.file,
-      };
-
       const response = await axios.post(
         `${BASE_URL}/upload-material`,
-        JSON.stringify(materialData),
+        JSON.stringify(formList),
         {
           headers: {
             "Content-Type": "application/json",
@@ -77,17 +108,23 @@ function AddCourseMaterial() {
 
       if (response.data) {
         setErrorMessage("Material uploaded successfully!");
-        setOpen(true);
       } else {
         setErrorMessage("Failed to upload material. Please try again.");
-        setOpen(true);
       }
+      setOpen(true);
     } catch (error) {
       setErrorMessage("An error occurred while uploading the material.");
       setOpen(true);
     } finally {
       setLoading(false);
     }
+  };
+
+  const openConfirmationDialog = () => setConfirmationOpen(true);
+  const closeConfirmationDialog = () => setConfirmationOpen(false);
+  const handleSendForm = () => {
+    closeConfirmationDialog();
+    handleUploadMaterial();
   };
 
   const handleFileUpload = (event) => {
@@ -125,6 +162,22 @@ function AddCourseMaterial() {
       }
     } else {
       setCourseName("");
+    }
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  const openRemoveDialog = (index) => setRemoveIndex(index);
+  const closeRemoveDialog = () => setRemoveIndex(null);
+  const confirmRemoveForm = () => {
+    if (removeIndex !== null) {
+      const updatedFormList = { ...formList };
+      updatedFormList.items.splice(removeIndex, 1);
+      setFormList(updatedFormList);
+      closeRemoveDialog();
     }
   };
 
@@ -176,15 +229,16 @@ function AddCourseMaterial() {
               coloredShadow="info"
               textAlign="center"
             >
-              <MDTypography variant="h5" color="white">
-                Add Course Material
-              </MDTypography>
+              <Grid container alignItems="center" justifyContent="space-between">
+                <MDTypography variant="h5" color="white">
+                  Add Course Material
+                </MDTypography>
+              </Grid>
             </MDBox>
             <Card>
               <CardContent>
                 <MDBox mb={2}>
                   <FormControl variant="outlined" fullWidth style={{ marginTop: "16px" }}>
-                    {/* <InputLabel htmlFor="course_code">Course Code</InputLabel> */}
                     <MDInput
                       type="text"
                       label="Course Code"
@@ -221,12 +275,16 @@ function AddCourseMaterial() {
                     variant="outlined"
                     fullWidth
                     value={formValues.materialTitle}
-                    onChange={(e) => setFormValues({ ...formValues, materialTitle: e.target.value })}
+                    onChange={handleFormChange}
                     margin="normal"
                     required
+                    inputProps={{
+                      name: "materialTitle",
+                      id: "materialTitle",
+                    }}
                   />
                 </MDBox>
-                <MDBox mb={2} style={{ display: 'flex', alignItems: 'center' }}>
+                <MDBox mb={2} style={{ display: "flex", alignItems: "center" }}>
                   <label htmlFor="fileUpload" style={fileInputStyle}>
                     <input
                       type="file"
@@ -242,12 +300,99 @@ function AddCourseMaterial() {
                   </MDTypography>
                 </MDBox>
                 <MDBox mt={2} mb={1} textAlign="center">
-                  <MDButton color="primary" onClick={handleUploadMaterial}>
-                    {loading ? <CircularProgress /> : "Upload Material"}
-                  </MDButton>
+                  <Grid container spacing={2}>
+                    <Grid item>
+                      <MDButton color="primary" onClick={addForm} disabled={loading}>
+                        Add Form
+                      </MDButton>
+                    </Grid>
+                    <Grid item>
+                      <MDButton
+                        variant="contained"
+                        color="info"
+                        onClick={openConfirmationDialog}
+                        disabled={loading}
+                      >
+                        Submit
+                      </MDButton>
+                    </Grid>
+                    <Grid item>{loading && <CircularProgress />}</Grid>
+                  </Grid>
                 </MDBox>
               </CardContent>
             </Card>
+            <Card style={{ border: "3px solid #206A5D", marginTop: "20px" }}>
+              <MDBox
+                mx={2}
+                mt={-5}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="dark"
+                borderRadius="lg"
+                coloredShadow="dark"
+              >
+                <MDTypography variant="h6" color="white">
+                  Entered Forms
+                </MDTypography>
+              </MDBox>
+              <MDBox pt={3} pb={3} px={2}>
+                {formList.items.length > 0 ? (
+                  <TableContainer>
+                    <Table>
+                      <TableBody>
+                        {formList.items.map((form, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{form.course_code}</TableCell>
+                            <TableCell>{form.materialTitle}</TableCell>
+                            <TableCell>
+                              <Button
+                                color="secondary"
+                                onClick={() => openRemoveDialog(index)}
+                              >
+                                Remove
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                ) : (
+                  <MDTypography>No forms added yet</MDTypography>
+                )}
+              </MDBox>
+            </Card>
+
+            <Dialog open={confirmationOpen} onClose={closeConfirmationDialog}>
+              <DialogTitle>Confirm Submission</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to submit the forms?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={closeConfirmationDialog}>Cancel</Button>
+                <Button onClick={handleSendForm} color="primary">
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            <Dialog open={removeIndex !== null} onClose={closeRemoveDialog}>
+              <DialogTitle>Remove Form</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to remove this form?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={closeRemoveDialog}>Cancel</Button>
+                <Button onClick={confirmRemoveForm} color="secondary">
+                  Remove
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Grid>
         </Grid>
       </MDBox>

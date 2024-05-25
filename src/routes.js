@@ -83,6 +83,7 @@ import AddCourseMaterial from "./layouts/courseMaterial";
 import CourseMaterialsPage from "./layouts/CourseMaterialList";
 import SubmitAssignment from "./layouts/submitAssignment";
 import ScheduleRequest from "./layouts/schedulePost";
+import SubmittedAssignments from "./layouts/viewSubmittedAssignment";
 const routes = [
   {
     type: "collapse",
@@ -459,6 +460,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/submitAssignment",
     component: <SubmitAssignment />,
+  },
+  {
+    type: "collapse",
+    name: "Submitted Assignment",
+    key: "submittedAssignment",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/viewSubmittedAssignment",
+    component: <SubmittedAssignments />,
   },
 ];
 
