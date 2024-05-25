@@ -67,7 +67,7 @@ import {
   DialogActions,
 } from "@mui/material";
 
-function CafeManagerDashboardNavbar({ absolute, light, isMini }) {
+function DeanNavBar({ absolute, light, isMini }) {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
@@ -305,17 +305,17 @@ function CafeManagerDashboardNavbar({ absolute, light, isMini }) {
 }
 
 // Setting default values for the props of DashboardNavbar
-CafeManagerDashboardNavbar.defaultProps = {
+DeanNavBar.defaultProps = {
   absolute: false,
   light: false,
   isMini: false,
 };
 
 // Typechecking props for the DashboardNavbar
-CafeManagerDashboardNavbar.propTypes = {
+DeanNavBar.propTypes = {
   absolute: PropTypes.bool,
   light: PropTypes.bool,
   isMini: PropTypes.bool,
 };
 
-export default CafeManagerDashboardNavbar;
+export default DeanNavBar;

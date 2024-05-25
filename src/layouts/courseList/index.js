@@ -12,7 +12,7 @@ import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
-import MainDashboard from "../../layouts/MainDashboard";
+import MainDashboard from "../MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
 import { Card, Box, Button, Modal, Pagination, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";

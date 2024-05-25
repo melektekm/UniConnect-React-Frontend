@@ -165,9 +165,9 @@ function AdminNavbar({ absolute, light, isMini }) {
     if (userData.user.role == "admin") {
       return "/mainDashboard";
     } else if (userData.user.role == "coordinator") {
-      return "/cashierdashboard";
+      return "/CoordinatorDashboard";
     } else if (userData.user.role == "student") {
-      return "/cafeCommetteDashboard";
+      return "/StudentDashboard";
     }
   }
 

@@ -12,8 +12,8 @@ import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
 import OrderTables from "./assignmentList";
-import CashierDashboard from "../CashierDashboard";
-import CafeManagerDashboardNavbar from "../../examples/Navbars/CafeManagerNavbar";
+import CoordinatorDashboard from "../CoordinatorDashboard";
+import DeanNavBar from "../../examples/Navbars/DeanNavBar";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 
 function Tables() {
@@ -22,8 +22,8 @@ function Tables() {
   const userData = ipcRenderer.sendSync("get-user");
   return (
     <DashboardLayout>
-      {/* <CafeManagerDashboardNavbar />
-      <CafeManagerSidenav color="dark" brand="" brandName="የሚንት ካፌ መተግበሪያ" /> */}
+      {/* <DeanNavBar />
+      <DeanSidenav color="dark" brand="" brandName="የሚንት ካፌ መተግበሪያ" /> */}
       {/* <DashboardNavbar /> */}
       <Sidenav />
       <MDBox pt={6} pb={3}>

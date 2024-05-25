@@ -6,20 +6,15 @@ import {
   TableRow,
   TableCell,
   Paper,
-  Typography,
   Grid,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Card,
   Box,
   Modal,
   CardContent,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
-// import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
@@ -28,24 +23,20 @@ import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
 
-function ViewAssignments() {
+function SubmittedAssignments() {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const userData = ipcRenderer.sendSync("get-user");
-
   const [open, setOpen] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
-
+  const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
-
-  // const history = useHistory();
 
   const fetchAssignments = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/getallassignments`, {
+      const response = await axios.get(`${BASE_URL}/getallsubmittedassignments`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -71,16 +62,6 @@ function ViewAssignments() {
   const handleCloseModal = () => {
     setOpen(false);
     setSelectedAssignment(null);
-  };
-
-  const handleSubmitAssignment = (assignment) => {
-    // history.push({
-    //   pathname: "/submit-assignment",
-    //   state: {
-    //     assignmentName: assignment.ass_name,
-    //     courseName: assignment.course_name,
-    //   },
-    // });
   };
 
   return (
@@ -114,7 +95,7 @@ function ViewAssignments() {
                 >
                   <Table>
                     <TableBody>
-                      <TableRow sx={{ backgroundColor: "#" }}>
+                      <TableRow>
                         <TableCell align="center">
                           <strong>Assignment Id</strong>
                         </TableCell>
@@ -122,13 +103,13 @@ function ViewAssignments() {
                           <strong>Assignment Name</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Assignment Description</strong>
-                        </TableCell>
-                        <TableCell align="center">
                           <strong>Course Name</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Due Date</strong>
+                          <strong>Student ID</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong>Student Name</strong>
                         </TableCell>
                         <TableCell align="center">
                           <strong>Actions</strong>
@@ -138,9 +119,9 @@ function ViewAssignments() {
                         <TableRow key={assignment.id}>
                           <TableCell align="center">{assignment.id}</TableCell>
                           <TableCell align="center">{assignment.ass_name}</TableCell>
-                          <TableCell align="center">{assignment.Add_description}</TableCell>
                           <TableCell align="center">{assignment.course_name}</TableCell>
-                          <TableCell align="center">{assignment.due_date}</TableCell>
+                          <TableCell align="center">{assignment.student_id}</TableCell>
+                          <TableCell align="center">{assignment.student_name}</TableCell>
                           <TableCell align="center">
                             <Button
                               variant="contained"
@@ -148,14 +129,6 @@ function ViewAssignments() {
                               onClick={() => handleAssignmentClick(assignment)}
                             >
                               View Assignment
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              onClick={() => handleSubmitAssignment(assignment)}
-                              style={{ marginLeft: "10px" }}
-                            >
-                              Submit
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -166,43 +139,51 @@ function ViewAssignments() {
                 <Footer />
               </Card>
               <Modal open={open} onClose={handleCloseModal}>
-                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                  <Card>
-                    <CardContent>
-                      {selectedAssignment && (
-                        <>
-                          <Typography variant="h5" component="div" gutterBottom>
-                            Assignment Details
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Assignment ID: {selectedAssignment.id}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Assignment Name: {selectedAssignment.ass_name}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Description: {selectedAssignment.Add_description}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Course Name: {selectedAssignment.course_name}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Due Date: {selectedAssignment.due_date}
-                          </Typography>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            href={selectedAssignment.uploadedFileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            download
-                          >
-                            Download Assignment
-                          </Button>
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "80%",
+                    height: "80%",
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                  }}
+                >
+                  {selectedAssignment ? (
+                    <>
+                      <Card>
+                        <CardContent>
+                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <MDTypography variant="h5">
+                              Viewing Assignment: {selectedAssignment.ass_name}
+                            </MDTypography>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              href={selectedAssignment.uploadedFileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download
+                            >
+                              Download Assignment
+                            </Button>
+                          </Box>
+                          <iframe
+                            src={selectedAssignment.uploadedFileUrl}
+                            title="Assignment File"
+                            width="100%"
+                            height="600px"
+                            style={{ marginTop: "20px" }}
+                          ></iframe>
+                        </CardContent>
+                      </Card>
+                    </>
+                  ) : (
+                    <CircularProgress />
+                  )}
                 </Box>
               </Modal>
             </Grid>
@@ -213,4 +194,4 @@ function ViewAssignments() {
   );
 }
 
-export default ViewAssignments;
+export default SubmittedAssignments;

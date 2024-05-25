@@ -39,50 +39,37 @@ Coded by www.creative-tim.com
 import React from "react";
 import Dashboard from "./layouts/dashboard";
 import AssignmentsPage from "./layouts/assignmentList";
-import Billing from "./layouts/billing";
-import Notifications from "./layouts/notifications";
-import EmployeeList from "./layouts/profile";
 import SignIn from "./layouts/authentication/sign-in";
 import SignUp from "./layouts/authentication/sign-up";
 import MainDashboard from "./layouts/MainDashboard";
 import AddEmployee from "./layouts/addEmployee";
-import FoodMenu from "./layouts/foodMenu";
-import BuyFood from "./layouts/buyFood";
-import Constraint from "./layouts/constraints";
-import Deposit from "./layouts/deposit";
-import CashierDashboard from "./layouts/CashierDashboard";
-import CafeCommetteDashboard from "./layouts/CafeCommetteDashboard";
-import CommetteDashboard from "./layouts/dashboard/cafeCommetteDashboard";
+import CoordinatorDashboard from "./layouts/CoordinatorDashboard";
+import StudentDashboard from "./layouts/StudentDashboard";
 import UploadCourse from "./layouts/courseUpload";
 import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
-import StockRequest from "./layouts/stockRequest";
-import Approval from "./layouts/stockApproval";
+
 import UploadAnnouncement from "./layouts/announcements";
 import ViewAnnouncement from "./layouts/viewAnnouncement";
 import ViewAssignments from "./layouts/assignmentView";
-import ShowApproval from "./layouts/showIngredientApproval";
-import StockApproval from "./layouts/showApprovedStock";
-import AssignmentUpload from "./layouts/buyFood/buyFoodDepartment";
-// import Billing from "./layouts/billing";
+import DisplaySchedule from "./layouts/scheduleView";
+
+//
 // @mui icons
 import Icon from "@mui/material/Icon";
 import SearchMenu from "./layouts/search/searchForCafeManager";
-import ViewCourses from "./layouts/report";
+import ViewCourses from "./layouts/courseList";
 // import ScheduleRequest from "./layouts/schedulePost";
 import ApproveScheduleRequest from "./layouts/scheduleApproval";
-import DepartmentBilling from "./layouts/billing/DepartmentBilling";
+// import DepartmentBilling from "./layouts/billing/DepartmentBilling";
 import CafeManagerDashboard from "./layouts/dashboard/cafeManagerDashboard";
 import SearchMenuForCashier from "./layouts/search/searchForCashier";
-import CashierOrder from "./layouts/tables/CashierOrderView";
-import storeKeeperDashboard from "./layouts/dashboard/storeKeeperDashboard";
-import StockAmountTable from "./layouts/stokeAmount";
-import InventoryEntry from "./layouts/inventory";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
 import CourseMaterialsPage from "./layouts/CourseMaterialList";
 import SubmitAssignment from "./layouts/submitAssignment";
 import ScheduleRequest from "./layouts/schedulePost";
+import SubmittedAssignments from "./layouts/viewSubmittedAssignment";
 const routes = [
   {
     type: "collapse",
@@ -92,39 +79,6 @@ const routes = [
     route: "/mainDashboard",
     component: <MainDashboard />,
   },
-  {
-    type: "collapse",
-    name: "የምግብ ዝርዝር",
-    key: "food_menu",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/food_menu",
-    component: <FoodMenu />,
-  },
-
-  // {
-  //   type: "collapse",
-  //   name: " guest billing",
-  //   key: "billing",
-  //   icon: <Icon fontSize="small" />,
-  //   route: "/billing",
-  //   component: <Billing />,
-  // },
-  {
-    type: "collapse",
-    name: "Inventory",
-    key: "inventory",
-    icon: <Icon fontSize="small" />,
-    route: "/inventory",
-    component: <InventoryEntry />,
-  },
-  // {
-  //   type: "collapse",
-  //   name: "ገደብ",
-  //   key: "constraint",
-  //   icon: <Icon fontSize="small" />,
-  //   route: "/constraint",
-  //   component: <Constraint />,
-  // },
   {
     type: "collapse",
     name: "ዳሽቦርድ",
@@ -138,32 +92,32 @@ const routes = [
     name: "ዳሽቦርድ",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/commetteDashboard",
-    component: <CommetteDashboard />,
+    route: "/StudentDashboard",
+    component: <StudentDashboard />,
   },
   {
     type: "collapse",
     name: "ዳሽቦርድ",
-    key: "cashierDashboard",
-    icon: <Icon fontSize="small">Cashier dashboard</Icon>,
-    route: "/cashierdashboard",
-    component: <CashierDashboard />,
+    key: "CoordinatorDashboard",
+    icon: <Icon fontSize="small">coordinator dashboard</Icon>,
+    route: "/CoordinatorDashboard",
+    component: <CoordinatorDashboard />,
   },
   {
     type: "collapse",
     name: "ዳሽቦርድ",
     key: "storeKeeperDashboard",
-    icon: <Icon fontSize="small">Cashier dashboard</Icon>,
+    icon: <Icon fontSize="small">coordinator dashboard</Icon>,
     route: "/storeKeeperdashboard",
     component: <storeKeeperDashboard />,
   },
   {
     type: "collapse",
     name: "ዳሽቦርድ",
-    key: "cafeCommetteDashboard",
-    icon: <Icon fontSize="small">Cashier dashboard</Icon>,
-    route: "/cafeCommetteDashboard",
-    component: <CafeCommetteDashboard />,
+    key: "StudentDashboard",
+    icon: <Icon fontSize="small">coordinator dashboard</Icon>,
+    route: "/StudentDashboard",
+    component: <StudentDashboard />,
   },
   {
     type: "collapse",
@@ -207,7 +161,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ሰራተኛ ማስገቢያ",
+    name: "add user",
     key: "Add-employee",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/addEmployee",
@@ -218,60 +172,16 @@ const routes = [
     name: "Course upload ",
     key: "Add-department",
     icon: <Icon fontSize="small">login</Icon>,
-    route: "/courseUpload",
+    route: "/addFood",
     component: <UploadCourse />,
   },
   {
     type: "collapse",
-    name: "ምግብ መግዣ",
-    key: "buyFood",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/buyFood",
-    component: <BuyFood />,
-  },
-  {
-    type: "collapse",
-    name: "Upload Assignments",
-    key: "buy_food_department",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/buyFoodDepartment",
-    component: <AssignmentUpload />,
-  },
-  {
-    type: "collapse",
-    name: "ከስቶር ማውጫ ፎርም",
-    key: "stock_request",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/stockRequest",
-    component: <StockRequest />,
-  },
-  {
-    type: "collapse",
-    name: "ከስቶረ ማውጫ መፍቀጃ",
+    name: "display Schedule",
     key: "stock_Approval",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/stockApproval",
-    component: <Approval />,
-  },
-  {
-    type: "collapse",
-    name: "ግዢ መፍቀጃ",
-    key: "Ingredient_Approval",
     icon: <Icon fontSize="small">AssignmentTurnedInIcon</Icon>,
-    route: "/showIngredientApproval",
-    component: <ShowApproval />,
-  },
-  {
-    type: "collapse",
-    name: "ከስቶረ ማውጫ መፍቀጃ",
-    key: "stock_Approval",
-    icon: (
-      <Icon fontSize="small" color="primary">
-        AssignmentTurnedInIcon
-      </Icon>
-    ),
-    route: "/showApprovedStock",
-    component: <StockApproval />,
+    route: "/scheduleView",
+    component: <DisplaySchedule />,
   },
   {
     type: "collapse",
@@ -297,48 +207,14 @@ const routes = [
     route: "/assignmentView",
     component: <ViewAssignments />,
   },
-  {
-    type: "collapse",
-    name: "ለእንግዳ ደረሰኝ",
-    key: "billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billingCashier",
-    component: <Billing showEditColumn={false} />,
-  },
-
-  {
-    type: "collapse",
-    name: "ስቶረ ውስጥ የቀረ እቃ",
-    key: "billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/stokeAmount",
-    component: <StockAmountTable />,
-  },
-  {
-    type: "collapse",
-    name: "ለእንግዳ ደረሰኝ",
-    key: "billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billingManager",
-    component: <Billing showEditColumn={true} />,
-  },
-
-  {
-    type: "collapse",
-    name: "ማስታወቂያ",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
-  },
-  {
-    type: "collapse",
-    name: "ሰራተኛ  ዝርዝር",
-    key: "ሰራተኛ  ዝርዝር",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
-    component: <EmployeeList />,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "ሰራተኛ  ዝርዝር",
+  //   key: "ሰራተኛ  ዝርዝር",
+  //   icon: <Icon fontSize="small">person</Icon>,
+  //   route: "/profile",
+  //   component: <EmployeeList />,
+  // },
   {
     type: "collapse",
     name: "Sign In",
@@ -404,30 +280,7 @@ const routes = [
     route: "/report",
     component: <ViewCourses />,
   },
-  {
-    type: "collapse",
-    name: "የገንዘብ አያያዝ",
-    key: "deposit",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/deposit",
-    component: <Deposit />,
-  },
-  {
-    type: "collapse",
-    name: "ትዕዛዞች",
-    key: "cashierOrder",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/cashierOrder",
-    component: <CashierOrder />,
-  },
-  {
-    type: "collapse",
-    name: "ለእንግዳ ደረሰኝ",
-    key: "billingCashier",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billingCashier",
-    component: <Billing showEditColumn={false} />,
-  },
+
   {
     type: "collapse",
     name: "Upload Assignment",
@@ -459,6 +312,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/submitAssignment",
     component: <SubmitAssignment />,
+  },
+  {
+    type: "collapse",
+    name: "Submitted Assignment",
+    key: "submittedAssignment",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/viewSubmittedAssignment",
+    component: <SubmittedAssignments />,
   },
 ];
 

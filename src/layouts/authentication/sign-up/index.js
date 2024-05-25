@@ -29,12 +29,12 @@ import { BASE_URL } from "../../../appconfig";
 function Cover() {
   const [name, setName] = useState("");
   const [loadingSign, setLoadingSign] = useState(false);
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState("");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const[roleError, setRoleError] = useState("");
+  const [roleError, setRoleError] = useState("");
 
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -76,11 +76,11 @@ function Cover() {
         user: response.data.user,
       });
       if (response.data.user.role == "coordinator") {
-        navigate("/cashierDashboard");
+        navigate("/CoordinatorDashboard");
       } else if (response.data.user.role == "admin") {
         navigate("/mainDashboard");
       } else if (response.data.user.role == "student") {
-        navigate("/cafeCommetteDashboard");
+        navigate("/StudentDashboard");
       } else if (response.data.user.role == "dean") {
         navigate("/cafeManagerDashboard");
       } else if (response.data.user.role == "instructor") {
@@ -176,24 +176,24 @@ function Cover() {
             </MDBox>
             <MDBox mb={2}>
               <FormControl fullWidth error={!!roleError} margin="normal">
-              <FormControl fullWidth margin="normal">
-                <Select
-                  label="Role"
-                  variant="standard"
-                  fullWidth
-                  value={role}
-                  name="role"
-                  onChange={(e) => setRole(e.target.value)}
-                >
-                  <MenuItem value="coordinator">Coordinator</MenuItem>
-                  <MenuItem value="admin">Admin</MenuItem>
-                  <MenuItem value="student">Student</MenuItem>
-                  <MenuItem value="dean">Dean</MenuItem>
-                  <MenuItem value="instructor">Instructor</MenuItem>
-                </Select>
-                {roleError && <FormHelperText>{roleError}</FormHelperText>}
-                {/* <FormHelperText>{passwordError}</FormHelperText> */}
-              </FormControl>
+                <FormControl fullWidth margin="normal">
+                  <Select
+                    label="Role"
+                    variant="standard"
+                    fullWidth
+                    value={role}
+                    name="role"
+                    onChange={(e) => setRole(e.target.value)}
+                  >
+                    <MenuItem value="coordinator">Coordinator</MenuItem>
+                    <MenuItem value="admin">Admin</MenuItem>
+                    <MenuItem value="student">Student</MenuItem>
+                    <MenuItem value="dean">Dean</MenuItem>
+                    <MenuItem value="instructor">Instructor</MenuItem>
+                  </Select>
+                  {roleError && <FormHelperText>{roleError}</FormHelperText>}
+                  {/* <FormHelperText>{passwordError}</FormHelperText> */}
+                </FormControl>
               </FormControl>
             </MDBox>
             <MDBox mb={2}>
