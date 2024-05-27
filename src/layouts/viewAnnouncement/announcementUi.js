@@ -1,26 +1,13 @@
 import React, { useState } from "react";
-
 import "react-confirm-alert/src/react-confirm-alert.css";
-
 import Card from "@mui/material/Card";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
-
 import { Segment } from "semantic-ui-react";
 import { IMG_BASE_URL } from "../../appconfig";
-import MDInput from "../../components/MDInput";
-import colors from "../../assets/theme/base/colors";
 
 function AnnouncementItemCard({ item, onDelete, userData }) {
-  const electron = window.require("electron");
-  const ipcRenderer = electron.ipcRenderer;
-
-  const handleInputChange = (event) => {
-    set(event.target.value);
-    setSetButtonVisible(true);
-  };
-
   return (
     <Card style={{ marginTop: "15px" }}>
       <MDBox
@@ -34,19 +21,19 @@ function AnnouncementItemCard({ item, onDelete, userData }) {
         coloredShadow="info"
       >
         <MDTypography variant="h4" color="white">
-          {item.tite}
+          {item.title}
         </MDTypography>
         <MDTypography variant="h6" color="white">
-          {item.category.toString() === "upcoming_events"
+          {item.category === "upcoming_events"
             ? "Upcoming events"
-            : item.category.toString() === "registration"
-            ? " registration"
-            : "class related"}
+            : item.category === "registration"
+            ? "Registration"
+            : "Class Related"}
         </MDTypography>
       </MDBox>
       <MDBox pt={3} pb={3} px={2}>
         <img
-          src={`${IMG_BASE_URL}${item.image_url.toString()}`}
+          src={`${IMG_BASE_URL}${item.image_url}`}
           alt={item.name}
           style={{ width: "100%", height: "200px" }}
         />
@@ -70,7 +57,6 @@ function AnnouncementItemCard({ item, onDelete, userData }) {
                 onClick={() => onDelete(item.id)}
                 style={{
                   marginLeft: "30px",
-
                   color: "white",
                 }}
               >
@@ -78,17 +64,6 @@ function AnnouncementItemCard({ item, onDelete, userData }) {
               </MDButton>
             </Segment>
           )}
-          <MDBox mt={2} display="flex" gap="10px">
-            {isSetButtonVisible && (
-              <MDButton
-                onClick={handleSetClick}
-                variant="contained"
-                color="info"
-              >
-                OK
-              </MDButton>
-            )}
-          </MDBox>
         </MDBox>
       </MDBox>
     </Card>
