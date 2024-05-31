@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import "react-confirm-alert/src/react-confirm-alert.css";
+import React from "react";
 import Card from "@mui/material/Card";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
@@ -7,9 +6,9 @@ import MDButton from "../../components/MDButton";
 import { Segment } from "semantic-ui-react";
 import { IMG_BASE_URL } from "../../appconfig";
 
-function AnnouncementItemCard({ item, onDelete, userData }) {
+function AnnouncementItemCard({ item, onDelete, userData, onClick }) {
   return (
-    <Card style={{ marginTop: "15px" }}>
+    <Card style={{ marginTop: "15px" }} onClick={onClick}>
       <MDBox
         mx={2}
         mt={-3}
@@ -46,7 +45,10 @@ function AnnouncementItemCard({ item, onDelete, userData }) {
             <Segment clearing basic>
               <MDButton
                 color="primary"
-                onClick={() => onEdit(item)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(item);
+                }}
                 style={{ marginRight: "15px" }}
               >
                 Edit
@@ -54,7 +56,10 @@ function AnnouncementItemCard({ item, onDelete, userData }) {
               <MDButton
                 variant="gradient"
                 color="error"
-                onClick={() => onDelete(item.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(item.id);
+                }}
                 style={{
                   marginLeft: "30px",
                   color: "white",
