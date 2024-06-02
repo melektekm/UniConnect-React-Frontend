@@ -59,7 +59,7 @@ function ScheduleRequest() {
   const scheduleTypeOptions = ["Exam", "Class"];
   const [formList, setFormList] = useState({
     items: [],
-    requested_by: userData.user.id,
+    // requested_by: userData.user.id,
     recommendations: "",
   });
   useEffect(() => {
@@ -67,7 +67,7 @@ function ScheduleRequest() {
     if (previousRoute) {
       setFormList({
         ...formList,
-        id: parseInt(previousRoute),
+        // id: parseInt(previousRoute),
         type: "entry",
       });
       sessionStorage.removeItem("preRouteData");
@@ -151,13 +151,10 @@ function ScheduleRequest() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${BASE_URL}/request`,
-        JSON.stringify(formList),
+        `${BASE_URL}/schedule-requests`,
+        formData,
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
       setLoading(false);
@@ -288,14 +285,14 @@ function ScheduleRequest() {
                   />
                   <MDInput
                     type="text"
-                    name="labroom days"
-                    label="Labroom"
+                    name="labDays"
+                    label="Labroom days"
                     value={formData.labDays}
                     onChange={handleFormChange}
                     margin="dense"
                     required
-                    error={!!errorMessages.labroom}
-                    helperText={errorMessages.labroom}
+                    error={!!errorMessages.labDays}
+                    helperText={errorMessages.labDays}
                   />
                   <MDInput
                     type="text"
@@ -332,6 +329,7 @@ function ScheduleRequest() {
                         </MenuItem>
                       ))}
                     </Select>
+                    ``
                   </FormControl>
                 </MDBox>
               </MDBox>

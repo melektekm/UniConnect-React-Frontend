@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FormControl, FormHelperText } from "@mui/material";
 import Card from "@mui/material/Card";
-import Checkbox from "@mui/material/Checkbox";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
 
 // Material Dashboard 2 React components
 import MDBox from "../../../components/MDBox";
@@ -23,7 +24,6 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { Button, TextField } from "@mui/material";
 import { BASE_URL } from "../../../appconfig";
 
 function Cover() {
@@ -35,6 +35,7 @@ function Cover() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [roleError, setRoleError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -75,16 +76,16 @@ function Cover() {
         accessToken: response.data.accessToken,
         user: response.data.user,
       });
-      if (response.data.user.role == "coordinator") {
+      if (response.data.user.role === "coordinator") {
         navigate("/CoordinatorDashboard");
-      } else if (response.data.user.role == "admin") {
+      } else if (response.data.user.role === "admin") {
         navigate("/mainDashboard");
-      } else if (response.data.user.role == "student") {
+      } else if (response.data.user.role === "student") {
         navigate("/StudentDashboard");
-      } else if (response.data.user.role == "dean") {
-        navigate("/cafeManagerDashboard");
-      } else if (response.data.user.role == "instructor") {
-        navigate("/storeKeeperdashboard");
+      } else if (response.data.user.role === "dean") {
+        navigate("/deanDashboard");
+      } else if (response.data.user.role === "instructor") {
+        navigate("/instructorDashboard");
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.errors) {
@@ -176,24 +177,21 @@ function Cover() {
             </MDBox>
             <MDBox mb={2}>
               <FormControl fullWidth error={!!roleError} margin="normal">
-                <FormControl fullWidth margin="normal">
-                  <Select
-                    label="Role"
-                    variant="standard"
-                    fullWidth
-                    value={role}
-                    name="role"
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    <MenuItem value="coordinator">Coordinator</MenuItem>
-                    <MenuItem value="admin">Admin</MenuItem>
-                    <MenuItem value="student">Student</MenuItem>
-                    <MenuItem value="dean">Dean</MenuItem>
-                    <MenuItem value="instructor">Instructor</MenuItem>
-                  </Select>
-                  {roleError && <FormHelperText>{roleError}</FormHelperText>}
-                  {/* <FormHelperText>{passwordError}</FormHelperText> */}
-                </FormControl>
+                <Select
+                  label="Role"
+                  variant="standard"
+                  fullWidth
+                  value={role}
+                  name="role"
+                  onChange={(e) => setRole(e.target.value)}
+                >
+                  <MenuItem value="coordinator">Coordinator</MenuItem>
+                  <MenuItem value="admin">Admin</MenuItem>
+                  <MenuItem value="student">Student</MenuItem>
+                  <MenuItem value="dean">Dean</MenuItem>
+                  <MenuItem value="instructor">Instructor</MenuItem>
+                </Select>
+                {roleError && <FormHelperText>{roleError}</FormHelperText>}
               </FormControl>
             </MDBox>
             <MDBox mb={2}>
@@ -209,7 +207,7 @@ function Cover() {
             <MDBox mb={2}>
               <FormControl fullWidth error={!!passwordError} margin="normal">
                 <MDInput
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   label="password"
                   variant="standard"
                   fullWidth
@@ -217,6 +215,15 @@ function Cover() {
                   onChange={(e) => {
                     setPassword(e.target.value);
                     validatePassword(e.target.value);
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    ),
                   }}
                 />
                 <FormHelperText>{passwordError}</FormHelperText>

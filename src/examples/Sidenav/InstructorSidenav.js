@@ -10,7 +10,7 @@ import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import ScheduleRequest from "../../layouts/schedulePost";
-import CafeManagerDashboard from "../../layouts/dashboard/cafeManagerDashboard";
+import DeanDashboard from "../../layouts/dashboard/deanDashboard";
 import { Icon } from "semantic-ui-react";
 
 import {

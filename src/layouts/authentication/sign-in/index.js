@@ -1,23 +1,8 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
-import Switch from "@mui/material/Switch";
+import IconButton from "@mui/material/IconButton";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import MDBox from "../../../components/MDBox";
 import MDTypography from "../../../components/MDTypography";
 import MDInput from "../../../components/MDInput";
@@ -34,8 +19,6 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import { BASE_URL } from "../../../appconfig";
-import CoordinatorDashboard from "../../CoordinatorDashboard";
-import Store from "electron-store";
 import CircularProgress from "@mui/material/CircularProgress";
 
 function Basic() {
@@ -44,6 +27,7 @@ function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
   const [open, setOpen] = useState(false);
   const [loadingSign, setLoadingSign] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -69,27 +53,23 @@ function Basic() {
         }
       );
 
-      //    session.defaultSession.setUserPreference('accessToken', response.data.accessToken);
-
       ipcRenderer.send("save-user", {
         accessToken: response.data.accessToken,
         user: response.data.user,
       });
-      if (response.data.user.role == "coordinator") {
+      if (response.data.user.role === "coordinator") {
         navigate("/CoordinatorDashboard");
-      } else if (response.data.user.role == "admin") {
+      } else if (response.data.user.role === "admin") {
         navigate("/mainDashboard");
-      } else if (response.data.user.role == "student") {
+      } else if (response.data.user.role === "student") {
         navigate("/StudentDashboard");
-      } else if (response.data.user.role == "dean") {
-        navigate("/cafeManagerDashboard");
-      } else if (response.data.user.role == "instructor") {
-        navigate("/storeKeeperdashboard");
+      } else if (response.data.user.role === "dean") {
+        navigate("/deanDashboard");
+      } else if (response.data.user.role === "instructor") {
+        navigate("/instructorDashboard");
       }
       setLoading(false);
       console.log(response.data.user.role);
-      //ceNlXlqqa27MYEJsUE8hey352DeXrEdQJmqDEbaV
-      // Redirect or perform other actions as needed
     } catch (error) {
       if (error.response && error.response.data && error.response.data.errors) {
         const errors = error.response.data.errors;
@@ -180,11 +160,18 @@ function Basic() {
             </MDBox>
             <MDBox mb={2}>
               <MDInput
-                type="password"
+                type={showPassword ? "text" : "password"}
                 label="password"
                 fullWidth
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  ),
+                }}
               />
             </MDBox>
             <MDBox mt={4} mb={1}>
