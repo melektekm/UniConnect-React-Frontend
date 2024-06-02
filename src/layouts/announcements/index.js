@@ -52,7 +52,6 @@ function UploadAnnouncement() {
     setFormValues({ ...formValues, file: selectedFile });
     setFile(selectedFile); // Set the file in the state
   };
-
   const handlePostAnnouncement = async () => {
     const newErrorMessages = {
       title: formValues.title ? "" : "title is required",
@@ -69,13 +68,16 @@ function UploadAnnouncement() {
       return;
     }
 
+    // Format date as YY-MM-DD
+    const formattedDate = formValues.date.split("-").slice(0, 3).join("-");
+
     setLoading(true);
     try {
       const jsonData = {
         title: formValues.title,
         category: formValues.category,
         content: formValues.content,
-        date: formValues.date,
+        date: formattedDate, // Use the formatted date
         file: formValues.file,
       };
 

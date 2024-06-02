@@ -15,7 +15,18 @@ import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MainDashboard from "../MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
-import { Card, Box, Button, Modal, Pagination, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import {
+  Card,
+  Box,
+  Button,
+  Modal,
+  Pagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 
 function ViewCourses() {
   const electron = window.require("electron");
@@ -36,11 +47,14 @@ function ViewCourses() {
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/fetch-course?page=${current_page}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/courses?page=${current_page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       if (response.data && response.data.courses) {
         setCourses(response.data["courses"]);
         setCurrentPage(response.data.current_page);
@@ -73,26 +87,37 @@ function ViewCourses() {
 
   const handleEnrollConfirm = async () => {
     try {
+      setLoading(true); // Set loading to true while enrolling
+      if (!selectedCourse) {
+        // Check if selectedCourse is null
+        throw new Error("No course selected for enrollment");
+      }
       // Update the course status and send it to the backend
-      const response = await axios.put(`${BASE_URL}/enroll/${selectedCourse.id}`, {
-        status: "enrolled",
-      }, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+      const response = await axios.put(
+        `${BASE_URL}/enroll/${id}`,
+        {
+          status: "enrolled",
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       if (response.data) {
-        setSuccessMessage("Enrolled successfully!");
-        setDialogOpen(true);
+        // After successful enrollment, fetch the updated course list
+        fetchCourses();
+        setErrorMessage(""); // Reset error message if there was any
+        setOpen(false); // Close the enrollment dialog
       } else {
         setErrorMessage("Failed to enroll. Please try again.");
-        setDialogOpen(true);
+        // Show error message if enrollment failed
       }
     } catch (error) {
+      setErrorMessage("Failed to enroll. Please try again.");
       console.error("Error enrolling in the course:", error);
-      setDialogOpen(true);
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after enrollment attempt
     }
   };
 
@@ -183,8 +208,9 @@ function ViewCourses() {
                             <Button
                               variant="contained"
                               color="primary"
-                              onClick={() => handleEnrollClick(course)}
+                              onClick={() => handleEnrollConfirm(course)}
                               style={{ marginLeft: 8 }}
+                              disabled={!selectedCourse}
                             >
                               Enroll
                             </Button>
@@ -195,18 +221,33 @@ function ViewCourses() {
                   </Table>
                 </TableContainer>
                 {loading && (
-                  <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    p={3}
+                  >
                     <Typography variant="body1">Loading...</Typography>
                   </Box>
                 )}
                 {errorMessage && (
-                  <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    p={3}
+                  >
                     <Typography variant="body1" color="error">
                       {errorMessage}
                     </Typography>
                   </Box>
                 )}
-                <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  p={3}
+                >
                   <Pagination
                     count={lastPage}
                     page={current_page}
@@ -222,7 +263,7 @@ function ViewCourses() {
         </MDBox>
       </div>
       {/* Modal for displaying detailed course information */}
-      <Modal open={open} onClose={handleCloseModal}>
+      {/* <Modal open={open} onClose={handleCloseModal}>
         <Box
           sx={{
             position: "absolute",
@@ -265,7 +306,18 @@ function ViewCourses() {
             Close
           </Button>
         </Box>
-      </Modal>
+      </Modal> */}
+      <Dialog open={!!errorMessage} onClose={() => setErrorMessage("")}>
+        <DialogTitle>Error</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{errorMessage}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setErrorMessage("")} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* Course Details Dialog */}
       <Dialog open={open} onClose={handleCloseModal}>
         <DialogTitle>Course Details</DialogTitle>

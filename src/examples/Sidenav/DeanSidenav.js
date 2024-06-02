@@ -14,7 +14,7 @@ import Tables from "../../layouts/tables";
 import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
 
-import CafeManagerDashboard from "../../layouts/dashboard/cafeManagerDashboard";
+import DeanDashboard from "../../layouts/dashboard/deanDashboard";
 import { Icon } from "semantic-ui-react";
 // import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import {

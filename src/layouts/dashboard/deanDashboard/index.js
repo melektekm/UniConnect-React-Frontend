@@ -1,11 +1,11 @@
 // @mui material components
 import React from "react";
 import Dashboard from "..";
-function CafeManagerDashboard() {
+function DeanDashboard() {
   
   return (
     <Dashboard />
   );
 }
 
-export default CafeManagerDashboard;
+export default DeanDashboard;

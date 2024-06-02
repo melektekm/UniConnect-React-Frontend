@@ -12,7 +12,7 @@ import UploadAnnouncement from "./layouts/announcements";
 import UploadCourse from "./layouts/courseUpload";
 import CoordinatorDashboard from "./layouts/CoordinatorDashboard";
 import StudentDashboard from "./layouts/StudentDashboard";
-import CafeManagerDashboard from "./layouts/dashboard/cafeManagerDashboard";
+import DeanDashboard from "./layouts/dashboard/deanDashboard";
 import DisplaySchedule from "./layouts/scheduleView";
 import Sidenav from "./examples/Sidenav/AdminSidenav";
 import UploadAssignment from "./layouts/assignmentUpload";
@@ -42,7 +42,7 @@ function getLayoutComponent(path) {
       case "student": // Assuming this is the role name
         return <StudentDashboard />;
       case "dean":
-        return <CafeManagerDashboard />;
+        return <DeanDashboard />;
       case "storeKeeper":
         return <storeKeeperDashboard />;
       default:
@@ -79,13 +79,13 @@ function getLayoutComponent(path) {
       return <Dashboard />;
     case "/report":
       return <ViewCourses />;
-    case "/cafeManagerDashboard":
-      return <CafeManagerDashboard />;
+    case "/deanDashboard":
+      return <DeanDashboard />;
     case "/StudentDashboard":
       return <StudentDashboard />;
     case "/CoordinatorDashboard":
       return <CoordinatorDashboard />;
-    case "/storeKeeperdashboard":
+    case "/instructorDashboard":
       return <storeKeeperDashboard />;
     case "/StudentDashboard":
       return <StudentDashboard />;
@@ -116,7 +116,7 @@ function getLayoutComponent(path) {
     case "/assignmentView":
       return <ViewAssignments />;
     case "/viewSubmittedAssignment":
-        return <SubmittedAssignments />;
+      return <SubmittedAssignments />;
     default:
       return null;
   }

@@ -62,7 +62,7 @@ import ViewCourses from "./layouts/courseList";
 // import ScheduleRequest from "./layouts/schedulePost";
 import ApproveScheduleRequest from "./layouts/scheduleApproval";
 // import DepartmentBilling from "./layouts/billing/DepartmentBilling";
-import CafeManagerDashboard from "./layouts/dashboard/cafeManagerDashboard";
+import DeanDashboard from "./layouts/dashboard/deanDashboard";
 import SearchMenuForCashier from "./layouts/search/searchForCashier";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
@@ -108,7 +108,7 @@ const routes = [
     name: "ዳሽቦርድ",
     key: "storeKeeperDashboard",
     icon: <Icon fontSize="small">coordinator dashboard</Icon>,
-    route: "/storeKeeperdashboard",
+    route: "/instructorDashboard",
     component: <storeKeeperDashboard />,
   },
   {
@@ -124,8 +124,8 @@ const routes = [
     name: "ዳሽቦርድ",
     key: "cafeMangerDashboard",
     icon: <Icon fontSize="small" />,
-    route: "/cafeManagerDashboard",
-    component: <CafeManagerDashboard />,
+    route: "/deanDashboard",
+    component: <DeanDashboard />,
   },
   {
     type: "collapse",
