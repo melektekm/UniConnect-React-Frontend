@@ -17,6 +17,11 @@ import Footer from "../../examples/Footer";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
+import StudentSidenav from "../../examples/Sidenav/Studentsidenav";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 
 function DisplaySchedule() {
   const [formList, setFormList] = useState({
@@ -48,7 +53,17 @@ function DisplaySchedule() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Sidenav />
+      {userData.user.role == "coordinator" ? (
+        <CoordinatorSidenav />
+      ) : userData.user.role == "admin" ? (
+        <Sidenav />
+      ) : userData.user.role == "student" ? (
+        <StudentSidenav />
+      ) : userData.user.role == "dean" ? (
+        <DeanSidenav />
+      ) : (
+        <InstructorSidenav />
+      )}
 
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>

@@ -1,6 +1,6 @@
 import React from "react";
 
-import StudentSidenav from "../examples/Sidenav/StudentSidenav";
+import StudentSidenav from "../examples/Sidenav/Studentsidenav";
 
 import theme from "../assets/theme";
 import Dashboard from "./dashboard";

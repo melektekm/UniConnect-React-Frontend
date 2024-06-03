@@ -14,6 +14,7 @@ import CoordinatorDashboard from "./layouts/CoordinatorDashboard";
 import StudentDashboard from "./layouts/StudentDashboard";
 import DeanDashboard from "./layouts/dashboard/deanDashboard";
 import DisplaySchedule from "./layouts/scheduleView";
+import InstructorDashboard from "./layouts/dashboard/instructorDashboard";
 import Sidenav from "./examples/Sidenav/AdminSidenav";
 import UploadAssignment from "./layouts/assignmentUpload";
 import ViewCourses from "./layouts/courseList";
@@ -43,8 +44,8 @@ function getLayoutComponent(path) {
         return <StudentDashboard />;
       case "dean":
         return <DeanDashboard />;
-      case "storeKeeper":
-        return <storeKeeperDashboard />;
+      case "instructor":
+        return <InstructorDashboard />;
       default:
         return null; // Handle other roles or scenarios
     }
@@ -86,7 +87,7 @@ function getLayoutComponent(path) {
     case "/CoordinatorDashboard":
       return <CoordinatorDashboard />;
     case "/instructorDashboard":
-      return <storeKeeperDashboard />;
+      return <InstructorDashboard />;
     case "/StudentDashboard":
       return <StudentDashboard />;
     // case "/stokeAmount":

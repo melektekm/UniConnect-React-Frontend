@@ -30,6 +30,11 @@ import { BASE_URL } from "../../appconfig";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import colors from "../../assets/theme/base/colors";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
+import StudentSidenav from "../../examples/Sidenav/Studentsidenav";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 
 function AddCourseMaterial() {
   const [file, setFile] = useState(null);
@@ -69,7 +74,10 @@ function AddCourseMaterial() {
     const newErrorMessages = {};
     ["course_code", "materialTitle", "file"].forEach((field) => {
       if (!formValues[field]) {
-        newErrorMessages[field] = `${field.replace(/([A-Z])/g, " $1")} is required`;
+        newErrorMessages[field] = `${field.replace(
+          /([A-Z])/g,
+          " $1"
+        )} is required`;
       }
     });
 
@@ -212,7 +220,17 @@ function AddCourseMaterial() {
         </DialogActions>
       </Dialog>
       <DashboardNavbar />
-      <Sidenav />
+      {userData.user.role == "coordinator" ? (
+        <CoordinatorSidenav />
+      ) : (
+        // ) : userData.user.role == "admin" ? (
+        //   <Sidenav />
+        // ) : userData.user.role == "student" ? (
+        //   <StudentSidenav />
+        // ) : userData.user.role == "dean" ? (
+        //   <DeanSidenav />
+        <InstructorSidenav />
+      )}
       <MainDashboard />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
@@ -229,7 +247,11 @@ function AddCourseMaterial() {
               coloredShadow="info"
               textAlign="center"
             >
-              <Grid container alignItems="center" justifyContent="space-between">
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="space-between"
+              >
                 <MDTypography variant="h5" color="white">
                   Add Course Material
                 </MDTypography>
@@ -238,7 +260,11 @@ function AddCourseMaterial() {
             <Card>
               <CardContent>
                 <MDBox mb={2}>
-                  <FormControl variant="outlined" fullWidth style={{ marginTop: "16px" }}>
+                  <FormControl
+                    variant="outlined"
+                    fullWidth
+                    style={{ marginTop: "16px" }}
+                  >
                     <MDInput
                       type="text"
                       label="Course Code"
@@ -302,7 +328,11 @@ function AddCourseMaterial() {
                 <MDBox mt={2} mb={1} textAlign="center">
                   <Grid container spacing={2}>
                     <Grid item>
-                      <MDButton color="primary" onClick={addForm} disabled={loading}>
+                      <MDButton
+                        color="primary"
+                        onClick={addForm}
+                        disabled={loading}
+                      >
                         Add Form
                       </MDButton>
                     </Grid>

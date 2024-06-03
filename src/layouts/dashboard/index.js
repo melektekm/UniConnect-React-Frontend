@@ -192,52 +192,7 @@ function Dashboard() {
           </Grid>
         </Grid>
       </MDBox>
-      <MDBox pt={3} pb={3}>
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="primary"
-                borderRadius="lg"
-                coloredShadow="primary"
-              >
-                <MDTypography variant="h6" color="white">
-                  Schedule
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3} pb={3} px={2}>
-                {formList.items.length > 0 ? (
-                  <TableContainer>
-                    <Table>
-                      <TableBody>
-                        {formList.items.map((form, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{form.course_code}</TableCell>
-                            <TableCell>{form.course_name}</TableCell>
-                            <TableCell>{form.classDays}</TableCell>
-                            <TableCell>{form.classroom}</TableCell>
-                            <TableCell>{form.labDays}</TableCell>
-                            <TableCell>{form.labroom}</TableCell>
-                            <TableCell>{form.labInstructor}</TableCell>
-                            <TableCell>{form.classInstructor}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                ) : (
-                  <MDTypography>No schedules available</MDTypography>
-                )}
-              </MDBox>
-            </Card>
-          </Grid>
-        </Grid>
-      </MDBox>
+
       <Footer />
     </DashboardLayout>
   );

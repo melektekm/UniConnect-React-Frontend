@@ -24,20 +24,24 @@ import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
 import { CheckCircle, Cancel, Edit, Delete } from "@mui/icons-material";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
+import StudentSidenav from "../../examples/Sidenav/Studentsidenav";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 const tabStyles = {
   root: {
-    '&:hover': {
-      backgroundColor: 'rgba(0, 0, 255, 0.1)',
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 255, 0.1)",
     },
-    '&.Mui-selected': {
-      backgroundColor: 'rgba(0, 0, 255, 0.2)',
+    "&.Mui-selected": {
+      backgroundColor: "rgba(0, 0, 255, 0.2)",
     },
   },
 };
@@ -101,7 +105,9 @@ function AssignmentsPage() {
       );
       setAssignments((prevAssignments) =>
         prevAssignments.map((assignment) =>
-          assignment.id === id ? { ...assignment, status: newStatus } : assignment
+          assignment.id === id
+            ? { ...assignment, status: newStatus }
+            : assignment
         )
       );
     } catch (error) {
@@ -116,16 +122,22 @@ function AssignmentsPage() {
     } else {
       setAssignments(
         assignments.map((assignment) =>
-          assignment.id === updatedAssignment.id ? updatedAssignment : assignment
+          assignment.id === updatedAssignment.id
+            ? updatedAssignment
+            : assignment
         )
       );
       setSelectedAssignment(null);
     }
-    Navigate("/assignmentUpload", { state: { selectedAssignment: updatedAssignment } });
+    Navigate("/assignmentUpload", {
+      state: { selectedAssignment: updatedAssignment },
+    });
   }
 
   function handleDeleteDialogOpen(id) {
-    const assignmentItem = assignments.find((assignmentItem) => assignmentItem.id === id);
+    const assignmentItem = assignments.find(
+      (assignmentItem) => assignmentItem.id === id
+    );
     setItemToDelete(assignmentItem);
     setDeleteDialogOpen(true);
   }
@@ -160,7 +172,11 @@ function AssignmentsPage() {
   return (
     <DashboardLayout>
       <div style={{ display: "flex" }}>
-        <Sidenav />
+        {userData.user.role == "coordinator" ? (
+          <CoordinatorSidenav />
+        ) : (
+          <InstructorSidenav />
+        )}
         <div style={{ flex: "1" }}>
           <DashboardNavbar />
           <MainDashboard />
@@ -177,49 +193,76 @@ function AssignmentsPage() {
                   borderRadius="lg"
                   coloredShadow="info"
                 >
-                  <MDTypography variant="h4" color="white"   textAlign="center">
+                  <MDTypography variant="h4" color="white" textAlign="center">
                     Assignment List
-                  <MDBox p={3}  variant="gradient"
-                  bgColor="dark"
-                  borderRadius="lg"
-                  coloredShadow="info" >
-                    <Tabs
-                      value={filterStatus}
-                      onChange={handleFilterChange}
-                      indicatorColor="primary"
-                      textColor="primary"
-                      centered
+                    <MDBox
+                      p={3}
+                      variant="gradient"
+                      bgColor="dark"
+                      borderRadius="lg"
+                      coloredShadow="info"
                     >
-                      <Tab
-                        label={<MDTypography variant="h6" color="primary">All</MDTypography>}
-                        value="all"
-                        sx={tabStyles.root}
-                      />
-                      <Tab
-                        label={<MDTypography variant="h6" color="primary">Sent</MDTypography>}
-                        value="sent"
-                        sx={tabStyles.root}
-                      />
-                      <Tab
-                        label={<MDTypography variant="h6" color="primary">Unsent</MDTypography>}
-                        value="unsent"
-                        sx={tabStyles.root}
-                      />
-                    </Tabs>
-                  </MDBox>
+                      <Tabs
+                        value={filterStatus}
+                        onChange={handleFilterChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        centered
+                      >
+                        <Tab
+                          label={
+                            <MDTypography variant="h6" color="primary">
+                              All
+                            </MDTypography>
+                          }
+                          value="all"
+                          sx={tabStyles.root}
+                        />
+                        <Tab
+                          label={
+                            <MDTypography variant="h6" color="primary">
+                              Sent
+                            </MDTypography>
+                          }
+                          value="sent"
+                          sx={tabStyles.root}
+                        />
+                        <Tab
+                          label={
+                            <MDTypography variant="h6" color="primary">
+                              Unsent
+                            </MDTypography>
+                          }
+                          value="unsent"
+                          sx={tabStyles.root}
+                        />
+                      </Tabs>
+                    </MDBox>
                   </MDTypography>
                 </MDBox>
-                  <Card style={{ marginTop: "20px", padding: "20px" }}>
+                <Card style={{ marginTop: "20px", padding: "20px" }}>
                   <TableContainer component={Paper}>
                     <Table>
                       <TableBody>
                         <TableRow>
-                          <TableCell><strong>Assignment Name</strong></TableCell>
-                          <TableCell><strong>Course Name</strong></TableCell>
-                          <TableCell><strong>Assignment Description</strong></TableCell>
-                          <TableCell><strong>Due Date</strong></TableCell>
-                          <TableCell><strong>Status</strong></TableCell>
-                          <TableCell><strong>Actions</strong></TableCell>
+                          <TableCell>
+                            <strong>Assignment Name</strong>
+                          </TableCell>
+                          <TableCell>
+                            <strong>Course Name</strong>
+                          </TableCell>
+                          <TableCell>
+                            <strong>Assignment Description</strong>
+                          </TableCell>
+                          <TableCell>
+                            <strong>Due Date</strong>
+                          </TableCell>
+                          <TableCell>
+                            <strong>Status</strong>
+                          </TableCell>
+                          <TableCell>
+                            <strong>Actions</strong>
+                          </TableCell>
                         </TableRow>
                         {filteredAssignments.map((assignment) => (
                           <TableRow key={assignment.id}>
@@ -238,7 +281,9 @@ function AssignmentsPage() {
                                     minWidth: "120px",
                                   }}
                                   startIcon={<Edit />}
-                                  onClick={() => handleEditAssignment(assignment)}
+                                  onClick={() =>
+                                    handleEditAssignment(assignment)
+                                  }
                                 >
                                   Edit
                                 </Button>
@@ -252,14 +297,21 @@ function AssignmentsPage() {
                                     minWidth: "120px",
                                   }}
                                   startIcon={<Delete />}
-                                  onClick={() => handleDeleteDialogOpen(assignment.id)}
+                                  onClick={() =>
+                                    handleDeleteDialogOpen(assignment.id)
+                                  }
                                 >
                                   Delete
                                 </Button>
                                 <Box minWidth="120px">
                                   <Select
                                     value={assignment.status}
-                                    onChange={(e) => handleStatusChange(assignment.id, e.target.value)}
+                                    onChange={(e) =>
+                                      handleStatusChange(
+                                        assignment.id,
+                                        e.target.value
+                                      )
+                                    }
                                   >
                                     <MenuItem value="sent">Sent</MenuItem>
                                     <MenuItem value="unsent">Unsent</MenuItem>
@@ -273,12 +325,22 @@ function AssignmentsPage() {
                     </Table>
                   </TableContainer>
                   {loading && (
-                    <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      p={3}
+                    >
                       <CircularProgress />
                     </Box>
                   )}
                   {errorMessage && (
-                    <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      p={3}
+                    >
                       <MDTypography variant="body1" color="error">
                         {errorMessage}
                       </MDTypography>

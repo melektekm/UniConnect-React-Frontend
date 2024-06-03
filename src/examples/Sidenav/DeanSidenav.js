@@ -13,8 +13,10 @@ import Dashboard from "../../layouts/dashboard";
 import Tables from "../../layouts/tables";
 import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
-
+import ViewCourses from "../../layouts/courseList";
 import DeanDashboard from "../../layouts/dashboard/deanDashboard";
+import ViewAnnouncement from "../../layouts/viewAnnouncement";
+import DisplaySchedule from "../../layouts/scheduleView";
 import { Icon } from "semantic-ui-react";
 // import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import {
@@ -35,7 +37,7 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import KitchenIcon from "@mui/icons-material/Kitchen";
 
 import colors from "../../assets/theme/base/colors";
-import DisplaySchedule from "../../layouts/scheduleView";
+
 import {
   useMaterialUIController,
   setMiniSidenav,
@@ -52,7 +54,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 function DeanSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
@@ -98,73 +100,15 @@ function DeanSidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/dashboard",
       component: <Dashboard />,
     },
-    {
-      type: "collapse",
-      name: "orders",
-      key: "orders",
-      icon: <TableViewOutlinedIcon fontSize="small" />,
-      route: "/tables",
-      component: <Tables />,
-    },
 
     {
       type: "collapse",
-      name: "stock_Approval",
-      key: "stock_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleView",
-      component: <DisplaySchedule />,
-    },
-
-    {
-      type: "collapse",
-      name: "menu entry",
-      key: "add_food",
-      icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/addfood",
-      component: <AddMenuItem />,
-    },
-    {
-      type: "collapse",
-      name: "ingredient_Request",
-      key: "schedule_post",
-      icon: <KitchenIcon fontSize="small" />,
-      route: "/schedulePost",
-      component: <ScheduleRequest />,
-    },
-    {
-      type: "collapse",
-      name: "ingredient_Approval",
+      name: "schedule approval",
       key: "ingredient_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
       route: "/scheduleApproval",
       component: <ApproveScheduleRequest />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "Add-employee",
-    //   key: "Add-employee",
-    //   icon: <AddIcon fontSize="small" />,
-    //   route: "/addEmployee",
-    //   component: <AddEmployee />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "employee list",
-    //   key: "profile",
-    //   icon: <PersonIcon fontSize="small" />,
-    //   route: "/profile",
-    //   component: <EmployeeList />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "report",
-    //   key: "report",
-    //   icon: <AssessmentIcon fontSize="small" />,
-    //   route: "/report",
-    //   component: <ReportList />,
-    // },
-
     {
       type: "collapse",
       name: "Display Schedule",
@@ -172,6 +116,14 @@ function DeanSidenav({ brand, brandName, selectedMenu, ...rest }) {
       icon: <AssignmentTurnedInIcon fontSize="small" />,
       route: "/scheduleView",
       component: <DisplaySchedule />,
+    },
+    {
+      type: "collapse",
+      name: "Announcement View",
+      key: "Announcement_view",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/viewAnnouncement",
+      component: <ViewAnnouncement />,
     },
   ];
   let textColor = "white";

@@ -1,9 +1,9 @@
 // @mui material components
 import React, { useState, useEffect } from "react";
-import InventoryList from "../../assignmentView";
+import Dashboard from "..";
 
-function storeKeeperDashboard() {
-  return <InventoryList />;
+function InstructorDashboard() {
+  return <Dashboard />;
 }
 
-export default storeKeeperDashboard;
+export default InstructorDashboard;

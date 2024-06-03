@@ -27,6 +27,11 @@ import { BASE_URL } from "../../appconfig";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import colors from "../../assets/theme/base/colors";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
+import StudentSidenav from "../../examples/Sidenav/Studentsidenav";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 
 function UploadCourse() {
   const [course_code, setcourse_code] = useState("");
@@ -115,7 +120,11 @@ function UploadCourse() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Sidenav />
+      {userData.user.role == "coordinator" ? (
+        <CoordinatorSidenav />
+      ) : (
+        <InstructorSidenav />
+      )}
       <MainDashboard />
       <Dialog
         open={open}

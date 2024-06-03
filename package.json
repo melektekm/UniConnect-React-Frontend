@@ -1,5 +1,5 @@
 {
-  "name": "mint_cafe_system",
+  "name": "uniconnect",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -13,8 +13,8 @@
   "author": "",
   "license": "ISC",
   "build": {
-    "appId": "com.yourcompany.mintcafesystem",
-    "productName": "Mint Cafe System",
+    "appId": "com.yourcompany.uniconnect",
+    "productName": "Uniconnect",
     "directories": {
       "output": "dist"
     },

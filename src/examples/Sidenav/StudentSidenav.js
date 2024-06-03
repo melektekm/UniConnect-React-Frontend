@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import List from "@mui/material/List";
@@ -10,14 +10,28 @@ import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
-import Tables from "../../layouts/tables";
-
+import AssignmentsPage from "../../layouts/assignmentList";
+// import EmployeeList from "../../layouts/profile";
+import AddEmployee from "../../layouts/addEmployee";
 import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
+import ViewCourses from "../../layouts/courseList";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import KitchenIcon from "@mui/icons-material/Kitchen";
+import UploadCourse from "../../layouts/courseUpload";
+import UploadAnnouncement from "../../layouts/announcements";
+import UploadAssignment from "../../layouts/assignmentUpload";
+import AddCourseMaterial from "../../layouts/courseMaterial";
+import CourseMaterialsPage from "../../layouts/CourseMaterialList";
+import SubmitAssignment from "../../layouts/submitAssignment";
+import ViewAssignments from "../../layouts/assignmentView";
+import ViewAnnouncement from "../../layouts/viewAnnouncement";
+import DisplaySchedule from "../../layouts/scheduleView";
+import SubmittedAssignments from "../../layouts/viewSubmittedAssignment";
 
-import InventoryList from "../../layouts/assignmentView";
 import { Icon } from "semantic-ui-react";
-import StudentDashboard from "../../layouts/StudentDashboard";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+
 import {
   Dashboard as DashboardIcon,
   Add as AddIcon,
@@ -29,21 +43,16 @@ import {
   TableViewOutlined as TableViewOutlinedIcon,
   RestaurantMenu as RestaurantMenuIcon,
   Fastfood as FastfoodIcon,
-  CheckCircle as CheckCircleIcon,
   Assessment as AssessmentIcon,
 } from "@mui/icons-material";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import KitchenIcon from "@mui/icons-material/Kitchen";
-
-import DisplaySchedule from "../../layouts/scheduleView";
-// import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import {
   useMaterialUIController,
   setMiniSidenav,
   setTransparentSidenav,
   setWhiteSidenav,
 } from "../../context";
-import ReportList from "../../layouts/courseList";
+
+import StudentDashboard from "../../layouts/StudentDashboard";
 
 import {
   Dialog,
@@ -53,7 +62,6 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 import colors from "../../assets/theme/base/colors";
 
@@ -105,22 +113,22 @@ function StudentSidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/dashboard",
       component: <Dashboard />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "orders",
-    //   key: "orders",
-    //   icon: <TableViewOutlinedIcon fontSize="small" />,
-    //   route: "/tables",
-    //   component: <Tables />,
-    // },
-    //
     {
       type: "collapse",
-      name: "stock_Approval",
-      key: "stock_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleView",
-      component: <DisplaySchedule />,
+      name: "View Assignment",
+      key: "list",
+      icon: <ShoppingCartIcon fontSize="small" />,
+      route: "/assignmentView",
+      component: <ViewAssignments />,
+    },
+
+    {
+      type: "collapse",
+      name: "Course List",
+      key: "report",
+      icon: <AssessmentIcon fontSize="small" />,
+      route: "/report",
+      component: <ViewCourses />,
     },
     {
       type: "collapse",
@@ -133,36 +141,28 @@ function StudentSidenav({ brand, brandName, selectedMenu, ...rest }) {
 
     {
       type: "collapse",
-      name: "schedule_post",
-      key: "schedule_post",
-      icon: <KitchenIcon fontSize="small" />,
-      route: "/schedulePost",
-      component: <ScheduleRequest />,
+      name: "Announcement View",
+      key: "Announcement_view",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/viewAnnouncement",
+      component: <ViewAnnouncement />,
     },
     {
       type: "collapse",
-      name: "schedule_Approval",
-      key: "ingredient_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleApproval",
-      component: <ApproveScheduleRequest />,
+      name: "Course Material List",
+      key: "courseMaterialList",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/CourseMaterialList",
+      component: <CourseMaterialsPage />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "Add-employee",
-    //   key: "Add-employee",
-    //   icon: <AddIcon fontSize="small" />,
-    //   route: "/addEmployee",
-    //   component: <AddEmployee />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "report",
-    //   key: "report",
-    //   icon: <AssessmentIcon fontSize="small" />,
-    //   route: "/report",
-    //   component: <ReportList />,
-    // },
+    {
+      type: "collapse",
+      name: "Submit Assignment",
+      key: "submitAssignment",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/submitAssignment",
+      component: <SubmitAssignment />,
+    },
 
     {
       type: "collapse",

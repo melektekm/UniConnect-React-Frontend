@@ -63,6 +63,7 @@ import ViewCourses from "./layouts/courseList";
 import ApproveScheduleRequest from "./layouts/scheduleApproval";
 // import DepartmentBilling from "./layouts/billing/DepartmentBilling";
 import DeanDashboard from "./layouts/dashboard/deanDashboard";
+import InstructorDashboard from "./layouts/dashboard/instructorDashboard";
 import SearchMenuForCashier from "./layouts/search/searchForCashier";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
@@ -73,7 +74,7 @@ import SubmittedAssignments from "./layouts/viewSubmittedAssignment";
 const routes = [
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "Dashboard",
     key: "mainDashboard",
     icon: <Icon fontSize="small">Main dashboard</Icon>,
     route: "/mainDashboard",
@@ -81,7 +82,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "Dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
@@ -89,7 +90,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "Dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/StudentDashboard",
@@ -97,7 +98,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "Dashboard",
     key: "CoordinatorDashboard",
     icon: <Icon fontSize="small">coordinator dashboard</Icon>,
     route: "/CoordinatorDashboard",
@@ -105,28 +106,21 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
-    key: "storeKeeperDashboard",
-    icon: <Icon fontSize="small">coordinator dashboard</Icon>,
+    name: "Dashboard",
+    key: "instructorDashboard",
+    icon: <Icon fontSize="small">instructor dashboard</Icon>,
     route: "/instructorDashboard",
-    component: <storeKeeperDashboard />,
+    component: <InstructorDashboard />,
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "Dashboard",
     key: "StudentDashboard",
-    icon: <Icon fontSize="small">coordinator dashboard</Icon>,
+    icon: <Icon fontSize="small">student dashboard</Icon>,
     route: "/StudentDashboard",
     component: <StudentDashboard />,
   },
-  {
-    type: "collapse",
-    name: "ዳሽቦርድ",
-    key: "cafeMangerDashboard",
-    icon: <Icon fontSize="small" />,
-    route: "/deanDashboard",
-    component: <DeanDashboard />,
-  },
+
   {
     type: "collapse",
     name: "Announcement post",

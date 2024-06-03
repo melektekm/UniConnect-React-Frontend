@@ -27,6 +27,11 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
+import StudentSidenav from "../../examples/Sidenav/Studentsidenav";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 
 function ViewCourses() {
   const electron = window.require("electron");
@@ -127,7 +132,17 @@ function ViewCourses() {
 
   return (
     <div style={{ display: "flex" }}>
-      <Sidenav />
+      {userData.user.role == "coordinator" ? (
+        <CoordinatorSidenav />
+      ) : userData.user.role == "admin" ? (
+        <Sidenav />
+      ) : userData.user.role == "student" ? (
+        <StudentSidenav />
+      ) : userData.user.role == "dean" ? (
+        <DeanSidenav />
+      ) : (
+        <InstructorSidenav />
+      )}
       <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
         <DashboardNavbar />
         <MainDashboard />

@@ -28,8 +28,13 @@ import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
 import axios from "axios";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+
 import { BASE_URL } from "../../appconfig";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
+import StudentSidenav from "../../examples/Sidenav/Studentsidenav";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 
 function ScheduleRequest() {
   const [formData, setFormData] = useState({
@@ -198,8 +203,7 @@ function ScheduleRequest() {
       </Dialog>
 
       <DashboardNavbar />
-      <Sidenav />
-
+      <CoordinatorSidenav />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>

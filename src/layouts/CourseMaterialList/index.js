@@ -27,6 +27,11 @@ import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
+// import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
+import StudentSidenav from "../../examples/Sidenav/Studentsidenav";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 
 function CourseMaterialsPage() {
   const electron = window.require("electron");
@@ -73,7 +78,11 @@ function CourseMaterialsPage() {
 
   return (
     <div style={{ display: "flex" }}>
-      <Sidenav />
+      {userData.user.role == "student" ? (
+        <StudentSidenav />
+      ) : (
+        <InstructorSidenav />
+      )}
       <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
         <DashboardNavbar />
         <MainDashboard />
@@ -122,9 +131,13 @@ function CourseMaterialsPage() {
                       {materials.map((material) => (
                         <TableRow key={assignment.id}>
                           <TableCell align="center">{material.id}</TableCell>
-                          <TableCell align="center">{material.materialTitle}</TableCell>
+                          <TableCell align="center">
+                            {material.materialTitle}
+                          </TableCell>
                           {/* <TableCell align="center">{material.materialDescription}</TableCell> */}
-                          <TableCell align="center">{material.course_name}</TableCell>
+                          <TableCell align="center">
+                            {material.course_name}
+                          </TableCell>
                           <TableCell align="center">
                             <Button
                               variant="contained"
@@ -142,7 +155,14 @@ function CourseMaterialsPage() {
                 <Footer />
               </Card>
               <Modal open={open} onClose={handleCloseModal}>
-                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
                   <Card>
                     <CardContent>
                       {selectedMaterial && (

@@ -14,7 +14,12 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { BASE_URL } from "../../appconfig";
 import { CardContent } from "@mui/material";
 import MainDashboard from "../MainDashboard";
+
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
+import StudentSidenav from "../../examples/Sidenav/Studentsidenav";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import FormControl from "@mui/material/FormControl"; // Import FormControl
@@ -72,6 +77,7 @@ function UploadAnnouncement() {
     const formattedDate = formValues.date.split("-").slice(0, 3).join("-");
 
     setLoading(true);
+    console.log(userData.user.role);
     try {
       const jsonData = {
         title: formValues.title,
@@ -91,7 +97,7 @@ function UploadAnnouncement() {
           },
         }
       );
-
+      console.log(userData.user.role);
       if (response.data) {
         setSuccessMessage("Announcement posted successfully!");
         setDialogOpen(true);
@@ -106,6 +112,7 @@ function UploadAnnouncement() {
       setLoading(false);
     }
   };
+  console.log(userData.user.role);
 
   const handleDialogClose = () => {
     setDialogOpen(false);
@@ -126,7 +133,13 @@ function UploadAnnouncement() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Sidenav />
+      {/* {userData.user.role == "coordinator" ? ( */}
+      <CoordinatorSidenav />
+      {/* ) : userData.user.role == "admin" ? ( // <Sidenav />
+       ) : userData.user.role == "student" ? ( // <StudentSidenav />
+       ) : userData.user.role == "dean" ? ( // <DeanSidenav />
+       ) : ( // <InstructorSidenav />
+       )} */}
       <MainDashboard />
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Error</DialogTitle>
