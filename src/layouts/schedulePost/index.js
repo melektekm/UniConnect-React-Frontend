@@ -154,7 +154,10 @@ function ScheduleRequest() {
         `${BASE_URL}/schedule-requests`,
         formData,
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       setLoading(false);
