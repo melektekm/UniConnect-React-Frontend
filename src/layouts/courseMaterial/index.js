@@ -97,7 +97,7 @@ function AddCourseMaterial() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${BASE_URL}/teacher/upload-material`,
+        `${BASE_URL}/upload-material`,
         JSON.stringify(formList),
         {
           headers: {
