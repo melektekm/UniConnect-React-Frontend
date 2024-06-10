@@ -74,6 +74,7 @@ function ScheduleRequest() {
   const handleCourseCodeChange = async (event) => {
     const course_code = event.target.value;
     setFormData((prevFormData) => ({ ...prevFormData, course_code }));
+  
     if (course_code) {
       try {
         const response = await axios.get(
@@ -100,6 +101,7 @@ function ScheduleRequest() {
       setFormData((prevFormData) => ({ ...prevFormData, course_name: "" }));
     }
   };
+  
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;

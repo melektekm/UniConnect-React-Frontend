@@ -7,7 +7,7 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../appconfig";
+import { BASE_URL, IMG_BASE_URL } from "../../appconfig";
 import { Pagination } from "@mui/material";
 import AnnouncementItemCard from "./announcementUi";
 import Dialog from "@mui/material/Dialog";
@@ -265,11 +265,24 @@ function ViewAnnouncement() {
             <>
               <MDTypography variant="h4">{selectedAnnouncement.title}</MDTypography>
               <MDTypography variant="body1">{selectedAnnouncement.content}</MDTypography>
-              <img
-                src={`${IMG_BASE_URL}${selectedAnnouncement.image_url}`}
-                alt={selectedAnnouncement.name}
-                style={{ width: "100%", height: "200px" }}
-              />
+              {selectedAnnouncement.image_url && (
+                <img
+                  src={`${IMG_BASE_URL}${selectedAnnouncement.image_url}`}
+                  alt={selectedAnnouncement.name}
+                  style={{ width: "100%", height: "200px" }}
+                />
+              )}
+              {selectedAnnouncement.file_url && (
+                <MDBox mt={2}>
+                  <MDButton
+                    variant="contained"
+                    color="primary"
+                    onClick={() => window.open(`${IMG_BASE_URL}${selectedAnnouncement.file_url}`, "_blank")}
+                  >
+                    View PDF
+                  </MDButton>
+                </MDBox>
+              )}
               <MDTypography variant="body2">{selectedAnnouncement.date}</MDTypography>
               <MDTypography variant="body2">{selectedAnnouncement.category}</MDTypography>
             </>
