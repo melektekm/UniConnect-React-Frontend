@@ -59,39 +59,40 @@ function UploadAnnouncement() {
       content: formValues.content ? "" : "content description is required",
       date: formValues.date ? "" : "Due date is required",
     };
-
+  
     setErrorMessages(newErrorMessages);
-
+  
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
       setErrorMessage("All fields should be filled");
       setDialogOpen(true);
       return;
     }
-
+  
     // Format date as YY-MM-DD
     const formattedDate = formValues.date.split("-").slice(0, 3).join("-");
-
+  
     setLoading(true);
     try {
-      const jsonData = {
-        title: formValues.title,
-        category: formValues.category,
-        content: formValues.content,
-        date: formattedDate, // Use the formatted date
-        file: formValues.file,
-      };
-
+      const formData = new FormData();
+      formData.append("title", formValues.title);
+      formData.append("category", formValues.category);
+      formData.append("content", formValues.content);
+      formData.append("date", formattedDate); // Use the formatted date
+      if (formValues.file) {
+        formData.append("file", formValues.file);
+      }
+  
       const response = await axios.post(
         `${BASE_URL}/post-announcement`,
-        jsonData,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-
+  
       if (response.data) {
         setSuccessMessage("Announcement posted successfully!");
         setDialogOpen(true);
@@ -106,6 +107,7 @@ function UploadAnnouncement() {
       setLoading(false);
     }
   };
+  
 
   const handleDialogClose = () => {
     setDialogOpen(false);

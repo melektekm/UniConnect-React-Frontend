@@ -97,7 +97,7 @@ function AddCourseMaterial() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${BASE_URL}/upload-material`,
+        `${BASE_URL}/teacher/upload-material`,
         JSON.stringify(formList),
         {
           headers: {
@@ -135,35 +135,30 @@ function AddCourseMaterial() {
 
   const handleCourseCodeChange = async (event) => {
     const course_code = event.target.value;
-    setFormValues({ ...formValues, course_code });
-
+    setFormValues((prevFormValues) => ({ ...prevFormValues, course_code }));
     if (course_code) {
       try {
-        const response = await axios.get(`${BASE_URL}/get-course-name`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          params: {
-            course_code,
-          },
-        });
-
+        const response = await axios.get(
+          `${BASE_URL}/course/name/${course_code}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
         if (response.data && response.data.course_name) {
           setCourseName(response.data.course_name);
+          setErrorMessage("");
         } else {
           setCourseName("");
           setErrorMessage("Course not found.");
-          setOpen(true);
         }
       } catch (error) {
         setCourseName("");
         setErrorMessage("Error fetching course name: " + error.message);
-        setOpen(true);
       }
     } else {
       setCourseName("");
     }
-  };
+  };                                                                                                                                                                    
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;

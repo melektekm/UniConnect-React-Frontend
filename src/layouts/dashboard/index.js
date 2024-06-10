@@ -25,6 +25,7 @@ function Dashboard() {
   const [assignments, setAssignments] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [schedule, setSchedule] = useState([]);
+  const [formList, setFormList] = useState([]);
 
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -211,11 +212,11 @@ function Dashboard() {
                 </MDTypography>
               </MDBox>
               <MDBox pt={3} pb={3} px={2}>
-                {formList.items.length > 0 ? (
+                {schedule.length > 0 ? (
                   <TableContainer>
                     <Table>
                       <TableBody>
-                        {formList.items.map((form, index) => (
+                        {schedule.map((form, index) => (
                           <TableRow key={index}>
                             <TableCell>{form.course_code}</TableCell>
                             <TableCell>{form.course_name}</TableCell>
@@ -244,3 +245,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
