@@ -26,6 +26,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 
 function ViewCourses() {
@@ -42,13 +46,16 @@ function ViewCourses() {
   const [current_page, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedSemester, setSelectedSemester] = useState("");
+
   const accessToken = userData.accessToken;
 
   const fetchCourses = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BASE_URL}/courses?page=${current_page}`,
+        `${BASE_URL}/courses?page=${current_page}&year=${selectedYear}&semester=${selectedSemester}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -69,7 +76,7 @@ function ViewCourses() {
 
   useEffect(() => {
     fetchCourses();
-  }, [current_page]);
+  }, [current_page, selectedYear, selectedSemester]);
 
   const handleViewDetails = (course) => {
     setSelectedCourse(course);
@@ -94,7 +101,7 @@ function ViewCourses() {
       }
       // Update the course status and send it to the backend
       const response = await axios.put(
-        `${BASE_URL}/enroll/${id}`,
+        `${BASE_URL}/enroll/${selectedCourse.id}`,
         {
           status: "enrolled",
         },
@@ -125,6 +132,22 @@ function ViewCourses() {
     setOpen(false);
   };
 
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+  const handleSemesterChange = (event) => {
+    setSelectedSemester(event.target.value);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
+  // const filteredCourses = courses.filter((course) => {
+  //   return (
+  //     (selectedYear ? course.year === selectedYear : true) &&
+  //     (selectedSemester ? course.semester === selectedSemester : true)
+  //   );
+  // });
+
   return (
     <div style={{ display: "flex" }}>
       <Sidenav />
@@ -149,6 +172,43 @@ function ViewCourses() {
                 </MDTypography>
               </MDBox>
               <Card style={{ marginTop: "20px" }}>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  p={2}
+                >
+                  <FormControl variant="outlined" style={{ minWidth: 120 }}>
+                    <InputLabel>Year</InputLabel>
+                    <Select
+                      value={selectedYear}
+                      onChange={handleYearChange}
+                      label="Year"
+                    >
+                      <MenuItem value="">
+                        <em>All</em>
+                      </MenuItem>
+                      <MenuItem value="1">1</MenuItem>
+                      <MenuItem value="2">2</MenuItem>
+                      <MenuItem value="3">3</MenuItem>
+                      <MenuItem value="4">4</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl variant="outlined" style={{ minWidth: 120 }}>
+                    <InputLabel>Semester</InputLabel>
+                    <Select
+                      value={selectedSemester}
+                      onChange={handleSemesterChange}
+                      label="Semester"
+                    >
+                      <MenuItem value="">
+                        <em>All</em>
+                      </MenuItem>
+                      <MenuItem value="1">1</MenuItem>
+                      <MenuItem value="2">2</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
                 <TableContainer
                   component={Paper}
                   elevation={3}
@@ -205,7 +265,7 @@ function ViewCourses() {
                             >
                               View Details
                             </Button>
-                            <Button
+                            {/* <Button
                               variant="contained"
                               color="primary"
                               onClick={() => handleEnrollConfirm(course)}
@@ -213,7 +273,7 @@ function ViewCourses() {
                               disabled={!selectedCourse}
                             >
                               Enroll
-                            </Button>
+                            </Button> */}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -342,11 +402,8 @@ function ViewCourses() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleEnrollConfirm} color="primary">
-            Enroll
-          </Button>
           <Button onClick={handleEnrollCancel} color="secondary">
-            Cancel
+            Close
           </Button>
         </DialogActions>
       </Dialog>

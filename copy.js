@@ -1,252 +1,286 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import axios from "axios";
+import { BASE_URL } from "../../appconfig";
+import MDBox from "../../components/MDBox";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import MainDashboard from "../MainDashboard";
+import Footer from "../../examples/Footer";
+import MDTypography from "../../components/MDTypography";
 import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Menu,
-  Icon,
+  Card,
+  Box,
+  Button,
+  Modal,
+  Pagination,
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogContentText,
   DialogActions,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
-import PropTypes from "prop-types";
-import Breadcrumbs from "../../../examples/Breadcrumbs";
-import NotificationItem from "../../../examples/Items/NotificationItem";
-import {
-  navbar,
-  navbarContainer,
-  navbarRow,
-  navbarIconButton,
-  navbarMobileMenu,
-} from "../../../examples/Navbars/DashboardNavbar/styles";
-import {
-  useMaterialUIController,
-  setTransparentNavbar,
-  setMiniSidenav,
-  setOpenConfigurator,
-} from "../../../context";
-import MDButton from "../../../components/MDButton";
-import MDTypography from "../../../components/MDTypography";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import routes from "../../../routes";
-import axios from "axios";
-import MDBox from "../../../components/MDBox";
-import MDInput from "../../../components/MDInput";
 
-function AdminNavbar({ absolute, light, isMini }) {
+function ViewCourses() {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const userData = ipcRenderer.sendSync("get-user");
-  const [navbarType, setNavbarType] = useState();
-  const [controller, dispatch] = useMaterialUIController();
-  const {
-    miniSidenav,
-    transparentNavbar,
-    fixedNavbar,
-    openConfigurator,
-    darkMode,
-  } = controller;
-  const [openMenu, setOpenMenu] = useState(false);
-  const route = useLocation().pathname.split("/").slice(1);
-  const location = useLocation();
-  let routeName = "";
 
-  routes.forEach((route) => {
-    if (useLocation().pathname === route.route) {
-      routeName = route.name;
-    }
-  });
-  const navigate = useNavigate();
-  const [openCommentDialog, setOpenCommentDialog] = useState(false);
-  const [comment, setComment] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const itemsPerPage = 10; // Set the number of items to display per page
+  const [current_page, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
 
-  useEffect(() => {
-    if (fixedNavbar) {
-      setNavbarType("sticky");
-    } else {
-      setNavbarType("static");
-    }
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedSemester, setSelectedSemester] = useState("");
 
-    function handleTransparentNavbar() {
-      setTransparentNavbar(
-        dispatch,
-        (fixedNavbar && window.scrollY === 0) || !fixedNavbar
+  const accessToken = userData.accessToken;
+
+  const fetchCourses = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/courses?page=${current_page}&year=${selectedYear}&semester=${selectedSemester}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
-    }
-
-    window.addEventListener("scroll", handleTransparentNavbar);
-    handleTransparentNavbar();
-
-    return () => window.removeEventListener("scroll", handleTransparentNavbar);
-  }, [dispatch, fixedNavbar]);
-
-  const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
-  const handleConfiguratorOpen = () =>
-    setOpenConfigurator(dispatch, !openConfigurator);
-  const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
-  const handleCloseMenu = () => setOpenMenu(false);
-
-  const handleLogout = async () => {
-    try {
-      await ipcRenderer.invoke("clear-user");
-      navigate("/authentication/sign-in");
-    } catch (error) {}
-  };
-
-  const handleOpenCommentDialog = () => {
-    setOpenCommentDialog(true);
-  };
-
-  const handleCloseCommentDialog = () => {
-    setOpenCommentDialog(false);
-  };
-
-  const handleSendComment = async () => {
-    try {
-      const response = await axios.post("your-backend-endpoint-url", {
-        comment: comment,
-      });
-
-      if (response.status === 200) {
-        console.log("Comment sent successfully");
-        handleCloseCommentDialog();
-      } else {
-        console.error(
-          "Failed to send comment. Response status:",
-          response.status
-        );
+      if (response.data && response.data.courses) {
+        setCourses(response.data["courses"]);
+        setCurrentPage(response.data.current_page);
+        setLastPage(response.data.lastPage);
       }
     } catch (error) {
-      console.error("Error sending comment:", error.message);
+      console.error("Error fetching courses:", error);
+      setErrorMessage("Failed to fetch courses.");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, [current_page, selectedYear, selectedSemester]);
+
+  const handleViewDetails = (course) => {
+    setSelectedCourse(course);
+    setOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
+  const handleEnrollClick = (course) => {
+    setSelectedCourse(course);
+    setOpen(true);
+  };
+
+  const handleEnrollConfirm = async () => {
+    try {
+      setLoading(true); // Set loading to true while enrolling
+      if (!selectedCourse) {
+        // Check if selectedCourse is null
+        throw new Error("No course selected for enrollment");
+      }
+      // Update the course status and send it to the backend
+      const response = await axios.put(
+        `${BASE_URL}/enroll/${selectedCourse.id}`,
+        {
+          status: "enrolled",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.data) {
+        // After successful enrollment, fetch the updated course list
+        fetchCourses();
+        setErrorMessage(""); // Reset error message if there was any
+        setOpen(false); // Close the enrollment dialog
+      } else {
+        setErrorMessage("Failed to enroll. Please try again.");
+        // Show error message if enrollment failed
+      }
+    } catch (error) {
+      setErrorMessage("Failed to enroll. Please try again.");
+      console.error("Error enrolling in the course:", error);
+    } finally {
+      setLoading(false); // Set loading to false after enrollment attempt
     }
   };
 
-  const renderMenu = () => (
-    <Menu
-      anchorEl={openMenu}
-      anchorReference={null}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
-      }}
-      open={Boolean(openMenu)}
-      onClose={handleCloseMenu}
-      sx={{ mt: 2 }}
-    >
-      <NotificationItem
-        onClick={handleLogout}
-        icon={<ExitToAppIcon>Logout</ExitToAppIcon>}
-        title="Log out"
-      />
-    </Menu>
-  );
+  const handleEnrollCancel = () => {
+    setOpen(false);
+  };
 
-  const iconsStyle = ({
-    palette: { dark, white, text },
-    functions: { rgba },
-  }) => ({
-    color: () => {
-      let colorValue = light || darkMode ? white.main : dark.main;
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
 
-      if (transparentNavbar && !light) {
-        colorValue = darkMode ? rgba(text.main, 0.6) : text.main;
-      }
-
-      return colorValue;
-    },
-  });
-
-  let routeName = "";
-  routes.forEach((route) => {
-    if (location.pathname === route.route) {
-      routeName = route.name;
-    }
-  });
+  const handleSemesterChange = (event) => {
+    setSelectedSemester(event.target.value);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
 
   return (
-    <AppBar position={absolute ? "absolute" : navbarType} color="inherit">
-      <Toolbar>
-        <MDBox color="inherit" mb={{ xs: 1, md: 0 }}>
-          <Breadcrumbs
-            icon="home"
-            title={routeName}
-            route={route}
-            light={light}
-          />
+    <div style={{ display: "flex" }}>
+      <Sidenav />
+      <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
+        <DashboardNavbar />
+        <MainDashboard />
+        <MDBox pt={6} pb={3}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <MDBox
+                mx={2}
+                mt={2}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="dark"
+                borderRadius="lg"
+                coloredShadow="info"
+              >
+                <MDTypography variant="h4" color="white">
+                  Course List
+                </MDTypography>
+              </MDBox>
+              <Card style={{ marginTop: "20px" }}>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  p={2}
+                >
+                  <FormControl variant="outlined" style={{ minWidth: 120 }}>
+                    <InputLabel>Year</InputLabel>
+                    <Select
+                      value={selectedYear}
+                      onChange={handleYearChange}
+                      label="Year"
+                    >
+                      <MenuItem value="">
+                        <em>All</em>
+                      </MenuItem>
+                      <MenuItem value="1">1</MenuItem>
+                      <MenuItem value="2">2</MenuItem>
+                      <MenuItem value="3">3</MenuItem>
+                      <MenuItem value="4">4</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl variant="outlined" style={{ minWidth: 120 }}>
+                    <InputLabel>Semester</InputLabel>
+                    <Select
+                      value={selectedSemester}
+                      onChange={handleSemesterChange}
+                      label="Semester"
+                    >
+                      <MenuItem value="">
+                        <em>All</em>
+                      </MenuItem>
+                      <MenuItem value="1">1</MenuItem>
+                      <MenuItem value="2">2</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableBody>
+                      {courses.map((course) => (
+                        <TableRow key={course.id}>
+                          <TableCell>{course.course_code}</TableCell>
+                          <TableCell>{course.course_name}</TableCell>
+                          <TableCell>{course.credit_hours}</TableCell>
+                          <TableCell>{course.year}</TableCell>
+                          <TableCell>{course.semester}</TableCell>
+                          <TableCell>{course.course_description}</TableCell>
+                          <TableCell>
+                            <Button
+                              variant="outlined"
+                              onClick={() => handleEnrollClick(course)}
+                            >
+                              Enroll
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <Box display="flex" justifyContent="center" p={2}>
+                  <Pagination
+                    count={lastPage}
+                    page={current_page}
+                    onChange={(event, page) => setCurrentPage(page)}
+                    color="primary"
+                  />
+                </Box>
+              </Card>
+            </Grid>
+          </Grid>
         </MDBox>
-        {!isMini && (
-          <MDBox>
-            <MDBox pr={1}>
-              <MDButton
-                color="secondary"
-                onClick={async () => {
-                  const currentRoute = location.pathname;
-                  sessionStorage.setItem("previousRoute", currentRoute);
-                  navigate("/searchForAdmin");
-                }}
-              >
-                ፈልግ
-              </MDButton>
-            </MDBox>
-            <MDBox color={light ? "white" : "dark"} textAlign="center">
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                aria-controls="notification-menu"
-                aria-haspopup="true"
-                variant="contained"
-                onClick={handleOpenMenu}
-              >
-                <AccountCircleIcon sx={iconsStyle} />
-              </IconButton>
-              {renderMenu()}
-            </MDBox>
-          </MDBox>
-        )}
-      </Toolbar>
-      <Dialog open={openCommentDialog} onClose={handleCloseCommentDialog}>
-        <DialogTitle>Send Comment</DialogTitle>
-        <DialogContent>
-          <MDInput
-            label="Your Comment"
-            multiline
-            rows={4}
-            fullWidth
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <MDButton onClick={handleCloseCommentDialog}>Cancel</MDButton>
-          <MDButton
-            onClick={handleSendComment}
-            color="primary"
-            variant="contained"
-          >
-            Send
-          </MDButton>
-        </DialogActions>
-      </Dialog>
-    </AppBar>
+        <Footer />
+        <Modal open={open} onClose={handleCloseModal}>
+          <Dialog open={open} onClose={handleCloseModal}>
+            <DialogTitle>Course Details</DialogTitle>
+            <DialogContent>
+              {selectedCourse && (
+                <>
+                  <DialogContentText>
+                    <strong>Course Code:</strong> {selectedCourse.course_code}
+                    <br />
+                    <strong>Course Name:</strong> {selectedCourse.course_name}
+                    <br />
+                    <strong>Credit Hours:</strong> {selectedCourse.credit_hours}
+                    <br />
+                    <strong>Year:</strong> {selectedCourse.year}
+                    <br />
+                    <strong>Semester:</strong> {selectedCourse.semester}
+                    <br />
+                    <strong>Description:</strong>{" "}
+                    {selectedCourse.course_description}
+                  </DialogContentText>
+                </>
+              )}
+              {errorMessage && (
+                <Typography color="error" variant="body2" sx={{ mt: 2 }}>
+                  {errorMessage}
+                </Typography>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleEnrollCancel} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleEnrollConfirm} color="primary">
+                Enroll
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Modal>
+      </div>
+    </div>
   );
 }
 
-AdminNavbar.defaultProps = {
-  absolute: false,
-  light: false,
-  isMini: false,
-};
-
-AdminNavbar.propTypes = {
-  absolute: PropTypes.bool,
-  light: PropTypes.bool,
-  isMini: PropTypes.bool,
-};
-
-export default AdminNavbar;
+export default ViewCourses;
