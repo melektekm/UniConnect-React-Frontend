@@ -152,7 +152,7 @@ function ScheduleRequest() {
     try {
       const response = await axios.post(
         `${BASE_URL}/schedule-requests`,
-        formData,
+        JSON.stringify(formData),
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -160,8 +160,13 @@ function ScheduleRequest() {
           },
         }
       );
-      setLoading(false);
-      setErrorMessage("Schedule has been sent successfully");
+      if (response.data) {
+        setLoading(false);
+        setErrorMessage("Schedule has been sent successfully");
+      } else {
+        setErrorMessage("Failed to post Schedule. Please try again.");
+        setLoading(false);
+      }
     } catch (error) {
       setErrorMessage("Error while sending schedule " + error.message);
       setLoading(false);

@@ -192,7 +192,7 @@ function Dashboard() {
           </Grid>
         </Grid>
       </MDBox>
-      <MDBox pt={3} pb={3}>
+      {/* <MDBox pt={3} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
@@ -237,7 +237,7 @@ function Dashboard() {
             </Card>
           </Grid>
         </Grid>
-      </MDBox>
+      </MDBox> */}
       <Footer />
     </DashboardLayout>
   );
