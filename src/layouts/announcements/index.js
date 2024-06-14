@@ -18,9 +18,6 @@ import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import FormControl from "@mui/material/FormControl"; // Import FormControl
-import InputLabel from "@mui/material/InputLabel"; // Import InputLabel
-import Select from "@mui/material/Select"; // Import Select
-import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
 import TextField from "@mui/material/TextField"; // Import TextField
 import MDInput from "../../components/MDInput";
 import colors from "../../assets/theme/base/colors";
@@ -52,6 +49,7 @@ function UploadAnnouncement() {
     setFormValues({ ...formValues, file: selectedFile });
     setFile(selectedFile); // Set the file in the state
   };
+  console.log(accessToken);
   const handlePostAnnouncement = async () => {
     const newErrorMessages = {
       title: formValues.title ? "" : "title is required",
@@ -73,21 +71,22 @@ function UploadAnnouncement() {
 
     setLoading(true);
     try {
-      const jsonData = {
-        title: formValues.title,
-        category: formValues.category,
-        content: formValues.content,
-        date: formattedDate, // Use the formatted date
-        file: formValues.file,
-      };
+      const formData = new FormData();
+      formData.append("title", formValues.title);
+      formData.append("category", formValues.category);
+      formData.append("content", formValues.content);
+      formData.append("date", formattedDate); // Use the formatted date
+      if (formValues.file) {
+        formData.append("file", formValues.file);
+      }
 
       const response = await axios.post(
         `${BASE_URL}/post-announcement`,
-        jsonData,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );

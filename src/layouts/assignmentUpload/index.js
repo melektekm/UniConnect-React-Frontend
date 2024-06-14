@@ -12,7 +12,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { BASE_URL } from "../../appconfig";
-import { CardContent } from "@mui/material";
 import MainDashboard from "../../layouts/MainDashboard";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Grid from "@mui/material/Grid";
@@ -27,7 +26,7 @@ function UploadAssignment() {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const userData = ipcRenderer.sendSync("get-user");
-  const accessToken = userData.accessToken; // Assuming accessToken is available in user data
+  const accessToken = userData.accessToken;
   const [loading, setLoading] = useState(false);
   const [courseName, setCourseName] = useState("");
   const [formValues, setFormValues] = useState({
@@ -42,14 +41,14 @@ function UploadAssignment() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
-  const [file, setFile] = useState(null); // Define the file state variable
+  const [file, setFile] = useState(null);
 
   const handleFileUpload = (event) => {
     const selectedFile = event.target.files[0];
     setFormValues({ ...formValues, file: selectedFile });
-    setFile(selectedFile); // Set the file in the state
+    setFile(selectedFile);
   };
-  console.log(accessToken);
+
   const handleAddToAssignment = async () => {
     const newErrorMessages = {
       course_code: formValues.course_code ? "" : "Course code is required",
@@ -74,12 +73,13 @@ function UploadAssignment() {
     try {
       const jsonData = {
         course_code: formValues.course_code,
+        courseName: courseName, // include courseName here
         assignmentName: formValues.assignmentName,
         assignmentDescription: formValues.assignmentDescription,
         dueDate: formValues.dueDate,
-        file: formValues.file, // Assuming the file object is needed in JSON format
+        file: formValues.file,
       };
-
+      
       const response = await axios.post(
         `${BASE_URL}/upload-assignment`,
         JSON.stringify(jsonData),
@@ -115,30 +115,25 @@ function UploadAssignment() {
 
   const handleCourseCodeChange = async (event) => {
     const course_code = event.target.value;
-    setFormValues({ ...formValues, course_code });
-
+    setFormValues((prevFormValues) => ({ ...prevFormValues, course_code }));
     if (course_code) {
       try {
-        const response = await axios.get(`${BASE_URL}/get-course-name`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          params: {
-            course_code,
-          },
-        });
-
+        const response = await axios.get(
+          `${BASE_URL}/course/name/${course_code}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
         if (response.data && response.data.course_name) {
           setCourseName(response.data.course_name);
+          setErrorMessage("");
         } else {
           setCourseName("");
           setErrorMessage("Course not found.");
-          setOpen(true);
         }
       } catch (error) {
         setCourseName("");
         setErrorMessage("Error fetching course name: " + error.message);
-        setOpen(true);
       }
     } else {
       setCourseName("");
@@ -164,6 +159,7 @@ function UploadAssignment() {
       file: null,
     });
     setFile(null);
+    setCourseName(""); // Reset course name as well
   };
 
   return (
@@ -233,10 +229,8 @@ function UploadAssignment() {
                         onChange={handleCourseCodeChange}
                         margin="normal"
                         required
-                        inputProps={{
-                          name: "course_code",
-                          id: "course_code",
-                        }}
+                        error={!!errorMessages.course_code}
+                      helperText={errorMessages.course_code}
                       />
                     </FormControl>
                   </MDBox>

@@ -3,11 +3,6 @@ import {
   Grid,
   Card,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   TableContainer,
   Table,
   TableBody,
@@ -18,8 +13,12 @@ import {
   TextField,
   Select,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import MDInput from "../../components/MDInput";
@@ -42,10 +41,10 @@ function ScheduleRequest() {
     labInstructor: "",
     classInstructor: "",
     scheduleType: "Class",
+    status: "Pending", // default value for status
   });
 
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
   const [confirmationOpen, setConfirmationOpen] = useState(false);
@@ -57,17 +56,17 @@ function ScheduleRequest() {
   const accessToken = userData.accessToken;
 
   const scheduleTypeOptions = ["Exam", "Class"];
+  const statusOptions = ["Pending", "Approved"]; // status options
   const [formList, setFormList] = useState({
     items: [],
-    // requested_by: userData.user.id,
     recommendations: "",
   });
+
   useEffect(() => {
     const previousRoute = sessionStorage.getItem("preRouteData");
     if (previousRoute) {
       setFormList({
         ...formList,
-        // id: parseInt(previousRoute),
         type: "entry",
       });
       sessionStorage.removeItem("preRouteData");
@@ -76,33 +75,38 @@ function ScheduleRequest() {
 
   const handleCourseCodeChange = async (event) => {
     const course_code = event.target.value;
-    setFormData({ ...formData, course_code });
+    setFormData((prevFormData) => ({ ...prevFormData, course_code }));
+
     if (course_code) {
       try {
-        const response = await axios.get(`${BASE_URL}/get-course-name`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          params: { course_code },
-        });
+        const response = await axios.get(
+          `${BASE_URL}/course/name/${course_code}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
         if (response.data && response.data.course_name) {
-          setFormData({ ...formData, course_name: response.data.course_name });
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            course_name: response.data.course_name,
+          }));
+          setErrorMessage("");
         } else {
-          setFormData({ ...formData, course_name: "" });
+          setFormData((prevFormData) => ({ ...prevFormData, course_name: "" }));
           setErrorMessage("Course not found.");
-          setOpen(true);
         }
       } catch (error) {
-        setFormData({ ...formData, course_name: "" });
+        setFormData((prevFormData) => ({ ...prevFormData, course_name: "" }));
         setErrorMessage("Error fetching course name: " + error.message);
-        setOpen(true);
       }
     } else {
-      setFormData({ ...formData, course_name: "" });
+      setFormData((prevFormData) => ({ ...prevFormData, course_name: "" }));
     }
   };
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
   const addForm = () => {
@@ -116,6 +120,7 @@ function ScheduleRequest() {
       "labDays",
       "labInstructor",
       "classInstructor",
+      "status", // check for status as well
     ].forEach((field) => {
       if (!formData[field]) {
         errors[field] = `${field.replace(/([A-Z])/g, " $1")} is required`;
@@ -126,14 +131,13 @@ function ScheduleRequest() {
 
     if (Object.keys(errors).length > 0) {
       setErrorMessage("Please fill in all fields");
-      setOpen(true);
       return;
     }
 
-    setFormList({
-      ...formList,
-      items: [...formList.items, formData],
-    });
+    setFormList((prevFormList) => ({
+      ...prevFormList,
+      items: [...prevFormList.items, formData],
+    }));
     setFormData({
       course_name: "",
       course_code: "",
@@ -144,6 +148,7 @@ function ScheduleRequest() {
       labInstructor: "",
       classInstructor: "",
       scheduleType: "Class",
+      status: "Pending", // reset to default
     });
   };
 
@@ -152,17 +157,23 @@ function ScheduleRequest() {
     try {
       const response = await axios.post(
         `${BASE_URL}/schedule-requests`,
-        formData,
+        { scheduleRequests: formList.items }, // Wrap the form data in a JSON object with a key
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
         }
       );
-      setLoading(false);
-      setErrorMessage("Schedule has been sent successfully");
-      setOpen(true);
+      if (response.data) {
+        setLoading(false);
+        setErrorMessage("Schedule has been sent successfully");
+      } else {
+        setErrorMessage("Failed to post Schedule. Please try again.");
+        setLoading(false);
+      }
     } catch (error) {
       setErrorMessage("Error while sending schedule " + error.message);
-      setOpen(true);
       setLoading(false);
     }
   };
@@ -178,25 +189,17 @@ function ScheduleRequest() {
   const closeRemoveDialog = () => setRemoveIndex(null);
   const confirmRemoveForm = () => {
     if (removeIndex !== null) {
-      const updatedFormList = { ...formList };
-      updatedFormList.items.splice(removeIndex, 1);
-      setFormList(updatedFormList);
+      setFormList((prevFormList) => {
+        const updatedItems = [...prevFormList.items];
+        updatedItems.splice(removeIndex, 1);
+        return { ...prevFormList, items: updatedItems };
+      });
       closeRemoveDialog();
     }
   };
 
   return (
     <DashboardLayout>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Notification</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{errorMessage}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <MDButton onClick={() => setOpen(false)}>Close</MDButton>
-        </DialogActions>
-      </Dialog>
-
       <DashboardNavbar />
       <Sidenav />
 
@@ -249,7 +252,13 @@ function ScheduleRequest() {
                     required
                     error={!!errorMessages.course_name}
                     helperText={errorMessages.course_name}
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
+                  {errorMessage && (
+                    <MDTypography color="error">{errorMessage}</MDTypography>
+                  )}
                   <MDInput
                     type="text"
                     name="classDays"
@@ -286,7 +295,7 @@ function ScheduleRequest() {
                   <MDInput
                     type="text"
                     name="labDays"
-                    label="Labroom days"
+                    label="Lab Days"
                     value={formData.labDays}
                     onChange={handleFormChange}
                     margin="dense"
@@ -316,21 +325,38 @@ function ScheduleRequest() {
                     error={!!errorMessages.classInstructor}
                     helperText={errorMessages.classInstructor}
                   />
-                  <FormControl fullWidth margin="dense">
-                    <Select
-                      value={formData.scheduleType}
-                      onChange={handleFormChange}
-                      name="scheduleType"
-                      displayEmpty
-                    >
-                      {scheduleTypeOptions.map((option, idx) => (
-                        <MenuItem value={option} key={idx}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    ``
-                  </FormControl>
+                  <MDBox mt={2} mb={2}>
+                    <FormControl fullWidth>
+                      <MDTypography>Schedule Type:</MDTypography>
+                      <Select
+                        name="scheduleType"
+                        value={formData.scheduleType}
+                        onChange={handleFormChange}
+                      >
+                        {scheduleTypeOptions.map((option, idx) => (
+                          <MenuItem value={option} key={idx}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </MDBox>
+                  <MDBox mt={2} mb={2}>
+                    <FormControl fullWidth>
+                      <MDTypography>Status:</MDTypography>
+                      <Select
+                        name="status"
+                        value={formData.status}
+                        onChange={handleFormChange}
+                      >
+                        {statusOptions.map((option, idx) => (
+                          <MenuItem value={option} key={idx}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </MDBox>
                 </MDBox>
               </MDBox>
 
@@ -392,6 +418,7 @@ function ScheduleRequest() {
                             <TableCell>{form.labroom}</TableCell>
                             <TableCell>{form.labInstructor}</TableCell>
                             <TableCell>{form.classInstructor}</TableCell>
+                            <TableCell>{form.status}</TableCell>
                             <TableCell>
                               <Button
                                 color="secondary"

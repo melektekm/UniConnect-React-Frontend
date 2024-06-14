@@ -48,7 +48,7 @@ import StudentDashboard from "./layouts/StudentDashboard";
 import UploadCourse from "./layouts/courseUpload";
 import SearchMenuForInvnetory from "./layouts/search/searchForCafeCommette";
 import SearchMenuForAdmin from "./layouts/search/searchForAdmin";
-
+import SubmitAssignment from "./layouts/submitAssignment";
 import UploadAnnouncement from "./layouts/announcements";
 import ViewAnnouncement from "./layouts/viewAnnouncement";
 import ViewAssignments from "./layouts/assignmentView";
@@ -67,9 +67,9 @@ import SearchMenuForCashier from "./layouts/search/searchForCashier";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
 import CourseMaterialsPage from "./layouts/CourseMaterialList";
-import SubmitAssignment from "./layouts/submitAssignment";
-import ScheduleRequest from "./layouts/schedulePost";
+// import SubmitAssignment from "./layouts/submitAssignment";
 import SubmittedAssignments from "./layouts/viewSubmittedAssignment";
+import ScheduleRequest from "./layouts/schedulePost";
 const routes = [
   {
     type: "collapse",
@@ -206,6 +206,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/assignmentView",
     component: <ViewAssignments />,
+  },
+  {
+    type: "collapse",
+    name: "Submitted Assignment",
+    key: "list",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/submit-assignment",
+    component: <SubmitAssignment />,
   },
   // {
   //   type: "collapse",

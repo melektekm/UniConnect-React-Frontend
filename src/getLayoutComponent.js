@@ -111,7 +111,7 @@ function getLayoutComponent(path) {
       return <AssignmentsPage />;
     case "/CourseMaterialList":
       return <CourseMaterialsPage />;
-    case "/submitAssignment":
+    case "/submit-assignment":
       return <SubmitAssignment />;
     case "/assignmentView":
       return <ViewAssignments />;
