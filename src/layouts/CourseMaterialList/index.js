@@ -9,17 +9,17 @@ import {
   Typography,
   Grid,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Modal,
   Card,
   Box,
-  Modal,
   CardContent,
+  FormControl,
+  TextField,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import axios from "axios";
-// import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
@@ -37,38 +37,101 @@ function CourseMaterialsPage() {
 
   const [open, setOpen] = useState(false);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [fileContent, setFileContent] = useState(null); // State to store file content
 
-  const accessToken = userData.accessToken;
+  const [courses, setCourses] = useState([]); // State to store unique courses
 
-  const fetchMaterial = async () => {
+  const fetchMaterials = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/getallmaterials`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.get(`${BASE_URL}/getallmaterials`);
+      console.log('Response data:', response.data); // Log the response data
       if (response.data && response.data.materials) {
         setMaterials(response.data.materials);
+        const uniqueCourses = [...new Set(response.data.materials.map(material => material.course_name))];
+        setCourses(uniqueCourses); // Extract unique courses
       }
     } catch (error) {
-      console.error("Error fetching matrials:", error);
+      console.error('Error fetching materials:', error);
+    }
+    setLoading(false);
+  };
+
+ // Fetch file content when material is selected
+const fetchFileContent = async (materialId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/getmaterialcontent/${materialId}`, {
+      responseType: "blob", // Ensure response is treated as a blob (binary data)
+    });
+    console.log('File content:', response.data);
+    setFileContent(response.data); // Set the file content
+  } catch (error) {
+    console.error('Error fetching file content:', error);
+  }
+};
+
+  // Filter materials based on selected course and search term
+  const filterMaterials = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`${BASE_URL}/filtermaterials`, {
+        course_name: selectedCourse,
+        searchTerm: searchTerm,
+      });
+      console.log('Filtered materials:', response.data.filteredMaterials);
+      if (response.data && response.data.filteredMaterials) {
+        setMaterials(response.data.filteredMaterials);
+      }
+    } catch (error) {
+      console.error('Error filtering materials:', error);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchMaterial();
+    fetchMaterials();
   }, []);
 
-  const handleMaterialClick = (material) => {
+  useEffect(() => {
+    if (selectedCourse || searchTerm) {
+      filterMaterials();
+    } else {
+      fetchMaterials();
+    }
+  }, [selectedCourse, searchTerm]);
+
+  const handleMaterialClick = async (material) => {
     setSelectedMaterial(material);
     setOpen(true);
+    await fetchFileContent(material.id); // Fetch file content when material is clicked
   };
 
   const handleCloseModal = () => {
     setOpen(false);
     setSelectedMaterial(null);
+    setFileContent(null); // Clear file content on modal close
+  };
+
+  const handleChangeCourse = (event) => {
+    setSelectedCourse(event.target.value);
+  };
+
+  const handleChangeSearchTerm = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleDownload = () => {
+    if (fileContent) {
+      // Create a Blob from the file content
+      const blob = new Blob([fileContent]);
+      // Create a URL for the Blob and open it in a new window
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+      // Release the URL object after opening the window
+      URL.revokeObjectURL(url);
+    }
   };
 
   return (
@@ -95,6 +158,40 @@ function CourseMaterialsPage() {
                 </MDTypography>
               </MDBox>
               <Card style={{ marginTop: "20px" }}>
+                {/* Filter by Course Select */}
+                <Box m={2}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth>
+                        <InputLabel id="course-select-label">Filter by Course</InputLabel>
+                        <Select
+                          labelId="course-select-label"
+                          id="course-select"
+                          value={selectedCourse}
+                          onChange={handleChangeCourse}
+                        >
+                          <MenuItem value="">All Courses</MenuItem>
+                          {courses.map((course_name) => (
+                            <MenuItem key={course_name} value={course_name}>
+                              {course_name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        id="search-term"
+                        label="Search by Course Name"
+                        variant="outlined"
+                        value={searchTerm}
+                        onChange={handleChangeSearchTerm}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+                {/* Table displaying filtered materials */}
                 <TableContainer
                   component={Paper}
                   elevation={3}
@@ -109,9 +206,6 @@ function CourseMaterialsPage() {
                         <TableCell align="center">
                           <strong>Title</strong>
                         </TableCell>
-                        {/* <TableCell align="center">
-                          <strong>Material Description</strong>
-                        </TableCell> */}
                         <TableCell align="center">
                           <strong>Course Name</strong>
                         </TableCell>
@@ -119,23 +213,30 @@ function CourseMaterialsPage() {
                           <strong>Actions</strong>
                         </TableCell>
                       </TableRow>
-                      {materials.map((material) => (
-                        <TableRow key={assignment.id}>
-                          <TableCell align="center">{material.id}</TableCell>
-                          <TableCell align="center">{material.materialTitle}</TableCell>
-                          {/* <TableCell align="center">{material.materialDescription}</TableCell> */}
-                          <TableCell align="center">{material.course_name}</TableCell>
-                          <TableCell align="center">
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={() => handleAssignmentClick(assignment)}
-                            >
-                              View Material
-                            </Button>
+                      {loading ? (
+                        <TableRow>
+                          <TableCell colSpan={4} align="center">
+                            <Typography>Loading...</Typography>
                           </TableCell>
                         </TableRow>
-                      ))}
+                      ) : (
+                        materials.map((material) => (
+                          <TableRow key={material.id}>
+                            <TableCell align="center">{material.id}</TableCell>
+                            <TableCell align="center">{material.material_title}</TableCell>
+                            <TableCell align="center">{material.course_name}</TableCell>
+                            <TableCell align="center">
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleMaterialClick(material)}
+                              >
+                                View Material
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -154,23 +255,17 @@ function CourseMaterialsPage() {
                             ID: {selectedMaterial.id}
                           </Typography>
                           <Typography variant="body1" gutterBottom>
-                            Title: {selectedMaterial.materialTitle}
+                            Title: {selectedMaterial.material_title}
                           </Typography>
-                          {/* <Typography variant="body1" gutterBottom>
-                            Description: {selectedMaterial.materialDescription}
-                          </Typography> */}
                           <Typography variant="body1" gutterBottom>
                             Course Name: {selectedMaterial.course_name}
                           </Typography>
                           <Button
                             variant="contained"
                             color="primary"
-                            href={selectedAssignment.uploadedFileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            download
+                            onClick={handleDownload}
                           >
-                            Download Assignment
+                            Download Material
                           </Button>
                         </>
                       )}

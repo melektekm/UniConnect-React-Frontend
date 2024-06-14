@@ -69,19 +69,19 @@ function UploadAssignment() {
       setDialogOpen(true);
       return;
     }
-
+    const formattedDate = formValues.dueDate.split("-").slice(0, 3).join("-");
     setLoading(true);
     try {
       const jsonData = {
         course_code: formValues.course_code,
         assignmentName: formValues.assignmentName,
         assignmentDescription: formValues.assignmentDescription,
-        dueDate: formValues.dueDate,
+        dueDate: formValues.formattedDate,
         file: formValues.file, // Assuming the file object is needed in JSON format
       };
-
+      
       const response = await axios.post(
-        `${BASE_URL}/teacher/upload-assignment`,
+        `${BASE_URL}/upload-assignment`,
         JSON.stringify(jsonData),
         {
           headers: {
