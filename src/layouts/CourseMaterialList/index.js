@@ -39,19 +39,18 @@ function CourseMaterialsPage() {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [fileContent, setFileContent] = useState(null); // State to store file content
+  const [fileContent, setFileContent] = useState(null);
 
-  const [courses, setCourses] = useState([]); // State to store unique courses
+  const [courses, setCourses] = useState([]);
 
   const fetchMaterials = async () => {
     setLoading(true);
     try {
       const response = await axios.get(`${BASE_URL}/getallmaterials`);
-      console.log('Response data:', response.data); // Log the response data
       if (response.data && response.data.materials) {
         setMaterials(response.data.materials);
         const uniqueCourses = [...new Set(response.data.materials.map(material => material.course_name))];
-        setCourses(uniqueCourses); // Extract unique courses
+        setCourses(uniqueCourses);
       }
     } catch (error) {
       console.error('Error fetching materials:', error);
@@ -59,20 +58,18 @@ function CourseMaterialsPage() {
     setLoading(false);
   };
 
- // Fetch file content when material is selected
-const fetchFileContent = async (materialId) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/getmaterialcontent/${materialId}`, {
-      responseType: "blob", // Ensure response is treated as a blob (binary data)
-    });
-    console.log('File content:', response.data);
-    setFileContent(response.data); // Set the file content
-  } catch (error) {
-    console.error('Error fetching file content:', error);
-  }
-};
+  const fetchFileContent = async (materialId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/getmaterialcontent/${materialId}`, {
+        responseType: "blob",
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching file content:', error);
+      return null;
+    }
+  };
 
-  // Filter materials based on selected course and search term
   const filterMaterials = async () => {
     setLoading(true);
     try {
@@ -80,7 +77,6 @@ const fetchFileContent = async (materialId) => {
         course_name: selectedCourse,
         searchTerm: searchTerm,
       });
-      console.log('Filtered materials:', response.data.filteredMaterials);
       if (response.data && response.data.filteredMaterials) {
         setMaterials(response.data.filteredMaterials);
       }
@@ -103,15 +99,35 @@ const fetchFileContent = async (materialId) => {
   }, [selectedCourse, searchTerm]);
 
   const handleMaterialClick = async (material) => {
-    setSelectedMaterial(material);
-    setOpen(true);
-    await fetchFileContent(material.id); // Fetch file content when material is clicked
+    const fileContent = await fetchFileContent(material.id);
+    if (fileContent) {
+      const fileURL = URL.createObjectURL(new Blob([fileContent], { type: "application/pdf" }));
+      const newWindow = window.open();
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>${material.material_title}</title>
+            </head>
+            <body>
+              <embed width="100%" height="100%" src="${fileURL}" type="application/pdf">
+              <a href="${fileURL}" download="${material.material_title}.pdf">
+                <button>Download</button>
+              </a>
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      } else {
+        console.error('Failed to open new window');
+      }
+    }
   };
 
   const handleCloseModal = () => {
     setOpen(false);
     setSelectedMaterial(null);
-    setFileContent(null); // Clear file content on modal close
+    setFileContent(null);
   };
 
   const handleChangeCourse = (event) => {
@@ -120,18 +136,6 @@ const fetchFileContent = async (materialId) => {
 
   const handleChangeSearchTerm = (event) => {
     setSearchTerm(event.target.value);
-  };
-
-  const handleDownload = () => {
-    if (fileContent) {
-      // Create a Blob from the file content
-      const blob = new Blob([fileContent]);
-      // Create a URL for the Blob and open it in a new window
-      const url = URL.createObjectURL(blob);
-      window.open(url, "_blank");
-      // Release the URL object after opening the window
-      URL.revokeObjectURL(url);
-    }
   };
 
   return (
@@ -158,7 +162,6 @@ const fetchFileContent = async (materialId) => {
                 </MDTypography>
               </MDBox>
               <Card style={{ marginTop: "20px" }}>
-                {/* Filter by Course Select */}
                 <Box m={2}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -191,7 +194,6 @@ const fetchFileContent = async (materialId) => {
                     </Grid>
                   </Grid>
                 </Box>
-                {/* Table displaying filtered materials */}
                 <TableContainer
                   component={Paper}
                   elevation={3}
@@ -242,37 +244,6 @@ const fetchFileContent = async (materialId) => {
                 </TableContainer>
                 <Footer />
               </Card>
-              <Modal open={open} onClose={handleCloseModal}>
-                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                  <Card>
-                    <CardContent>
-                      {selectedMaterial && (
-                        <>
-                          <Typography variant="h5" component="div" gutterBottom>
-                            Course Material Details
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            ID: {selectedMaterial.id}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Title: {selectedMaterial.material_title}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Course Name: {selectedMaterial.course_name}
-                          </Typography>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleDownload}
-                          >
-                            Download Material
-                          </Button>
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
-                </Box>
-              </Modal>
             </Grid>
           </Grid>
         </MDBox>

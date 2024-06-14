@@ -32,7 +32,8 @@ function AddCourseMaterial() {
   const [courseName, setCourseName] = useState("");
   const [formValues, setFormValues] = useState({
     course_code: "",
-    materialTitle: "",
+    material_title: "",
+    course_name: "",
     file: null,
   });
   const [open, setOpen] = useState(false);
@@ -41,6 +42,7 @@ function AddCourseMaterial() {
   const [errorMessages, setErrorMessages] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
   const [file, setFile] = useState(null); // Define the file state variable
+  const [fileUrl, setFileUrl] = useState(""); // State to hold the file URL for viewing
 
   const handleFileUpload = (event) => {
     const selectedFile = event.target.files[0];
@@ -51,7 +53,7 @@ function AddCourseMaterial() {
   const handleUploadMaterial = async () => {
     const newErrorMessages = {
       course_code: formValues.course_code ? "" : "Course code is required",
-      materialTitle: formValues.materialTitle ? "" : "Material title is required",
+      material_title: formValues.material_title ? "" : "Material title is required",
     };
 
     setErrorMessages(newErrorMessages);
@@ -66,7 +68,8 @@ function AddCourseMaterial() {
     try {
       const formData = new FormData();
       formData.append("course_code", formValues.course_code);
-      formData.append("material_title", formValues.materialTitle);
+      formData.append("material_title", formValues.material_title);
+      formData.append("course_name", courseName);
       formData.append("file", formValues.file);
 
       const response = await axios.post(`${BASE_URL}/upload-material`, formData, {
@@ -79,6 +82,7 @@ function AddCourseMaterial() {
       if (response.status === 201) {
         resetState();
         setSuccessMessage("Course material uploaded successfully!");
+        setFileUrl(response.data.file_url); // Set the URL of the uploaded file
         setDialogOpen(true);
       } else {
         setErrorMessage("Failed to upload Course material. Please try again.");
@@ -122,6 +126,12 @@ function AddCourseMaterial() {
     }
   };
 
+  const handleViewDetail = () => {
+    if (fileUrl) {
+      window.open(fileUrl, "_blank");
+    }
+  };
+
   const fileInputStyle = {
     display: "inline-block",
     cursor: "pointer",
@@ -135,10 +145,11 @@ function AddCourseMaterial() {
   const resetState = () => {
     setFormValues({
       course_code: "",
-      materialTitle: "",
+      material_title: "",
       file: null,
     });
     setFile(null);
+    setFileUrl(""); // Reset the file URL
   };
 
   return (
@@ -229,21 +240,21 @@ function AddCourseMaterial() {
                   <MDBox mb={2}>
                     <MDInput
                       type="text"
-                      name="materialTitle"
+                      name="material_title"
                       label="Material Title"
                       variant="outlined"
                       fullWidth
-                      value={formValues.materialTitle}
+                      value={formValues.material_title}
                       onChange={(e) =>
                         setFormValues({
                           ...formValues,
-                          materialTitle: e.target.value,
+                          material_title: e.target.value,
                         })
                       }
                       margin="normal"
                       required
-                      error={!!errorMessages.materialTitle}
-                      helperText={errorMessages.materialTitle}
+                      error={!!errorMessages.material_title}
+                      helperText={errorMessages.material_title}
                     />
                   </MDBox>
                   <MDBox
@@ -273,6 +284,16 @@ function AddCourseMaterial() {
                     >
                       {loading ? "Uploading..." : "Upload Course Material"}
                     </MDButton>
+                    {fileUrl && (
+                      <MDButton
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleViewDetail}
+                        style={{ marginLeft: "10px" }}
+                      >
+                        View Detail
+                      </MDButton>
+                    )}
                   </MDBox>
                 </MDBox>
               </MDBox>
