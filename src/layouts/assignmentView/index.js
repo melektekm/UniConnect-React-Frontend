@@ -9,13 +9,9 @@ import {
   Typography,
   Grid,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Modal,
   Card,
   Box,
-  Modal,
   CardContent,
 } from "@mui/material";
 import axios from "axios";
@@ -27,6 +23,7 @@ import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
+import { useNavigate } from "react-router-dom";
 
 function ViewAssignments() {
   const electron = window.require("electron");
@@ -40,7 +37,7 @@ function ViewAssignments() {
 
   const accessToken = userData.accessToken;
 
-  // const history = useHistory();
+  const navigate = useNavigate();
 
   const fetchAssignments = async () => {
     setLoading(true);
@@ -73,15 +70,14 @@ function ViewAssignments() {
     setSelectedAssignment(null);
   };
 
-  const handleSubmitAssignment = (assignment) => {
-    // history.push({
-    //   pathname: "/submit-assignment",
-    //   state: {
-    //     assignmentName: assignment.ass_name,
-    //     courseName: assignment.course_name,
-    //   },
-    // });
-  };
+  function handleSubmitAssignment(assignment) {
+    navigate("/submit-assignment", {
+      state: {
+        assignmentName: assignment.assignmentName,
+        courseName: assignment.course_name,
+      },
+    });
+  }
 
   return (
     <div style={{ display: "flex" }}>
@@ -138,16 +134,16 @@ function ViewAssignments() {
                         <TableRow key={assignment.id}>
                           <TableCell align="center">{assignment.id}</TableCell>
                           <TableCell align="center">
-                            {assignment.ass_name}
+                            {assignment.assignmentName}
                           </TableCell>
                           <TableCell align="center">
-                            {assignment.Add_description}
+                            {assignment.assignmentDescription}
                           </TableCell>
                           <TableCell align="center">
                             {assignment.course_name}
                           </TableCell>
                           <TableCell align="center">
-                            {assignment.due_date}
+                            {assignment.dueDate}
                           </TableCell>
                           <TableCell align="center">
                             <Button
@@ -159,7 +155,7 @@ function ViewAssignments() {
                             </Button>
                             <Button
                               variant="contained"
-                              color="secondary"
+                              color="white"
                               onClick={() => handleSubmitAssignment(assignment)}
                               style={{ marginLeft: "10px" }}
                             >
