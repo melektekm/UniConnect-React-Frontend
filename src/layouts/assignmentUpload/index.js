@@ -71,22 +71,24 @@ function UploadAssignment() {
 
     setLoading(true);
     try {
-      const jsonData = {
-        course_code: formValues.course_code,
-        courseName: courseName, // include courseName here
-        assignmentName: formValues.assignmentName,
-        assignmentDescription: formValues.assignmentDescription,
-        dueDate: formValues.dueDate,
-        file: formValues.file,
-      };
-      
+      const formData = new FormData();
+      formData.append("course_code", formValues.course_code);
+      formData.append("course_name", courseName);
+      formData.append("assignmentName", formValues.assignmentName);
+      formData.append(
+        "assignmentDescription",
+        formValues.assignmentDescription
+      );
+      formData.append("dueDate", formValues.dueDate);
+      formData.append("file", formValues.file);
+
       const response = await axios.post(
         `${BASE_URL}/upload-assignment`,
-        JSON.stringify(jsonData),
+        formData,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -230,7 +232,7 @@ function UploadAssignment() {
                         margin="normal"
                         required
                         error={!!errorMessages.course_code}
-                      helperText={errorMessages.course_code}
+                        helperText={errorMessages.course_code}
                       />
                     </FormControl>
                   </MDBox>
