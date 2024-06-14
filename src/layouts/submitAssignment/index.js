@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
@@ -12,12 +12,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { BASE_URL } from "../../appconfig";
-import { CardContent } from "@mui/material";
-import MainDashboard from "../../layouts/MainDashboard";
 import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import TextField from "@mui/material/TextField";
 import MDInput from "../../components/MDInput";
 import colors from "../../assets/theme/base/colors";
 import FormControl from "@mui/material/FormControl";
@@ -30,14 +27,12 @@ function SubmitAssignment() {
   const accessToken = userData.accessToken;
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
-    course_code: "",
-    assignmentName: location.state.assignmentName || "", // get assignmentName from location state
-    courseName: location.state.courseName || "", // get courseName from location state
+    assignmentName: location.state.assignmentName || "",
+    courseName: location.state.courseName || "",
     student_name: "",
     student_id: "",
     file: null,
   });
-  const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
@@ -58,7 +53,7 @@ function SubmitAssignment() {
         : "Assignment name is required",
       student_name: formValues.student_name ? "" : "Name is required",
       student_id: formValues.student_id ? "" : "ID is required",
-      file: formValues.file ? "" : "File is required",
+      // file: formValues.file ? "" : "File is required",
     };
 
     setErrorMessages(newErrorMessages);
@@ -73,7 +68,7 @@ function SubmitAssignment() {
     try {
       const formData = new FormData();
       formData.append("course_name", formValues.courseName);
-      formData.append("assignmentName", formValues.assignmentName);
+      formData.append("assignment_name", formValues.assignmentName);
       formData.append("student_name", formValues.student_name);
       formData.append("student_id", formValues.student_id);
       formData.append("file", formValues.file);
@@ -123,7 +118,6 @@ function SubmitAssignment() {
 
   const resetState = () => {
     setFormValues({
-      course_code: "",
       assignmentName: location.state.assignmentName || "",
       courseName: location.state.courseName || "",
       student_name: "",
@@ -137,18 +131,6 @@ function SubmitAssignment() {
     <DashboardLayout>
       <DashboardNavbar />
       <Sidenav />
-      <MainDashboard />
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Error</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{errorMessage}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <MDButton onClick={() => setOpen(false)} color="primary">
-            Close
-          </MDButton>
-        </DialogActions>
-      </Dialog>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogTitle>{successMessage ? "Success" : "Error"}</DialogTitle>
         <DialogContent>
@@ -251,12 +233,12 @@ function SubmitAssignment() {
                     />
                   </MDBox>
                   <MDBox mb={2}>
-                    <TextField
+                    <MDInput
                       type="text"
                       name="student_id"
                       label="Student ID"
-                      fullWidth
                       variant="outlined"
+                      fullWidth
                       value={formValues.student_id}
                       onChange={(e) =>
                         setFormValues({
