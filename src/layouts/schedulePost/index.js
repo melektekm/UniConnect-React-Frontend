@@ -41,6 +41,7 @@ function ScheduleRequest() {
     labInstructor: "",
     classInstructor: "",
     scheduleType: "Class",
+    status: "Pending", // default value for status
   });
 
   const [loading, setLoading] = useState(false);
@@ -55,6 +56,7 @@ function ScheduleRequest() {
   const accessToken = userData.accessToken;
 
   const scheduleTypeOptions = ["Exam", "Class"];
+  const statusOptions = ["Pending", "Approved"]; // status options
   const [formList, setFormList] = useState({
     items: [],
     recommendations: "",
@@ -74,7 +76,7 @@ function ScheduleRequest() {
   const handleCourseCodeChange = async (event) => {
     const course_code = event.target.value;
     setFormData((prevFormData) => ({ ...prevFormData, course_code }));
-  
+
     if (course_code) {
       try {
         const response = await axios.get(
@@ -101,7 +103,6 @@ function ScheduleRequest() {
       setFormData((prevFormData) => ({ ...prevFormData, course_name: "" }));
     }
   };
-  
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -119,6 +120,7 @@ function ScheduleRequest() {
       "labDays",
       "labInstructor",
       "classInstructor",
+      "status", // check for status as well
     ].forEach((field) => {
       if (!formData[field]) {
         errors[field] = `${field.replace(/([A-Z])/g, " $1")} is required`;
@@ -146,6 +148,7 @@ function ScheduleRequest() {
       labInstructor: "",
       classInstructor: "",
       scheduleType: "Class",
+      status: "Pending", // reset to default
     });
   };
 
@@ -154,7 +157,7 @@ function ScheduleRequest() {
     try {
       const response = await axios.post(
         `${BASE_URL}/schedule-requests`,
-        JSON.stringify(formData),
+        { scheduleRequests: formList.items }, // Wrap the form data in a JSON object with a key
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -292,7 +295,7 @@ function ScheduleRequest() {
                   <MDInput
                     type="text"
                     name="labDays"
-                    label="Labroom days"
+                    label="Lab Days"
                     value={formData.labDays}
                     onChange={handleFormChange}
                     margin="dense"
@@ -331,6 +334,22 @@ function ScheduleRequest() {
                         onChange={handleFormChange}
                       >
                         {scheduleTypeOptions.map((option, idx) => (
+                          <MenuItem value={option} key={idx}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </MDBox>
+                  <MDBox mt={2} mb={2}>
+                    <FormControl fullWidth>
+                      <MDTypography>Status:</MDTypography>
+                      <Select
+                        name="status"
+                        value={formData.status}
+                        onChange={handleFormChange}
+                      >
+                        {statusOptions.map((option, idx) => (
                           <MenuItem value={option} key={idx}>
                             {option}
                           </MenuItem>
@@ -399,6 +418,7 @@ function ScheduleRequest() {
                             <TableCell>{form.labroom}</TableCell>
                             <TableCell>{form.labInstructor}</TableCell>
                             <TableCell>{form.classInstructor}</TableCell>
+                            <TableCell>{form.status}</TableCell>
                             <TableCell>
                               <Button
                                 color="secondary"

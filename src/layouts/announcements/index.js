@@ -18,9 +18,6 @@ import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import FormControl from "@mui/material/FormControl"; // Import FormControl
-import InputLabel from "@mui/material/InputLabel"; // Import InputLabel
-import Select from "@mui/material/Select"; // Import Select
-import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
 import TextField from "@mui/material/TextField"; // Import TextField
 import MDInput from "../../components/MDInput";
 import colors from "../../assets/theme/base/colors";
@@ -52,6 +49,7 @@ function UploadAnnouncement() {
     setFormValues({ ...formValues, file: selectedFile });
     setFile(selectedFile); // Set the file in the state
   };
+  console.log(accessToken);
   const handlePostAnnouncement = async () => {
     const newErrorMessages = {
       title: formValues.title ? "" : "title is required",
@@ -59,18 +57,18 @@ function UploadAnnouncement() {
       content: formValues.content ? "" : "content description is required",
       date: formValues.date ? "" : "Due date is required",
     };
-  
+
     setErrorMessages(newErrorMessages);
-  
+
     if (Object.values(newErrorMessages).some((message) => message !== "")) {
       setErrorMessage("All fields should be filled");
       setDialogOpen(true);
       return;
     }
-  
+
     // Format date as YY-MM-DD
     const formattedDate = formValues.date.split("-").slice(0, 3).join("-");
-  
+
     setLoading(true);
     try {
       const formData = new FormData();
@@ -81,7 +79,7 @@ function UploadAnnouncement() {
       if (formValues.file) {
         formData.append("file", formValues.file);
       }
-  
+
       const response = await axios.post(
         `${BASE_URL}/post-announcement`,
         formData,
@@ -92,7 +90,7 @@ function UploadAnnouncement() {
           },
         }
       );
-  
+
       if (response.data) {
         setSuccessMessage("Announcement posted successfully!");
         setDialogOpen(true);
@@ -107,7 +105,6 @@ function UploadAnnouncement() {
       setLoading(false);
     }
   };
-  
 
   const handleDialogClose = () => {
     setDialogOpen(false);
