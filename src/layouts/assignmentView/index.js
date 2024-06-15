@@ -9,13 +9,15 @@ import {
   Typography,
   Grid,
   Button,
-  Modal,
   Card,
   Box,
-  CardContent,
+  TextField,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControl,
 } from "@mui/material";
 import axios from "axios";
-// import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
@@ -32,8 +34,9 @@ function ViewAssignments() {
   const [loading, setLoading] = useState(true);
   const userData = ipcRenderer.sendSync("get-user");
 
-  const [open, setOpen] = useState(false);
-  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [courses, setCourses] = useState([]);
 
   const accessToken = userData.accessToken;
 
@@ -47,11 +50,41 @@ function ViewAssignments() {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      console.log("API Response:", response.data); // Log the API response
       if (response.data && response.data.assignments) {
         setAssignments(response.data.assignments);
+        const uniqueCourses = [
+          ...new Set(response.data.assignments.map((assignment) => assignment.course_name)),
+        ];
+        setCourses(uniqueCourses);
       }
     } catch (error) {
       console.error("Error fetching assignments:", error);
+    }
+    setLoading(false);
+  };
+
+  const filterAssignments = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/filterassignments`,
+        {
+          course_name: selectedCourse,
+          searchTerm: searchTerm,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("Filtered API Response:", response.data); // Log the filtered API response
+      if (response.data && response.data.filteredAssignments) {
+        setAssignments(response.data.filteredAssignments);
+      }
+    } catch (error) {
+      console.error("Error filtering assignments:", error);
     }
     setLoading(false);
   };
@@ -60,14 +93,31 @@ function ViewAssignments() {
     fetchAssignments();
   }, []);
 
+  useEffect(() => {
+    if (selectedCourse || searchTerm) {
+      filterAssignments();
+    } else {
+      fetchAssignments();
+    }
+  }, [selectedCourse, searchTerm]);
+
   const handleAssignmentClick = (assignment) => {
-    setSelectedAssignment(assignment);
-    setOpen(true);
+    const fileUrl = assignment.uploadedFileUrl;
+    console.log("Opening URL:", fileUrl);
+
+    if (fileUrl) {
+      window.open(fileUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      console.error("Invalid file URL");
+    }
   };
 
-  const handleCloseModal = () => {
-    setOpen(false);
-    setSelectedAssignment(null);
+  const handleChangeCourse = (event) => {
+    setSelectedCourse(event.target.value);
+  };
+
+  const handleChangeSearchTerm = (event) => {
+    setSearchTerm(event.target.value);
   };
 
   function handleSubmitAssignment(assignment) {
@@ -103,6 +153,38 @@ function ViewAssignments() {
                 </MDTypography>
               </MDBox>
               <Card style={{ marginTop: "20px" }}>
+                <Box m={2}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth>
+                        <InputLabel id="course-select-label">Filter by Course</InputLabel>
+                        <Select
+                          labelId="course-select-label"
+                          id="course-select"
+                          value={selectedCourse}
+                          onChange={handleChangeCourse}
+                        >
+                          <MenuItem value="">All Courses</MenuItem>
+                          {courses.map((course_name) => (
+                            <MenuItem key={course_name} value={course_name}>
+                              {course_name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        id="search-term"
+                        label="Search by Course Name"
+                        variant="outlined"
+                        value={searchTerm}
+                        onChange={handleChangeSearchTerm}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
                 <TableContainer
                   component={Paper}
                   elevation={3}
@@ -133,18 +215,10 @@ function ViewAssignments() {
                       {assignments.map((assignment) => (
                         <TableRow key={assignment.id}>
                           <TableCell align="center">{assignment.id}</TableCell>
-                          <TableCell align="center">
-                            {assignment.assignmentName}
-                          </TableCell>
-                          <TableCell align="center">
-                            {assignment.assignmentDescription}
-                          </TableCell>
-                          <TableCell align="center">
-                            {assignment.course_name}
-                          </TableCell>
-                          <TableCell align="center">
-                            {assignment.dueDate}
-                          </TableCell>
+                          <TableCell align="center">{assignment.assignmentName}</TableCell>
+                          <TableCell align="center">{assignment.assignmentDescription}</TableCell>
+                          <TableCell align="center">{assignment.course_name}</TableCell>
+                          <TableCell align="center">{assignment.dueDate}</TableCell>
                           <TableCell align="center">
                             <Button
                               variant="contained"
@@ -169,53 +243,6 @@ function ViewAssignments() {
                 </TableContainer>
                 <Footer />
               </Card>
-              <Modal open={open} onClose={handleCloseModal}>
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                >
-                  <Card>
-                    <CardContent>
-                      {selectedAssignment && (
-                        <>
-                          <Typography variant="h5" component="div" gutterBottom>
-                            Assignment Details
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Assignment ID: {selectedAssignment.id}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Assignment Name: {selectedAssignment.ass_name}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Description: {selectedAssignment.Add_description}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Course Name: {selectedAssignment.course_name}
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            Due Date: {selectedAssignment.due_date}
-                          </Typography>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            href={selectedAssignment.uploadedFileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            download
-                          >
-                            Download Assignment
-                          </Button>
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
-                </Box>
-              </Modal>
             </Grid>
           </Grid>
         </MDBox>
