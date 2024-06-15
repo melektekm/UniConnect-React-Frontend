@@ -36,11 +36,14 @@ function SubmittedAssignments() {
   const fetchAssignments = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/getallsubmittedassignments`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/getallsubmittedassignments`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       if (response.data && response.data.assignments) {
         setAssignments(response.data.assignments);
       }
@@ -118,10 +121,18 @@ function SubmittedAssignments() {
                       {assignments.map((assignment) => (
                         <TableRow key={assignment.id}>
                           <TableCell align="center">{assignment.id}</TableCell>
-                          <TableCell align="center">{assignment.ass_name}</TableCell>
-                          <TableCell align="center">{assignment.course_name}</TableCell>
-                          <TableCell align="center">{assignment.student_id}</TableCell>
-                          <TableCell align="center">{assignment.student_name}</TableCell>
+                          <TableCell align="center">
+                            {assignment.assignment_name}
+                          </TableCell>
+                          <TableCell align="center">
+                            {assignment.course_name}
+                          </TableCell>
+                          <TableCell align="center">
+                            {assignment.student_id}
+                          </TableCell>
+                          <TableCell align="center">
+                            {assignment.student_name}
+                          </TableCell>
                           <TableCell align="center">
                             <Button
                               variant="contained"
@@ -156,7 +167,12 @@ function SubmittedAssignments() {
                     <>
                       <Card>
                         <CardContent>
-                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
                             <MDTypography variant="h5">
                               Viewing Assignment: {selectedAssignment.ass_name}
                             </MDTypography>

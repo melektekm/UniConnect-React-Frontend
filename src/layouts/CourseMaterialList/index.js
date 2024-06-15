@@ -40,7 +40,6 @@ function CourseMaterialsPage() {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [fileContent, setFileContent] = useState(null);
-
   const [courses, setCourses] = useState([]);
 
   const fetchMaterials = async () => {
@@ -49,23 +48,30 @@ function CourseMaterialsPage() {
       const response = await axios.get(`${BASE_URL}/getallmaterials`);
       if (response.data && response.data.materials) {
         setMaterials(response.data.materials);
-        const uniqueCourses = [...new Set(response.data.materials.map(material => material.course_name))];
+        const uniqueCourses = [
+          ...new Set(
+            response.data.materials.map((material) => material.course_name)
+          ),
+        ];
         setCourses(uniqueCourses);
       }
     } catch (error) {
-      console.error('Error fetching materials:', error);
+      console.error("Error fetching materials:", error);
     }
     setLoading(false);
   };
 
   const fetchFileContent = async (materialId) => {
     try {
-      const response = await axios.get(`${BASE_URL}/getmaterialcontent/${materialId}`, {
-        responseType: "blob",
-      });
+      const response = await axios.get(
+        `${BASE_URL}/getmaterialcontent/${materialId}`,
+        {
+          responseType: "blob",
+        }
+      );
       return response.data;
     } catch (error) {
-      console.error('Error fetching file content:', error);
+      console.error("Error fetching file content:", error);
       return null;
     }
   };
@@ -81,7 +87,7 @@ function CourseMaterialsPage() {
         setMaterials(response.data.filteredMaterials);
       }
     } catch (error) {
-      console.error('Error filtering materials:', error);
+      console.error("Error filtering materials:", error);
     }
     setLoading(false);
   };
@@ -98,10 +104,12 @@ function CourseMaterialsPage() {
     }
   }, [selectedCourse, searchTerm]);
 
-  const handleMaterialClick = async (material) => {
+  const handleViewDetail = async (material) => {
     const fileContent = await fetchFileContent(material.id);
     if (fileContent) {
-      const fileURL = URL.createObjectURL(new Blob([fileContent], { type: "application/pdf" }));
+      const fileURL = URL.createObjectURL(
+        new Blob([fileContent], { type: "application/pdf" })
+      );
       const newWindow = window.open();
       if (newWindow) {
         newWindow.document.write(`
@@ -119,7 +127,7 @@ function CourseMaterialsPage() {
         `);
         newWindow.document.close();
       } else {
-        console.error('Failed to open new window');
+        console.error("Failed to open new window");
       }
     }
   };
@@ -166,7 +174,9 @@ function CourseMaterialsPage() {
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
                       <FormControl fullWidth>
-                        <InputLabel id="course-select-label">Filter by Course</InputLabel>
+                        <InputLabel id="course-select-label">
+                          Filter by Course
+                        </InputLabel>
                         <Select
                           labelId="course-select-label"
                           id="course-select"
@@ -225,13 +235,17 @@ function CourseMaterialsPage() {
                         materials.map((material) => (
                           <TableRow key={material.id}>
                             <TableCell align="center">{material.id}</TableCell>
-                            <TableCell align="center">{material.material_title}</TableCell>
-                            <TableCell align="center">{material.course_name}</TableCell>
+                            <TableCell align="center">
+                              {material.material_title}
+                            </TableCell>
+                            <TableCell align="center">
+                              {material.course_name}
+                            </TableCell>
                             <TableCell align="center">
                               <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={() => handleMaterialClick(material)}
+                                onClick={() => handleViewDetail(material)}
                               >
                                 View Material
                               </Button>
