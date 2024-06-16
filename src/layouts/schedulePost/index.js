@@ -10,7 +10,6 @@ import {
   TableCell,
   FormControl,
   MenuItem,
-  TextField,
   Select,
   Button,
   Dialog,
@@ -40,8 +39,7 @@ function ScheduleRequest() {
     labDays: "",
     labInstructor: "",
     classInstructor: "",
-    scheduleType: "Class",
-    status: "Pending", // default value for status
+    schedule_type: "Class",
   });
 
   const [loading, setLoading] = useState(false);
@@ -56,7 +54,7 @@ function ScheduleRequest() {
   const accessToken = userData.accessToken;
 
   const scheduleTypeOptions = ["Exam", "Class"];
-  const statusOptions = ["Pending", "Approved"]; // status options
+
   const [formList, setFormList] = useState({
     items: [],
     recommendations: "",
@@ -115,12 +113,8 @@ function ScheduleRequest() {
       "course_name",
       "course_code",
       "classroom",
-      "labroom",
       "classDays",
-      "labDays",
-      "labInstructor",
       "classInstructor",
-      "status", // check for status as well
     ].forEach((field) => {
       if (!formData[field]) {
         errors[field] = `${field.replace(/([A-Z])/g, " $1")} is required`;
@@ -130,7 +124,7 @@ function ScheduleRequest() {
     setErrorMessages(errors);
 
     if (Object.keys(errors).length > 0) {
-      setErrorMessage("Please fill in all fields");
+      setErrorMessage("Please fill in all required fields.");
       return;
     }
 
@@ -147,8 +141,7 @@ function ScheduleRequest() {
       labDays: "",
       labInstructor: "",
       classInstructor: "",
-      scheduleType: "Class",
-      status: "Pending", // reset to default
+      schedule_type: "Class",
     });
   };
 
@@ -157,7 +150,7 @@ function ScheduleRequest() {
     try {
       const response = await axios.post(
         `${BASE_URL}/schedule-requests`,
-        { scheduleRequests: formList.items }, // Wrap the form data in a JSON object with a key
+        { items: formList.items },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -165,15 +158,16 @@ function ScheduleRequest() {
           },
         }
       );
-      if (response.data) {
+      if (response.status === 201) {
         setLoading(false);
-        setErrorMessage("Schedule has been sent successfully");
+        setFormList({ items: [], recommendations: "" });
+        setErrorMessage("Schedule has been sent successfully.");
       } else {
-        setErrorMessage("Failed to post Schedule. Please try again.");
+        setErrorMessage("Failed to post schedule. Please try again.");
         setLoading(false);
       }
     } catch (error) {
-      setErrorMessage("Error while sending schedule " + error.message);
+      setErrorMessage("Error while sending schedule: " + error.message);
       setLoading(false);
     }
   };
@@ -229,6 +223,22 @@ function ScheduleRequest() {
               </MDBox>
 
               <MDBox pt={3} pb={3} px={2}>
+                <MDBox mt={2} mb={2}>
+                  <FormControl fullWidth>
+                    <MDTypography>Schedule Type:</MDTypography>
+                    <Select
+                      name="schedule_type"
+                      value={formData.schedule_type}
+                      onChange={handleFormChange}
+                    >
+                      {scheduleTypeOptions.map((option, idx) => (
+                        <MenuItem value={option} key={idx}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </MDBox>
                 <MDBox component="form" role="form">
                   <FormControl variant="outlined" fullWidth margin="normal">
                     <MDInput
@@ -281,43 +291,48 @@ function ScheduleRequest() {
                     error={!!errorMessages.classroom}
                     helperText={errorMessages.classroom}
                   />
-                  <MDInput
-                    type="text"
-                    name="labroom"
-                    label="Labroom"
-                    value={formData.labroom}
-                    onChange={handleFormChange}
-                    margin="dense"
-                    required
-                    error={!!errorMessages.labroom}
-                    helperText={errorMessages.labroom}
-                  />
-                  <MDInput
-                    type="text"
-                    name="labDays"
-                    label="Lab Days"
-                    value={formData.labDays}
-                    onChange={handleFormChange}
-                    margin="dense"
-                    required
-                    error={!!errorMessages.labDays}
-                    helperText={errorMessages.labDays}
-                  />
-                  <MDInput
-                    type="text"
-                    name="labInstructor"
-                    label="Lab Instructor"
-                    value={formData.labInstructor}
-                    onChange={handleFormChange}
-                    margin="dense"
-                    required
-                    error={!!errorMessages.labInstructor}
-                    helperText={errorMessages.labInstructor}
-                  />
+                  {formData.schedule_type === "Class" && (
+                    <>
+                      <MDInput
+                        type="text"
+                        name="labroom"
+                        label="Labroom"
+                        value={formData.labroom}
+                        onChange={handleFormChange}
+                        margin="dense"
+                        error={!!errorMessages.labroom}
+                        helperText={errorMessages.labroom}
+                      />
+                      <MDInput
+                        type="text"
+                        name="labDays"
+                        label="Lab Days"
+                        value={formData.labDays}
+                        onChange={handleFormChange}
+                        margin="dense"
+                        error={!!errorMessages.labDays}
+                        helperText={errorMessages.labDays}
+                      />
+                      <MDInput
+                        type="text"
+                        name="labInstructor"
+                        label="Lab Instructor"
+                        value={formData.labInstructor}
+                        onChange={handleFormChange}
+                        margin="dense"
+                        error={!!errorMessages.labInstructor}
+                        helperText={errorMessages.labInstructor}
+                      />
+                    </>
+                  )}
                   <MDInput
                     type="text"
                     name="classInstructor"
-                    label="Class Instructor"
+                    label={
+                      formData.schedule_type === "Exam"
+                        ? "Examiner"
+                        : "Class Instructor"
+                    }
                     value={formData.classInstructor}
                     onChange={handleFormChange}
                     margin="dense"
@@ -325,38 +340,6 @@ function ScheduleRequest() {
                     error={!!errorMessages.classInstructor}
                     helperText={errorMessages.classInstructor}
                   />
-                  <MDBox mt={2} mb={2}>
-                    <FormControl fullWidth>
-                      <MDTypography>Schedule Type:</MDTypography>
-                      <Select
-                        name="scheduleType"
-                        value={formData.scheduleType}
-                        onChange={handleFormChange}
-                      >
-                        {scheduleTypeOptions.map((option, idx) => (
-                          <MenuItem value={option} key={idx}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </MDBox>
-                  <MDBox mt={2} mb={2}>
-                    <FormControl fullWidth>
-                      <MDTypography>Status:</MDTypography>
-                      <Select
-                        name="status"
-                        value={formData.status}
-                        onChange={handleFormChange}
-                      >
-                        {statusOptions.map((option, idx) => (
-                          <MenuItem value={option} key={idx}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </MDBox>
                 </MDBox>
               </MDBox>
 
@@ -377,7 +360,7 @@ function ScheduleRequest() {
                       variant="contained"
                       color="info"
                       onClick={openConfirmationDialog}
-                      disabled={loading}
+                      disabled={loading || formList.items.length === 0}
                     >
                       Submit
                     </MDButton>
@@ -387,7 +370,12 @@ function ScheduleRequest() {
               </MDBox>
             </Card>
 
-            <Card style={{ border: "3px solid #206A5D", marginTop: "20px" }}>
+            <Card
+              style={{
+                border: "3px solid #206A5D",
+                marginTop: "20px",
+              }}
+            >
               <MDBox
                 mx={2}
                 mt={-5}
@@ -414,11 +402,14 @@ function ScheduleRequest() {
                             <TableCell>{form.course_name}</TableCell>
                             <TableCell>{form.classDays}</TableCell>
                             <TableCell>{form.classroom}</TableCell>
-                            <TableCell>{form.labDays}</TableCell>
-                            <TableCell>{form.labroom}</TableCell>
-                            <TableCell>{form.labInstructor}</TableCell>
+                            {form.schedule_type === "Class" && (
+                              <>
+                                <TableCell>{form.labDays}</TableCell>
+                                <TableCell>{form.labroom}</TableCell>
+                                <TableCell>{form.labInstructor}</TableCell>
+                              </>
+                            )}
                             <TableCell>{form.classInstructor}</TableCell>
-                            <TableCell>{form.status}</TableCell>
                             <TableCell>
                               <Button
                                 color="secondary"
@@ -438,31 +429,47 @@ function ScheduleRequest() {
               </MDBox>
             </Card>
 
-            <Dialog open={confirmationOpen} onClose={closeConfirmationDialog}>
-              <DialogTitle>Confirm Submission</DialogTitle>
+            <Dialog
+              open={confirmationOpen}
+              onClose={closeConfirmationDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Confirm Submission
+              </DialogTitle>
               <DialogContent>
-                <DialogContentText>
+                <DialogContentText id="alert-dialog-description">
                   Are you sure you want to submit the forms?
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={closeConfirmationDialog}>Cancel</Button>
-                <Button onClick={handleSendForm} color="primary">
+                <Button onClick={closeConfirmationDialog} color="secondary">
+                  Cancel
+                </Button>
+                <Button onClick={handleSendForm} color="primary" autoFocus>
                   Confirm
                 </Button>
               </DialogActions>
             </Dialog>
 
-            <Dialog open={removeIndex !== null} onClose={closeRemoveDialog}>
-              <DialogTitle>Remove Form</DialogTitle>
+            <Dialog
+              open={removeIndex !== null}
+              onClose={closeRemoveDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">Remove Form</DialogTitle>
               <DialogContent>
-                <DialogContentText>
+                <DialogContentText id="alert-dialog-description">
                   Are you sure you want to remove this form?
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={closeRemoveDialog}>Cancel</Button>
-                <Button onClick={confirmRemoveForm} color="secondary">
+                <Button onClick={closeRemoveDialog} color="secondary">
+                  Cancel
+                </Button>
+                <Button onClick={confirmRemoveForm} color="primary" autoFocus>
                   Remove
                 </Button>
               </DialogActions>
