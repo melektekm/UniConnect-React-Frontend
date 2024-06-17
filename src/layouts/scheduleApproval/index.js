@@ -59,7 +59,7 @@ function ApproveScheduleRequest() {
           date: filterDate,
         },
       });
-      setScheduleRequests(response.data);
+      setScheduleRequests(response.data.data);
     } catch (error) {
       setErrorMessage("Error fetching schedule requests: " + error.message);
       setOpen(true);

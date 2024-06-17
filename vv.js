@@ -1,315 +1,559 @@
-// /**
-//  * v0 by Vercel.
-//  * @see https://v0.dev/t/5bT02GPQaD5
-//  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
-//  */
-// import Link from "next/link";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import {
-//   CardTitle,
-//   CardDescription,
-//   CardHeader,
-//   CardContent,
-//   Card,
-// } from "@/components/ui/card";
-// import {
-//   DropdownMenuTrigger,
-//   DropdownMenuItem,
-//   DropdownMenuContent,
-//   DropdownMenu,
-// } from "@/components/ui/dropdown-menu";
-// import Sidenav from "../../examples/Sidenav/AdminSidenav";
-// import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-// import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-// function Dashboard() {
-//   return (
-//     <DashboardLayout>
-//       <DashboardNavbar />
-//       <Sidenav />
-//       <div className="flex flex-col w-full min-h-screen">
-//         <header className="flex items-center h-16 px-4 border-b shrink-0 md:px-6">
-//           <Link
-//             className="flex items-center gap-2 text-lg font-semibold sm:text-base mr-4"
-//             href="#"
-//           >
-//             <FrameIcon className="w-6 h-6" />
-//             <span className="sr-only">Acme Inc</span>
-//           </Link>
-//           <nav className="hidden font-medium sm:flex flex-row items-center gap-5 text-sm lg:gap-6">
-//             <Link className="font-bold" href="#">
-//               Assignments
-//             </Link>
-//             <Link className="text-gray-500 dark:text-gray-400" href="#">
-//               Calendar
-//             </Link>
-//             <Link className="text-gray-500 dark:text-gray-400" href="#">
-//               Notes
-//             </Link>
-//           </nav>
-//           <div className="flex items-center w-full gap-4 md:ml-auto md:gap-2 lg:gap-4">
-//             <Button
-//               className="rounded-full ml-auto"
-//               size="icon"
-//               variant="ghost"
-//             >
-//               <img
-//                 alt="Avatar"
-//                 className="rounded-full border"
-//                 height="32"
-//                 src="/placeholder.svg"
-//                 style={{
-//                   aspectRatio: "32/32",
-//                   objectFit: "cover",
-//                 }}
-//                 width="32"
-//               />
-//               <span className="sr-only">Toggle user menu</span>
-//             </Button>
-//           </div>
-//         </header>
-//         <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] bg-gray-100/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 dark:bg-gray-800/40">
-//           <div className="max-w-6xl w-full mx-auto flex items-center gap-4">
-//             <form className="flex-1">
-//               <Input
-//                 className="bg-white dark:bg-gray-950"
-//                 placeholder="Search assignments..."
-//               />
-//               <Button className="sr-only" type="submit">
-//                 Submit
-//               </Button>
-//             </form>
-//             <Button>Add New</Button>
-//           </div>
-//           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl w-full mx-auto">
-//             <Card>
-//               <CardHeader className="flex flex-row items-center gap-4">
-//                 <BookIcon className="w-8 h-8" />
-//                 <div className="grid gap-1">
-//                   <CardTitle>Math Homework</CardTitle>
-//                   <CardDescription>Due: 2024-01-26</CardDescription>
-//                 </div>
-//                 <DropdownMenu>
-//                   <DropdownMenuTrigger asChild>
-//                     <Button className="ml-auto" size="icon" variant="ghost">
-//                       <MoreHorizontalIcon className="w-4 h-4" />
-//                       <span className="sr-only">Toggle menu</span>
-//                     </Button>
-//                   </DropdownMenuTrigger>
-//                   <DropdownMenuContent align="end">
-//                     <DropdownMenuItem>View Assignment</DropdownMenuItem>
-//                     <DropdownMenuItem>View Settings</DropdownMenuItem>
-//                   </DropdownMenuContent>
-//                 </DropdownMenu>
-//               </CardHeader>
-//               <CardContent className="grid gap-2">
-//                 <div className="text-sm font-semibold">
-//                   Complete the math homework.
-//                 </div>
-//                 <div className="flex items-center gap-4 text-sm">
-//                   <div className="flex items-center gap-1">
-//                     <GithubIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       3h ago
-//                     </span>
-//                   </div>
-//                   <div className="flex items-center gap-1">
-//                     <GitBranchIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       main
-//                     </span>
-//                   </div>
-//                 </div>
-//               </CardContent>
-//             </Card>
-//             <Card>
-//               <CardHeader className="flex flex-row items-center gap-4">
-//                 <BookIcon className="w-8 h-8" />
-//                 <div className="grid gap-1">
-//                   <CardTitle>Science Project</CardTitle>
-//                   <CardDescription>Due: 2024-01-28</CardDescription>
-//                 </div>
-//                 <DropdownMenu>
-//                   <DropdownMenuTrigger asChild>
-//                     <Button className="ml-auto" size="icon" variant="ghost">
-//                       <MoreHorizontalIcon className="w-4 h-4" />
-//                       <span className="sr-only">Toggle menu</span>
-//                     </Button>
-//                   </DropdownMenuTrigger>
-//                   <DropdownMenuContent align="end">
-//                     <DropdownMenuItem>View Assignment</DropdownMenuItem>
-//                     <DropdownMenuItem>View Settings</DropdownMenuItem>
-//                   </DropdownMenuContent>
-//                 </DropdownMenu>
-//               </CardHeader>
-//               <CardContent className="grid gap-2">
-//                 <div className="text-sm font-semibold">
-//                   Complete the science project.
-//                 </div>
-//                 <div className="flex items-center gap-4 text-sm">
-//                   <div className="flex items-center gap-1">
-//                     <GithubIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       1 day ago
-//                     </span>
-//                   </div>
-//                   <div className="flex items-center gap-1">
-//                     <GitBranchIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       main
-//                     </span>
-//                   </div>
-//                 </div>
-//               </CardContent>
-//             </Card>
-//             <Card>
-//               <CardHeader className="flex flex-row items-center gap-4">
-//                 <BookIcon className="w-8 h-8" />
-//                 <div className="grid gap-1">
-//                   <CardTitle>English Essay</CardTitle>
-//                   <CardDescription>Due: 2024-01-30</CardDescription>
-//                 </div>
-//                 <DropdownMenu>
-//                   <DropdownMenuTrigger asChild>
-//                     <Button className="ml-auto" size="icon" variant="ghost">
-//                       <MoreHorizontalIcon className="w-4 h-4" />
-//                       <span className="sr-only">Toggle menu</span>
-//                     </Button>
-//                   </DropdownMenuTrigger>
-//                   <DropdownMenuContent align="end">
-//                     <DropdownMenuItem>View Assignment</DropdownMenuItem>
-//                     <DropdownMenuItem>View Settings</DropdownMenuItem>
-//                   </DropdownMenuContent>
-//                 </DropdownMenu>
-//               </CardHeader>
-//               <CardContent className="grid gap-2">
-//                 <div className="text-sm font-semibold">
-//                   Complete the English essay.
-//                 </div>
-//                 <div className="flex items-center gap-4 text-sm">
-//                   <div className="flex items-center gap-1">
-//                     <GithubIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       2 days ago
-//                     </span>
-//                   </div>
-//                   <div className="flex items-center gap-1">
-//                     <GitBranchIcon className="w-4 h-4" />
-//                     <span className="text-gray-500 dark:text-gray-400">
-//                       main
-//                     </span>
-//                   </div>
-//                 </div>
-//               </CardContent>
-//             </Card>
-//           </div>
-//         </main>
-//       </div>
-//     </DashboardLayout>
-//   );
-// }
+import React, { useEffect, useState } from "react";
+import {
+  Grid,
+  Card,
+  CircularProgress,
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  FormControl,
+  MenuItem,
+  Select,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import MDBox from "../../components/MDBox";
+import MDTypography from "../../components/MDTypography";
+import MDInput from "../../components/MDInput";
+import MDButton from "../../components/MDButton";
+import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import Footer from "../../examples/Footer";
+import axios from "axios";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import { BASE_URL } from "../../appconfig";
 
-// function BookIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-//     </svg>
-//   );
-// }
+function ScheduleRequest() {
+  const [formData, setFormData] = useState({
+    course_name: "",
+    course_code: "",
+    classroom: "",
+    labroom: "",
+    classDays: "",
+    labDays: "",
+    labInstructor: "",
+    classInstructor: "",
+    examDate: "",
+    examTime: "",
+    examRoom: "",
+    examiner: "",
+    schedule_type: "Class",
+    status: "Pending", // default value for status
+  });
 
-// function FrameIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <line x1="22" x2="2" y1="6" y2="6" />
-//       <line x1="22" x2="2" y1="18" y2="18" />
-//       <line x1="6" x2="6" y1="2" y2="22" />
-//       <line x1="18" x2="18" y1="2" y2="22" />
-//     </svg>
-//   );
-// }
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessages, setErrorMessages] = useState({});
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [removeIndex, setRemoveIndex] = useState(null);
 
-// function GitBranchIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <line x1="6" x2="6" y1="3" y2="15" />
-//       <circle cx="18" cy="6" r="3" />
-//       <circle cx="6" cy="18" r="3" />
-//       <path d="M18 9a9 9 0 0 1-9 9" />
-//     </svg>
-//   );
-// }
+  const electron = window.require("electron");
+  const ipcRenderer = electron.ipcRenderer;
+  const userData = ipcRenderer.sendSync("get-user");
+  const accessToken = userData.accessToken;
 
-// function GithubIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-//       <path d="M9 18c-4.51 2-5-2-7-2" />
-//     </svg>
-//   );
-// }
+  const scheduleTypeOptions = ["Exam", "Class"];
+  const statusOptions = ["Pending", "Approved"]; // status options
+  const [formList, setFormList] = useState({
+    items: [],
+    recommendations: "",
+  });
 
-// function MoreHorizontalIcon(props) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <circle cx="12" cy="12" r="1" />
-//       <circle cx="19" cy="12" r="1" />
-//       <circle cx="5" cy="12" r="1" />
-//     </svg>
-//   );
-// }
-// export default Dashboard;
+  useEffect(() => {
+    const previousRoute = sessionStorage.getItem("preRouteData");
+    if (previousRoute) {
+      setFormList({
+        ...formList,
+        type: "entry",
+      });
+      sessionStorage.removeItem("preRouteData");
+    }
+  }, []);
+
+  const handleCourseCodeChange = async (event) => {
+    const course_code = event.target.value;
+    setFormData((prevFormData) => ({ ...prevFormData, course_code }));
+
+    if (course_code) {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/course/name/${course_code}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        if (response.data && response.data.course_name) {
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            course_name: response.data.course_name,
+          }));
+          setErrorMessage("");
+        } else {
+          setFormData((prevFormData) => ({ ...prevFormData, course_name: "" }));
+          setErrorMessage("Course not found.");
+        }
+      } catch (error) {
+        setFormData((prevFormData) => ({ ...prevFormData, course_name: "" }));
+        setErrorMessage("Error fetching course name: " + error.message);
+      }
+    } else {
+      setFormData((prevFormData) => ({ ...prevFormData, course_name: "" }));
+    }
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const addForm = () => {
+    const errors = {};
+    const requiredFields = {
+      Exam: [
+        "course_code",
+        "course_name",
+        "examDate",
+        "examTime",
+        "examRoom",
+        "examiner",
+        "status",
+      ],
+      Class: [
+        "course_code",
+        "course_name",
+        "classDays",
+        "classroom",
+        "labDays",
+        "labroom",
+        "labInstructor",
+        "classInstructor",
+        "status",
+      ],
+    };
+  
+    requiredFields[formData.schedule_type].forEach((field) => {
+      if (!formData[field]) {
+        errors[field] = `${field.replace(/([A-Z])/g, " $1")} is required`;
+      }
+    });
+  
+    setErrorMessages(errors);
+  
+    if (Object.keys(errors).length > 0) {
+      setErrorMessage("Please fill in all required fields.");
+      return;
+    }
+  
+    const newFormData = { ...formData };
+    
+    // Remove irrelevant fields based on schedule_type
+    if (formData.schedule_type === "Class") {
+      delete newFormData.examDate;
+      delete newFormData.examTime;
+      delete newFormData.examRoom;
+      delete newFormData.examiner;
+    } else if (formData.schedule_type === "Exam") {
+      delete newFormData.classroom;
+      delete newFormData.labroom;
+      delete newFormData.classDays;
+      delete newFormData.labDays;
+      delete newFormData.labInstructor;
+      delete newFormData.classInstructor;
+    }
+  
+    setFormList((prevFormList) => ({
+      ...prevFormList,
+      items: [...prevFormList.items, newFormData],
+    }));
+  
+    setFormData({
+      course_name: "",
+      course_code: "",
+      classroom: "",
+      labroom: "",
+      classDays: "",
+      labDays: "",
+      labInstructor: "",
+      classInstructor: "",
+      examDate: "",
+      examTime: "",
+      examRoom: "",
+      examiner: "",
+      schedule_type: "Class",
+      status: "Pending", // reset to default
+    });
+  };
+  
+  
+  const submitForms = async () => {
+    setLoading(true);
+    const payload = {
+      scheduleRequests: formList.items
+    };
+  
+    console.log('Payload:', JSON.stringify(payload, null, 2));
+  
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/schedule-requests`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (response.data) {
+        setLoading(false);
+        setErrorMessage("Schedule has been sent successfully");
+      } else {
+        setErrorMessage("Failed to post Schedule. Please try again.");
+        setLoading(false);
+      }
+    } catch (error) {
+      if (error.response && error.response.data.errors) {
+        console.error('Validation Errors:', error.response.data.errors);
+      }
+      setErrorMessage("Error while sending schedule " + error.message);
+      setLoading(false);
+    }
+  };
+  
+  
+  const openConfirmationDialog = () => setConfirmationOpen(true);
+  const closeConfirmationDialog = () => setConfirmationOpen(false);
+  const handleSendForm = () => {
+    closeConfirmationDialog();
+    submitForms();
+  };
+
+  const openRemoveDialog = (index) => setRemoveIndex(index);
+  const closeRemoveDialog = () => setRemoveIndex(null);
+  const confirmRemoveForm = () => {
+    if (removeIndex !== null) {
+      setFormList((prevFormList) => {
+        const updatedItems = [...prevFormList.items];
+        updatedItems.splice(removeIndex, 1);
+        return { ...prevFormList, items: updatedItems };
+      });
+      closeRemoveDialog();
+    }
+  };
+
+  const renderFormFields = () => {
+    if (formData.schedule_type === "Class") {
+      return (
+        <>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Classroom"
+              name="classroom"
+              fullWidth
+              value={formData.classroom}
+              onChange={handleFormChange}
+              error={Boolean(errorMessages.classroom)}
+              helperText={errorMessages.classroom}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Class Days"
+              name="classDays"
+              fullWidth
+              value={formData.classDays}
+              onChange={handleFormChange}
+              error={Boolean(errorMessages.classDays)}
+              helperText={errorMessages.classDays}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Labroom"
+              name="labroom"
+              fullWidth
+              value={formData.labroom}
+              onChange={handleFormChange}
+              error={Boolean(errorMessages.labroom)}
+              helperText={errorMessages.labroom}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Lab Days"
+              name="labDays"
+              fullWidth
+              value={formData.labDays}
+              onChange={handleFormChange}
+              error={Boolean(errorMessages.labDays)}
+              helperText={errorMessages.labDays}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Lab Instructor"
+              name="labInstructor"
+              fullWidth
+              value={formData.labInstructor}
+              onChange={handleFormChange}
+              error={Boolean(errorMessages.labInstructor)}
+              helperText={errorMessages.labInstructor}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Class Instructor"
+              name="classInstructor"
+              fullWidth
+              value={formData.classInstructor}
+              onChange={handleFormChange}
+              error={Boolean(errorMessages.classInstructor)}
+              helperText={errorMessages.classInstructor}
+            />
+          </Grid>
+        </>
+      );
+    } else if (formData.schedule_type === "Exam") {
+      return (
+        <>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Exam Date"
+              name="examDate"
+              fullWidth
+              value={formData.examDate}
+              onChange={handleFormChange}
+              type="date"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              error={Boolean(errorMessages.examDate)}
+              helperText={errorMessages.examDate}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Exam Time"
+              name="examTime"
+              fullWidth
+              value={formData.examTime}
+              onChange={handleFormChange}
+              type="time"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              error={Boolean(errorMessages.examTime)}
+              helperText={errorMessages.examTime}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Exam Room"
+              name="examRoom"
+              fullWidth
+              value={formData.examRoom}
+              onChange={handleFormChange}
+              error={Boolean(errorMessages.examRoom)}
+              helperText={errorMessages.examRoom}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <MDInput
+              label="Examiner"
+              name="examiner"
+              fullWidth
+              value={formData.examiner}
+              onChange={handleFormChange}
+              error={Boolean(errorMessages.examiner)}
+              helperText={errorMessages.examiner}
+            />
+          </Grid>
+        </>
+      );
+    }
+  };
+
+  return (
+    <DashboardLayout>
+      <DashboardNavbar />
+      <Sidenav />
+
+      <MDBox pt={6} pb={3}>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Card style={{ border: "3px solid #206A5D" }}>
+              <MDBox
+                mx={2}
+                mt={-5}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="dark"
+                borderRadius="lg"
+                coloredShadow="dark"
+              >
+                <Grid
+                  container
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <MDTypography variant="h6" color="white">
+                    Schedule Upload
+                  </MDTypography>
+                </Grid>
+              </MDBox>
+              <MDBox pt={3}>
+                <MDBox px={2}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={3}>
+                      <MDInput
+                        label="Course Code"
+                        name="course_code"
+                        fullWidth
+                        value={formData.course_code}
+                        onChange={handleCourseCodeChange}
+                        error={Boolean(errorMessages.course_code)}
+                        helperText={errorMessages.course_code}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                      <MDInput
+                        label="Course Name"
+                        name="course_name"
+                        fullWidth
+                        value={formData.course_name}
+                        onChange={handleFormChange}
+                        error={Boolean(errorMessages.course_name)}
+                        helperText={errorMessages.course_name}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                      <FormControl fullWidth>
+                        <Select
+                          name="schedule_type"
+                          value={formData.schedule_type}
+                          onChange={handleFormChange}
+                        >
+                          {scheduleTypeOptions.map((type) => (
+                            <MenuItem key={type} value={type}>
+                              {type}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    {renderFormFields()}
+                    <Grid item xs={12}>
+                      <MDButton
+                        variant="contained"
+                        color="primary"
+                        onClick={addForm}
+                      >
+                        Add Schedule
+                      </MDButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                      {errorMessage && (
+                        <MDTypography color="error">{errorMessage}</MDTypography>
+                      )}
+                    </Grid>
+                  </Grid>
+                </MDBox>
+              </MDBox>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Card style={{ border: "3px solid #206A5D" }}>
+              <MDBox pt={3}>
+                <TableContainer>
+                  <Table>
+                    <TableBody>
+                      {formList.items.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.course_code}</TableCell>
+                          <TableCell>{item.course_name}</TableCell>
+                          <TableCell>{item.classroom}</TableCell>
+                          <TableCell>{item.classDays}</TableCell>
+                          <TableCell>{item.labroom}</TableCell>
+                          <TableCell>{item.labDays}</TableCell>
+                          <TableCell>{item.labInstructor}</TableCell>
+                          <TableCell>{item.classInstructor}</TableCell>
+                          <TableCell>{item.examDate}</TableCell>
+                          <TableCell>{item.examTime}</TableCell>
+                          <TableCell>{item.examRoom}</TableCell>
+                          <TableCell>{item.examiner}</TableCell>
+                          <TableCell>
+                            <Button
+                              color="secondary"
+                              onClick={() => openRemoveDialog(index)}
+                            >
+                              Remove
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </MDBox>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <MDButton
+              variant="contained"
+              color="primary"
+              onClick={openConfirmationDialog}
+            >
+              Submit Schedule
+            </MDButton>
+            {loading && <CircularProgress />}
+          </Grid>
+        </Grid>
+
+        <Dialog open={confirmationOpen} onClose={closeConfirmationDialog}>
+          <DialogTitle>Confirm Submission</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to submit the schedule?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeConfirmationDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleSendForm} color="primary">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={removeIndex !== null} onClose={closeRemoveDialog}>
+          <DialogTitle>Confirm Removal</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to remove this schedule?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeRemoveDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={confirmRemoveForm} color="primary">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </MDBox>
+      <Footer />
+    </DashboardLayout>
+  );
+}
+
+export default ScheduleRequest;

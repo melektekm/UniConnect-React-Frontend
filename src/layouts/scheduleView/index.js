@@ -9,6 +9,11 @@ import {
   TableCell,
   TableBody,
   Typography,
+  Tabs,
+  Tab,
+  MenuItem,
+  FormControl,
+  Select,
 } from "@mui/material";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
@@ -22,6 +27,9 @@ import { BASE_URL } from "../../appconfig";
 function DisplaySchedule() {
   const [classSchedules, setClassSchedules] = useState([]);
   const [examSchedules, setExamSchedules] = useState([]);
+  const [currentTab, setCurrentTab] = useState("Class"); // State for current tab
+  const [selectedYear, setSelectedYear] = useState(""); // State for selected year
+  const [page, setPage] = useState(1); // State for pagination
 
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -52,6 +60,14 @@ function DisplaySchedule() {
     fetchSchedules();
   }, [accessToken]);
 
+  const handleTabChange = (event, newValue) => {
+    setCurrentTab(newValue);
+  };
+
+  const handleYearFilterChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
+
   const renderTable = (title, schedules, type) => (
     <Card style={{ border: "3px solid #206A5D", marginTop: "20px" }}>
       <MDBox
@@ -77,6 +93,7 @@ function DisplaySchedule() {
                 <TableRow>
                   <TableCell>Course Code</TableCell>
                   <TableCell>Course Name</TableCell>
+
                   {type === "Class" && (
                     <>
                       <TableCell>Class Days</TableCell>
@@ -94,32 +111,39 @@ function DisplaySchedule() {
                       <TableCell>Exam Room</TableCell>
                     </>
                   )}
+                  <TableCell>Status</TableCell>
                 </TableRow>
               {/* </TableHead> */}
               <TableBody>
-                {schedules.map((form, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{form.course_code}</TableCell>
-                    <TableCell>{form.course_name}</TableCell>
-                    {type === "Class" && (
-                      <>
-                        <TableCell>{form.classDays}</TableCell>
-                        <TableCell>{form.classroom}</TableCell>
-                        <TableCell>{form.labDays}</TableCell>
-                        <TableCell>{form.labroom}</TableCell>
-                        <TableCell>{form.labInstructor}</TableCell>
-                        <TableCell>{form.classInstructor}</TableCell>
-                      </>
-                    )}
-                    {type === "Exam" && (
-                      <>
-                        <TableCell>{form.examDate}</TableCell>
-                        <TableCell>{form.examTime}</TableCell>
-                        <TableCell>{form.examRoom}</TableCell>
-                      </>
-                    )}
-                  </TableRow>
-                ))}
+                {schedules
+                  .filter((schedule) =>
+                    selectedYear ? schedule.year === selectedYear : true
+                  )
+                  .slice((page - 1) * 10, page * 10) // Example: Displaying 10 schedules per page
+                  .map((form, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{form.course_code}</TableCell>
+                      <TableCell>{form.course_name}</TableCell>
+                      {type === "Class" && (
+                        <>
+                          <TableCell>{form.classDays}</TableCell>
+                          <TableCell>{form.classroom}</TableCell>
+                          <TableCell>{form.labDays}</TableCell>
+                          <TableCell>{form.labroom}</TableCell>
+                          <TableCell>{form.labInstructor}</TableCell>
+                          <TableCell>{form.classInstructor}</TableCell>
+                        </>
+                      )}
+                      {type === "Exam" && (
+                        <>
+                          <TableCell>{form.examDate}</TableCell>
+                          <TableCell>{form.examTime}</TableCell>
+                          <TableCell>{form.examRoom}</TableCell>
+                        </>
+                      )}
+                       <TableCell>{form.status}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -130,7 +154,6 @@ function DisplaySchedule() {
     </Card>
   );
   
-  
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -139,8 +162,47 @@ function DisplaySchedule() {
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
-            {renderTable("Class Schedules", classSchedules, "Class")}
-            {renderTable("Exam Schedules", examSchedules, "Exam")}
+          <MDBox
+        mx={2}
+        mt={1}
+        mb={2}
+        py={3}
+        px={2}
+        variant="gradient"
+        bgColor="dark"
+        borderRadius="lg"
+        coloredShadow="info"
+        textAlign="center"
+      >
+            <Tabs
+              value={currentTab}
+              onChange={handleTabChange}
+              variant="fullWidth"
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              <Tab label="Class Schedules" value="Class" />
+              <Tab label="Exam Schedules" value="Exam" />
+            </Tabs>
+            </MDBox>
+            {/* <FormControl style={{ marginTop: "10px" }}>
+              <Select
+                value={selectedYear}
+                onChange={handleYearFilterChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+              >
+                <MenuItem value="">All Years</MenuItem>
+                <MenuItem value="1">1st Year</MenuItem>
+                <MenuItem value="2">2nd Year</MenuItem>
+                <MenuItem value="3">3rd Year</MenuItem>
+                <MenuItem value="4">4th Year</MenuItem>
+              </Select>
+            </FormControl> */}
+            {currentTab === "Class" &&
+              renderTable("Class Schedules", classSchedules, "Class")}
+            {currentTab === "Exam" &&
+              renderTable("Exam Schedules", examSchedules, "Exam")}
           </Grid>
         </Grid>
       </MDBox>
