@@ -44,11 +44,10 @@ function ScheduleRequest() {
     examRoom: "",
     examiner: "",
     schedule_type: "Class",
-    status: "Pending", // default value for status
-    yearGroup: "", // combined field for year and group
-    // year: "",
+    status: "Pending",
+    year: "",
+    yearGroup: "",
   });
-  const [year, setYear] = useState(""); //
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
@@ -61,7 +60,7 @@ function ScheduleRequest() {
   const accessToken = userData.accessToken;
 
   const scheduleTypeOptions = ["Exam", "Class"];
-  const statusOptions = ["Pending", "Approved"]; // status options
+  const statusOptions = ["Pending", "Approved"];
   const [formList, setFormList] = useState({
     items: [],
     recommendations: "",
@@ -124,9 +123,8 @@ function ScheduleRequest() {
         "examTime",
         "examRoom",
         "examiner",
-        "status",
-        "yearGroup",
         "year",
+        "yearGroup",
       ],
       Class: [
         "course_code",
@@ -137,9 +135,8 @@ function ScheduleRequest() {
         "labroom",
         "labInstructor",
         "classInstructor",
-        "status",
-        "yearGroup",
         "year",
+        "yearGroup",
       ],
     };
 
@@ -158,7 +155,6 @@ function ScheduleRequest() {
 
     const newFormData = { ...formData };
 
-    // Remove irrelevant fields based on schedule_type
     if (formData.schedule_type === "Class") {
       delete newFormData.examDate;
       delete newFormData.examTime;
@@ -172,15 +168,6 @@ function ScheduleRequest() {
       delete newFormData.labInstructor;
       delete newFormData.classInstructor;
     }
-
-    // Ensure yearGroup is a string before splitting
-    newFormData.yearGroup = newFormData.yearGroup || ""; // Set default if undefined
-    const [year, group] = newFormData.yearGroup
-      .split("-")
-      .map((item) => item.trim());
-
-    newFormData.year = year;
-    newFormData.group = group;
 
     setFormList((prevFormList) => ({
       ...prevFormList,
@@ -201,18 +188,16 @@ function ScheduleRequest() {
       examRoom: "",
       examiner: "",
       schedule_type: "Class",
-      status: "Pending", // reset to default
-      yearGroup: "", // reset to default
-      // year: "",
+      status: "Pending",
+      year: "",
+      yearGroup: "",
     });
-    setYear: ""
   };
 
   const submitForms = async () => {
     setLoading(true);
     const payload = {
       scheduleRequests: formList.items.map((item) => {
-        // Ensure we remove unnecessary fields based on schedule type
         const filteredItem = { ...item };
         if (filteredItem.schedule_type === "Class") {
           delete filteredItem.examDate;
@@ -328,297 +313,302 @@ function ScheduleRequest() {
               value={formData.labDays}
               onChange={handleFormChange}
               error={Boolean(errorMessages.labDays)}
-              helperText={errorMessages.labDays}
-            />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <MDInput
-              label="Lab Instructor"
-              name="labInstructor"
-              fullWidth
-              value={formData.labInstructor}
-              onChange={handleFormChange}
-              error={Boolean(errorMessages.labInstructor)}
-              helperText={errorMessages.labInstructor}
-            />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <MDInput
-              label="Class Instructor"
-              name="classInstructor"
-              fullWidth
-              value={formData.classInstructor}
-              onChange={handleFormChange}
-              error={Boolean(errorMessages.classInstructor)}
-              helperText={errorMessages.classInstructor}
-            />
-          </Grid>
-        </>
-      );
-    } else if (formData.schedule_type === "Exam") {
-      return (
-        <>
-          <Grid item xs={12} md={3}>
-            <MDInput
-              label="Exam Date"
-              name="examDate"
-              fullWidth
-              value={formData.examDate}
-              onChange={handleFormChange}
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              error={Boolean(errorMessages.examDate)}
-              helperText={errorMessages.examDate}
-            />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <MDInput
-              label="Exam Time"
-              name="examTime"
-              fullWidth
-              value={formData.examTime}
-              onChange={handleFormChange}
-              type="time"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              error={Boolean(errorMessages.examTime)}
-              helperText={errorMessages.examTime}
-            />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <MDInput
-              label="Exam Room"
-              name="examRoom"
-              fullWidth
-              value={formData.examRoom}
-              onChange={handleFormChange}
-              error={Boolean(errorMessages.examRoom)}
-              helperText={errorMessages.examRoom}
-            />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <MDInput
-              label="Examiner"
-              name="examiner"
-              fullWidth
-              value={formData.examiner}
-              onChange={handleFormChange}
-              error={Boolean(errorMessages.examiner)}
-              helperText={errorMessages.examiner}
-            />
-          </Grid>
-        </>
-      );
-    }
-  };
-
-  return (
-    <DashboardLayout>
-      <DashboardNavbar />
-      <Sidenav />
-
-      <MDBox pt={6} pb={3}>
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Card style={{ border: "3px solid #206A5D" }}>
-              <MDBox
-                mx={2}
-                mt={-5}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="dark"
-                borderRadius="lg"
-                coloredShadow="dark"
-              >
-                <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="space-between"
+              helper          Text={errorMessages.labDays}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <MDInput
+                label="Lab Instructor"
+                name="labInstructor"
+                fullWidth
+                value={formData.labInstructor}
+                onChange={handleFormChange}
+                error={Boolean(errorMessages.labInstructor)}
+                helperText={errorMessages.labInstructor}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <MDInput
+                label="Class Instructor"
+                name="classInstructor"
+                fullWidth
+                value={formData.classInstructor}
+                onChange={handleFormChange}
+                error={Boolean(errorMessages.classInstructor)}
+                helperText={errorMessages.classInstructor}
+              />
+            </Grid>
+          </>
+        );
+      } else if (formData.schedule_type === "Exam") {
+        return (
+          <>
+            <Grid item xs={12} md={3}>
+              <MDInput
+                label="Exam Date"
+                name="examDate"
+                fullWidth
+                value={formData.examDate}
+                onChange={handleFormChange}
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                error={Boolean(errorMessages.examDate)}
+                helperText={errorMessages.examDate}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <MDInput
+                label="Exam Time"
+                name="examTime"
+                fullWidth
+                value={formData.examTime}
+                onChange={handleFormChange}
+                type="time"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                error={Boolean(errorMessages.examTime)}
+                helperText={errorMessages.examTime}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <MDInput
+                label="Exam Room"
+                name="examRoom"
+                fullWidth
+                value={formData.examRoom}
+                onChange={handleFormChange}
+                error={Boolean(errorMessages.examRoom)}
+                helperText={errorMessages.examRoom}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <MDInput
+                label="Examiner"
+                name="examiner"
+                fullWidth
+                value={formData.examiner}
+                onChange={handleFormChange}
+                error={Boolean(errorMessages.examiner)}
+                helperText={errorMessages.examiner}
+              />
+            </Grid>
+          </>
+        );
+      }
+    };
+  
+    return (
+      <DashboardLayout>
+        <DashboardNavbar />
+        <Sidenav />
+  
+        <MDBox pt={6} pb={3}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Card style={{ border: "3px solid #206A5D" }}>
+                <MDBox
+                  mx={2}
+                  mt={-5}
+                  py={3}
+                  px={2}
+                  variant="gradient"
+                  bgColor="dark"
+                  borderRadius="lg"
+                  coloredShadow="dark"
                 >
-                  <MDTypography variant="h6" color="white">
-                    Schedule Upload
-                  </MDTypography>
-                </Grid>
-              </MDBox>
-              <MDBox pt={3}>
-                <MDBox px={2}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={3}>
-                      <MDInput
-                        label="Course Code"
-                        name="course_code"
-                        fullWidth
-                        value={formData.course_code}
-                        onChange={handleCourseCodeChange}
-                        error={Boolean(errorMessages.course_code)}
-                        helperText={errorMessages.course_code}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                      <MDInput
-                        label="Course Name"
-                        name="course_name"
-                        fullWidth
-                        value={formData.course_name}
-                        onChange={handleFormChange}
-                        error={Boolean(errorMessages.course_name)}
-                        helperText={errorMessages.course_name}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                      <FormControl fullWidth>
-                        <Select
-                          name="schedule_type"
-                          value={formData.schedule_type}
-                          onChange={handleFormChange}
-                        >
-                          {scheduleTypeOptions.map((type) => (
-                            <MenuItem key={type} value={type}>
-                              {type}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                      {/* <MDInput */}
-                      <FormControl fullWidth>
-                      <Select
-                      value={year}
-                      onChange={(e) => setYear(e.target.value)}
-                      label="Year"
-                    >
-                      <MenuItem value={1}>1</MenuItem>
-                      <MenuItem value={2}>2</MenuItem>
-                      <MenuItem value={3}>3</MenuItem>
-                      <MenuItem value={4}>4</MenuItem>
-                    </Select>
-                    </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                      <MDInput
-                        label="Year - Group"
-                        name="yearGroup"
-                        fullWidth
-                        value={formData.yearGroup}
-                        onChange={handleFormChange}
-                        error={Boolean(errorMessages.yearGroup)}
-                        helperText={errorMessages.yearGroup}
-                      />
-                    </Grid>
-                    {renderFormFields()}
-                    <Grid item xs={12}>
-                      <MDButton
-                        variant="contained"
-                        color="primary"
-                        onClick={addForm}
-                      >
-                        Add Schedule
-                      </MDButton>
-                    </Grid>
-                    <Grid item xs={12}>
-                      {errorMessage && (
-                        <MDTypography color="error">
-                          {errorMessage}
-                        </MDTypography>
-                      )}
-                    </Grid>
+                  <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <MDTypography variant="h6" color="white">
+                      Schedule Upload
+                    </MDTypography>
                   </Grid>
                 </MDBox>
-              </MDBox>
-            </Card>
+                <MDBox pt={3}>
+                  <MDBox px={2}>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} md={3}>
+                        <MDInput
+                          label="Course Code"
+                          name="course_code"
+                          fullWidth
+                          value={formData.course_code}
+                          onChange={handleCourseCodeChange}
+                          error={Boolean(errorMessages.course_code)}
+                          helperText={errorMessages.course_code}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <MDInput
+                          label="Course Name"
+                          name="course_name"
+                          fullWidth
+                          value={formData.course_name}
+                          onChange={handleFormChange}
+                          error={Boolean(errorMessages.course_name)}
+                          helperText={errorMessages.course_name}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <FormControl fullWidth>
+                          <Select
+                            name="schedule_type"
+                            value={formData.schedule_type}
+                            onChange={handleFormChange}
+                          >
+                            {scheduleTypeOptions.map((type) => (
+                              <MenuItem key={type} value={type}>
+                                {type}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <FormControl fullWidth>
+                          <Select
+                            label="Year"
+                            name="year"
+                            value={formData.year}
+                            onChange={handleFormChange}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                          >
+                            <MenuItem value="">Select Year</MenuItem>
+                            {[1, 2, 3, 4].map((yearOption) => (
+                              <MenuItem key={yearOption} value={yearOption}>
+                                {yearOption}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <MDInput
+                          label="Year - Group"
+                          name="yearGroup"
+                          fullWidth
+                          value={formData.yearGroup}
+                          onChange={handleFormChange}
+                          error={Boolean(errorMessages.yearGroup)}
+                          helperText={errorMessages.yearGroup}
+                        />
+                      </Grid>
+                      {renderFormFields()}
+                      <Grid item xs={12}>
+                        <MDButton
+                          variant="contained"
+                          color="primary"
+                          onClick={addForm}
+                        >
+                          Add Schedule
+                        </MDButton>
+                      </Grid>
+                      <Grid item xs={12}>
+                        {errorMessage && (
+                          <MDTypography color="error">
+                            {errorMessage}
+                          </MDTypography>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </MDBox>
+                </MDBox>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <Card style={{ border: "3px solid #206A5D" }}>
+                <MDBox pt={3}>
+                  <TableContainer>
+                    <Table>
+                      <TableBody>
+                        {formList.items.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{item.course_code}</TableCell>
+                            <TableCell>{item.course_name}</TableCell>
+                            <TableCell>{item.year}</TableCell>
+                            <TableCell>{item.yearGroup}</TableCell>
+                            <TableCell>{item.classroom}</TableCell>
+                            <TableCell>{item.classDays}</TableCell>
+                            <TableCell>{item.labroom}</TableCell>
+                            <TableCell>{item.labDays}</TableCell>
+                            <TableCell>{item.labInstructor}</TableCell>
+                            <TableCell>{item.classInstructor}</TableCell>
+                            <TableCell>{item.examDate}</TableCell>
+                            <TableCell>{item.examTime}</TableCell>
+                            <TableCell>{item.examRoom}</TableCell>
+                            <TableCell>{item.examiner}</TableCell>
+                            <TableCell>
+                              <Button
+                                color="secondary"
+                                onClick={() => openRemoveDialog(index)}
+                              >
+                                Remove
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </MDBox>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <MDButton
+                variant="contained"
+                color="primary"
+                onClick={openConfirmationDialog}
+              >
+                Submit Schedule
+              </MDButton>
+              {loading && <CircularProgress />}
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Card style={{ border: "3px solid #206A5D" }}>
-              <MDBox pt={3}>
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      {formList.items.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item.course_code}</TableCell>
-                          <TableCell>{item.course_name}</TableCell>
-                          <TableCell>{item.year}</TableCell>
-                          <TableCell>{item.yearGroup}</TableCell>
-                          <TableCell>{item.classroom}</TableCell>
-                          <TableCell>{item.classDays}</TableCell>
-                          <TableCell>{item.labroom}</TableCell>
-                          <TableCell>{item.labDays}</TableCell>
-                          <TableCell>{item.labInstructor}</TableCell>
-                          <TableCell>{item.classInstructor}</TableCell>
-                          <TableCell>{item.examDate}</TableCell>
-                          <TableCell>{item.examTime}</TableCell>
-                          <TableCell>{item.examRoom}</TableCell>
-                          <TableCell>{item.examiner}</TableCell>
-                          <TableCell>
-                            <Button
-                              color="secondary"
-                              onClick={() => openRemoveDialog(index)}
-                            >
-                              Remove
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </MDBox>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <MDButton
-              variant="contained"
-              color="primary"
-              onClick={openConfirmationDialog}
-            >
-              Submit Schedule
-            </MDButton>
-            {loading && <CircularProgress />}
-          </Grid>
-        </Grid>
-
-        <Dialog open={confirmationOpen} onClose={closeConfirmationDialog}>
-          <DialogTitle>Confirm Submission</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to submit the schedule?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={closeConfirmationDialog} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleSendForm} color="primary">
-              Confirm
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog open={removeIndex !== null} onClose={closeRemoveDialog}>
-          <DialogTitle>Confirm Removal</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to remove this schedule?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={closeRemoveDialog} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={confirmRemoveForm} color="primary">
-              Confirm
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </MDBox>
-      <Footer />
-    </DashboardLayout>
-  );
-}
-
-export default ScheduleRequest;
+  
+          <Dialog open={confirmationOpen} onClose={closeConfirmationDialog}>
+            <DialogTitle>Confirm Submission</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to submit the schedule?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeConfirmationDialog} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleSendForm} color="primary">
+                Confirm
+              </Button>
+            </DialogActions>
+          </Dialog>
+  
+          <Dialog open={removeIndex !== null} onClose={closeRemoveDialog}>
+            <DialogTitle>Confirm Removal</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to remove this schedule?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeRemoveDialog} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={confirmRemoveForm} color="primary">
+                Confirm
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </MDBox>
+        <Footer />
+      </DashboardLayout>
+    );
+  }
+  
+  export default ScheduleRequest;
+  

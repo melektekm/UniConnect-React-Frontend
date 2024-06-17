@@ -8,12 +8,13 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Typography,
   Tabs,
   Tab,
   MenuItem,
   FormControl,
   Select,
+  InputLabel,
+  Typography,
 } from "@mui/material";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
@@ -27,9 +28,9 @@ import { BASE_URL } from "../../appconfig";
 function DisplaySchedule() {
   const [classSchedules, setClassSchedules] = useState([]);
   const [examSchedules, setExamSchedules] = useState([]);
-  const [currentTab, setCurrentTab] = useState("Class"); // State for current tab
-  const [selectedYear, setSelectedYear] = useState(""); // State for selected year
-  const [page, setPage] = useState(1); // State for pagination
+  const [currentTab, setCurrentTab] = useState("Class");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [page, setPage] = useState(1);
 
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
@@ -69,31 +70,31 @@ function DisplaySchedule() {
   };
 
   const renderTable = (title, schedules, type) => (
-    <Card style={{ border: "3px solid #206A5D", marginTop: "20px" }}>
+    <Card style={{ border: "1px solid #206A5D", marginTop: "20px", borderRadius: "10px", overflow: "hidden" }}>
       <MDBox
         mx={2}
-        mt={-5}
-        py={3}
+        mt={-3}
+        py={2}
         px={2}
         variant="gradient"
         bgColor="dark"
         borderRadius="lg"
         coloredShadow="dark"
+        textAlign="center"
       >
-        <MDTypography variant="h6" color="white">
+        <MDTypography variant="h5" color="white">
           {title}
         </MDTypography>
       </MDBox>
-  
+
       <MDBox pt={3} pb={3} px={2}>
         {schedules.length > 0 ? (
           <TableContainer>
             <Table>
-              {/* <TableHead> */}
+              <TableHead>
                 <TableRow>
                   <TableCell>Course Code</TableCell>
                   <TableCell>Course Name</TableCell>
-
                   {type === "Class" && (
                     <>
                       <TableCell>Class Days</TableCell>
@@ -112,14 +113,15 @@ function DisplaySchedule() {
                     </>
                   )}
                   <TableCell>Status</TableCell>
+                  <TableCell>Year</TableCell>
                 </TableRow>
-              {/* </TableHead> */}
+              </TableHead>
               <TableBody>
                 {schedules
                   .filter((schedule) =>
                     selectedYear ? schedule.year === selectedYear : true
                   )
-                  .slice((page - 1) * 10, page * 10) // Example: Displaying 10 schedules per page
+                  .slice((page - 1) * 10, page * 10)
                   .map((form, index) => (
                     <TableRow key={index}>
                       <TableCell>{form.course_code}</TableCell>
@@ -141,19 +143,22 @@ function DisplaySchedule() {
                           <TableCell>{form.examRoom}</TableCell>
                         </>
                       )}
-                       <TableCell>{form.status}</TableCell>
+                      <TableCell>{form.status}</TableCell>
+                      <TableCell>{form.year}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
             </Table>
           </TableContainer>
         ) : (
-          <MDTypography>No schedules available</MDTypography>
+          <Typography variant="body1" color="textSecondary">
+            No schedules available
+          </Typography>
         )}
       </MDBox>
     </Card>
   );
-  
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -162,43 +167,53 @@ function DisplaySchedule() {
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
-          <MDBox
-        mx={2}
-        mt={1}
-        mb={2}
-        py={3}
-        px={2}
-        variant="gradient"
-        bgColor="dark"
-        borderRadius="lg"
-        coloredShadow="info"
-        textAlign="center"
-      >
-            <Tabs
-              value={currentTab}
-              onChange={handleTabChange}
-              variant="fullWidth"
-              textColor="primary"
-              indicatorColor="primary"
+            <MDBox
+              mx={2}
+              mt={1}
+              mb={2}
+              py={3}
+              px={2}
+              variant="gradient"
+              bgColor="dark"
+              borderRadius="lg"
+              coloredShadow="info"
+              textAlign="center"
             >
-              <Tab label="Class Schedules" value="Class" />
-              <Tab label="Exam Schedules" value="Exam" />
-            </Tabs>
-            </MDBox>
-            {/* <FormControl style={{ marginTop: "10px" }}>
-              <Select
-                value={selectedYear}
-                onChange={handleYearFilterChange}
-                displayEmpty
-                inputProps={{ "aria-label": "Without label" }}
+              <Tabs
+                value={currentTab}
+                onChange={handleTabChange}
+                variant="fullWidth"
+                textColor="primary"
+                indicatorColor="primary"
               >
-                <MenuItem value="">All Years</MenuItem>
-                <MenuItem value="1">1st Year</MenuItem>
-                <MenuItem value="2">2nd Year</MenuItem>
-                <MenuItem value="3">3rd Year</MenuItem>
-                <MenuItem value="4">4th Year</MenuItem>
-              </Select>
-            </FormControl> */}
+                <Tab label="Class Schedules" value="Class" />
+                <Tab label="Exam Schedules" value="Exam" />
+              </Tabs>
+            </MDBox>
+            <MDBox display="flex" justifyContent="center" mt={2} mb={2}>
+                <FormControl
+                  style={{
+                    width: "200px",
+                    backgroundColor: "#fff",
+                    borderRadius: "5px",
+                    marginTop: "10px",
+                    padding: "5px",
+                  }}
+                >
+                  <InputLabel>Filter by Year</InputLabel>
+                  <Select
+                    value={selectedYear}
+                    onChange={handleYearFilterChange}
+                    displayEmpty
+                  >
+                    <MenuItem value="">All Years</MenuItem>
+                    <MenuItem value="1">1st Year</MenuItem>
+                    <MenuItem value="2">2nd Year</MenuItem>
+                    <MenuItem value="3">3rd Year</MenuItem>
+                    <MenuItem value="4">4th Year</MenuItem>
+                  </Select>
+                </FormControl>
+              </MDBox>
             {currentTab === "Class" &&
               renderTable("Class Schedules", classSchedules, "Class")}
             {currentTab === "Exam" &&
