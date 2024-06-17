@@ -14,7 +14,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { BASE_URL } from "../../appconfig";
 import { CardContent } from "@mui/material";
 import MainDashboard from "../../layouts/MainDashboard";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import TextField from "@mui/material/TextField";
@@ -53,7 +53,9 @@ function AddCourseMaterial() {
   const handleUploadMaterial = async () => {
     const newErrorMessages = {
       course_code: formValues.course_code ? "" : "Course code is required",
-      material_title: formValues.material_title ? "" : "Material title is required",
+      material_title: formValues.material_title
+        ? ""
+        : "Material title is required",
     };
 
     setErrorMessages(newErrorMessages);
@@ -72,12 +74,16 @@ function AddCourseMaterial() {
       formData.append("course_name", courseName);
       formData.append("file", formValues.file);
 
-      const response = await axios.post(`${BASE_URL}/upload-material`, formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `${BASE_URL}/upload-material`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.status === 201) {
         resetState();
@@ -107,9 +113,12 @@ function AddCourseMaterial() {
     setFormValues((prevFormValues) => ({ ...prevFormValues, course_code }));
     if (course_code) {
       try {
-        const response = await axios.get(`${BASE_URL}/course/name/${course_code}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        const response = await axios.get(
+          `${BASE_URL}/course/name/${course_code}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
         if (response.data && response.data.course_name) {
           setCourseName(response.data.course_name);
           setErrorMessage("");
@@ -155,8 +164,8 @@ function AddCourseMaterial() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Sidenav />
-      <MainDashboard />
+      <InstructorSidenav />
+
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Error</DialogTitle>
         <DialogContent>

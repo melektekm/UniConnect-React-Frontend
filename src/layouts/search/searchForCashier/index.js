@@ -292,7 +292,7 @@
 //             color="primary"
 //             style={{ borderRadius: "10%", marginTop: "10px" }}
 //           >
-//             ፈልግ
+//             Search
 //           </MDButton>
 //         )}
 

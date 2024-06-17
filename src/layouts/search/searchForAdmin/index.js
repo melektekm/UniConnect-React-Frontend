@@ -251,7 +251,7 @@ function SearchMenuForAdmin() {
             color="primary"
             style={{ borderRadius: "20%", height: "50px", marginTop: "10px" }}
           >
-            ፈልግ
+            Search
           </MDButton>
         )}
 

@@ -254,7 +254,7 @@
 //             color="primary"
 //             style={{ borderRadius: "10%", marginTop: "10px" }}
 //           >
-//             ፈልግ
+//             Search
 //           </MDButton>
 //         )}
 //         <Select
@@ -322,7 +322,7 @@
 //             )}
 //           </DialogContent>
 //           <DialogActions>
-//             <Button onClick={handleDeleteDialogClose}>አይ</Button>
+//             <Button onClick={handleDeleteDialogClose}>No</Button>
 //             <Button
 //               onClick={() =>
 //                 HandleDelete(itemToDelete ? itemToDelete.id : null)

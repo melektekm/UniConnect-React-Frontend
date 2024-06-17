@@ -228,7 +228,7 @@
 //         />
 
 //         <MDButton variant="gradient" onClick={handleSearch} color={"secondary"}>
-//           ፈልግ
+//           Search
 //         </MDButton>
 //         <Select
 //           value={searchType}
@@ -301,7 +301,7 @@
 //             )}
 //           </DialogContent>
 //           <DialogActions>
-//             <Button onClick={handleDeleteDialogClose}>አይ</Button>
+//             <Button onClick={handleDeleteDialogClose}>No</Button>
 //             <Button
 //               onClick={() =>
 //                 HandleDelete(itemToDelete ? itemToDelete.id : null)

@@ -1,11 +1,10 @@
 import React from "react";
 import Dashboard from "./layouts/dashboard";
-import Tables from "./layouts/tables";
 import ViewAssignments from "./layouts/assignmentView";
-import Notifications from "./layouts/notifications";
 import ScheduleRequest from "./layouts/schedulePost";
 import BasicLayout from "./layouts/authentication/sign-in";
 import SignUpLayout from "./layouts/authentication/sign-up";
+import NotifyStudents from "./layouts/notifyStudents";
 import MainDashboard from "./layouts/MainDashboard";
 import AddEmployee from "./layouts/addEmployee";
 import UploadAnnouncement from "./layouts/announcements";
@@ -13,10 +12,15 @@ import UploadCourse from "./layouts/courseUpload";
 import CoordinatorDashboard from "./layouts/CoordinatorDashboard";
 import StudentDashboard from "./layouts/StudentDashboard";
 import DeanDashboard from "./layouts/dashboard/deanDashboard";
+import InstructorDashboard from "./layouts/dashboard/instructorDashboard";
 import DisplaySchedule from "./layouts/scheduleView";
 import Sidenav from "./examples/Sidenav/AdminSidenav";
 import UploadAssignment from "./layouts/assignmentUpload";
 import ViewCourses from "./layouts/courseList";
+import ViewCoursesInstructor from "./layouts/courseListInstructor";
+import ViewCoursesStudent from "./layouts/courseListstudent";
+
+import CourseMaterialsList from "./layouts/courseMaterialStudent";
 import AddCourseMaterial from "./layouts/courseMaterial";
 import ViewAnnouncement from "./layouts/viewAnnouncement";
 import AssignmentsPage from "./layouts/assignmentList";
@@ -25,6 +29,7 @@ import SubmitAssignment from "./layouts/submitAssignment";
 // import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "./layouts/scheduleApproval";
 import SubmittedAssignments from "./layouts/viewSubmittedAssignment";
+import EmployeeList from "./layouts/employeeList";
 
 function getLayoutComponent(path) {
   const electron = window.require("electron");
@@ -43,8 +48,8 @@ function getLayoutComponent(path) {
         return <StudentDashboard />;
       case "dean":
         return <DeanDashboard />;
-      case "storeKeeper":
-        return <storeKeeperDashboard />;
+      case "instructor":
+        return <InstructorDashboard />;
       default:
         return null; // Handle other roles or scenarios
     }
@@ -79,6 +84,10 @@ function getLayoutComponent(path) {
       return <Dashboard />;
     case "/report":
       return <ViewCourses />;
+    case "/courseListInstructor":
+      return <ViewCoursesInstructor />;
+    case "/courseListstudent":
+      return <ViewCoursesStudent />;
     case "/deanDashboard":
       return <DeanDashboard />;
     case "/StudentDashboard":
@@ -86,7 +95,7 @@ function getLayoutComponent(path) {
     case "/CoordinatorDashboard":
       return <CoordinatorDashboard />;
     case "/instructorDashboard":
-      return <storeKeeperDashboard />;
+      return <InstructorDashboard />;
     case "/StudentDashboard":
       return <StudentDashboard />;
     // case "/stokeAmount":
@@ -111,12 +120,18 @@ function getLayoutComponent(path) {
       return <AssignmentsPage />;
     case "/CourseMaterialList":
       return <CourseMaterialsPage />;
+    case "/courseMaterialStudent":
+      return <CourseMaterialsList />;
     case "/submit-assignment":
       return <SubmitAssignment />;
     case "/assignmentView":
       return <ViewAssignments />;
     case "/viewSubmittedAssignment":
       return <SubmittedAssignments />;
+    case "/notify-students":
+      return <NotifyStudents />;
+    case "/viewEmployee":
+      return <EmployeeList />;
     default:
       return null;
   }

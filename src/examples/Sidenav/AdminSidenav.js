@@ -16,7 +16,6 @@ import AddEmployee from "../../layouts/addEmployee";
 import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
 import ViewCourses from "../../layouts/courseList";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import KitchenIcon from "@mui/icons-material/Kitchen";
 import UploadCourse from "../../layouts/courseUpload";
 import UploadAnnouncement from "../../layouts/announcements";
@@ -28,6 +27,10 @@ import ViewAssignments from "../../layouts/assignmentView";
 import ViewAnnouncement from "../../layouts/viewAnnouncement";
 import DisplaySchedule from "../../layouts/scheduleView";
 import SubmittedAssignments from "../../layouts/viewSubmittedAssignment";
+import EmployeeList from "../../layouts/employeeList";
+
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+
 import {
   Dialog,
   DialogTitle,
@@ -58,7 +61,7 @@ import {
   setWhiteSidenav,
 } from "../../context";
 
-function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
+function AdminSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } =
@@ -88,56 +91,20 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     },
     {
       type: "collapse",
-      name: "Assignment List",
-      key: "assignment-list",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/assignmentList",
-      component: <AssignmentsPage />,
-    },
-
-    {
-      type: "collapse",
-      name: "Upload Courses",
-      key: "add_food",
-      icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/addFood",
-      component: <UploadCourse />,
-    },
-
-    {
-      type: "collapse",
-      name: "Schedule Post",
-      key: "schedule_post",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/schedulePost",
-      component: <ScheduleRequest />,
-    },
-    {
-      type: "collapse",
-      name: "View Assignment",
-      key: "list",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/assignmentView",
-      component: <ViewAssignments />,
-    },
-
-    {
-      type: "collapse",
-      name: "schedule approval",
-      key: "ingredient_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleApproval",
-      component: <ApproveScheduleRequest />,
-    },
-    {
-      type: "collapse",
       name: "Add-employee",
       key: "Add-employee",
       icon: <AddIcon fontSize="small" />,
       route: "/addEmployee",
       component: <AddEmployee />,
     },
-
+    {
+      type: "collapse",
+      name: "view-employee",
+      key: "view-employee",
+      icon: <AddIcon fontSize="small" />,
+      route: "/viewEmployee",
+      component: <EmployeeList />,
+    },
     // {
     //   type: "collapse",
     //   name: "employee list",
@@ -146,14 +113,6 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
     //   route: "/profile",
     //   component: <EmployeeList />,
     // },
-    {
-      type: "collapse",
-      name: "Course List",
-      key: "report",
-      icon: <AssessmentIcon fontSize="small" />,
-      route: "/report",
-      component: <ViewCourses />,
-    },
     //
     {
       type: "collapse",
@@ -162,15 +121,6 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       icon: <AssignmentTurnedInIcon fontSize="small" />,
       route: "/scheduleView",
       component: <DisplaySchedule />,
-    },
-
-    {
-      type: "collapse",
-      name: "Upload Assignment",
-      key: "assignmentUpload",
-      icon: <AttachMoneyIcon fontSize="small" />,
-      route: "/assignmentUpload",
-      component: <UploadAssignment />,
     },
     {
       type: "collapse",
@@ -187,39 +137,6 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
       icon: <AttachMoneyIcon fontSize="small" />,
       route: "/announcements",
       component: <UploadAnnouncement />,
-    },
-
-    {
-      type: "collapse",
-      name: "Upload Course Material",
-      key: "courseMaterial",
-      icon: <AttachMoneyIcon fontSize="small" />,
-      route: "/courseMaterial",
-      component: <AddCourseMaterial />,
-    },
-    {
-      type: "collapse",
-      name: "Course Material List",
-      key: "courseMaterialList",
-      icon: <AttachMoneyIcon fontSize="small" />,
-      route: "/CourseMaterialList",
-      component: <CourseMaterialsPage />,
-    },
-    {
-      type: "collapse",
-      name: "Submit Assignment",
-      key: "submitAssignment",
-      icon: <AttachMoneyIcon fontSize="small" />,
-      route: "/submitAssignment",
-      component: <SubmitAssignment />,
-    },
-    {
-      type: "collapse",
-      name: "Submitted Assignment",
-      key: "submittedAssignment",
-      icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/viewSubmittedAssignment",
-      component: <SubmittedAssignments />,
     },
   ];
 
@@ -399,13 +316,13 @@ function Sidenav({ brand, brandName, selectedMenu, ...rest }) {
 }
 
 // Setting default values for the props of Sidenav
-Sidenav.defaultProps = {
+AdminSidenav.defaultProps = {
   color: "info",
   brand: "",
 };
 
 // Typechecking props for the Sidenav
-Sidenav.propTypes = {
+AdminSidenav.propTypes = {
   color: PropTypes.oneOf([
     "primary",
     "secondary",
@@ -419,4 +336,4 @@ Sidenav.propTypes = {
   brandName: PropTypes.string.isRequired,
 };
 
-export default Sidenav;
+export default AdminSidenav;

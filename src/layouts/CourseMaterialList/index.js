@@ -27,6 +27,7 @@ import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 
 function CourseMaterialsPage() {
   const electron = window.require("electron");
@@ -148,10 +149,10 @@ function CourseMaterialsPage() {
 
   return (
     <div style={{ display: "flex" }}>
-      <Sidenav />
+      <InstructorSidenav />
       <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
         <DashboardNavbar />
-        <MainDashboard />
+
         <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12}>

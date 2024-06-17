@@ -13,7 +13,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { BASE_URL } from "../../appconfig";
 import MainDashboard from "../../layouts/MainDashboard";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import TextField from "@mui/material/TextField";
@@ -167,8 +167,8 @@ function UploadAssignment() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Sidenav />
-      <MainDashboard />
+      <InstructorSidenav />
+
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Error</DialogTitle>
         <DialogContent>

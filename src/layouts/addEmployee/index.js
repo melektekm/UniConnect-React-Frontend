@@ -9,7 +9,7 @@ import AdminNavbar from "../../examples/Navbars/AdminNavbar";
 import Footer from "../../examples/Footer";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import AdminSidenav from "../../examples/Sidenav/AdminSidenav";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 import Icon from "@mui/material/Icon";
@@ -101,17 +101,24 @@ function AddEmployee({ selectedEmployee }) {
         setOpen(true);
       }
     } catch (error) {
-      if (error.response && error.response.data) {
-        const serverErrorMessages = error.response.data.errors;
-        let errorMessage = "user not registered";
+      if (error.response) {
+        if (error.response.status === 422) {
+          const serverErrorMessages = error.response.data.errors;
+          let errorMessage = "Validation errors: ";
 
-        for (const [key, value] of Object.entries(serverErrorMessages)) {
-          errorMessage += `${key}: ${value[0]}, `;
+          for (const [key, value] of Object.entries(serverErrorMessages)) {
+            errorMessage += `${key}: ${value[0]}, `;
+          }
+
+          setErrorMessage(errorMessage);
+        } else if (error.response.status === 409) {
+          // Assuming 409 Conflict for duplicate email
+          setErrorMessage("The email is already registered.");
+        } else {
+          setErrorMessage("An error occurred: " + error.response.statusText);
         }
-
-        setErrorMessage(errorMessage);
       } else {
-        setErrorMessage("user not registered: " + error);
+        setErrorMessage("Network error: " + error.message);
       }
       setOpen(true);
     } finally {
@@ -124,6 +131,7 @@ function AddEmployee({ selectedEmployee }) {
     setRole(0);
     setEmail("");
   };
+
   return (
     <DashboardLayout>
       <Dialog
@@ -133,7 +141,7 @@ function AddEmployee({ selectedEmployee }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {successMessage ? "notification" : "notification"}
+          {successMessage ? "Notification" : "Error"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -145,17 +153,18 @@ function AddEmployee({ selectedEmployee }) {
             onClick={() => {
               setOpen(false);
               setErrorMessage("");
+              setSuccessMessage("");
             }}
             color="primary"
             autoFocus
           >
-            close
+            Close
           </Button>
         </DialogActions>
       </Dialog>
       <AdminNavbar />
-      <Sidenav />
-      <MainDashboard />
+      <AdminSidenav />
+
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
@@ -171,7 +180,7 @@ function AddEmployee({ selectedEmployee }) {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  add employee
+                  Add Employee
                 </MDTypography>
               </MDBox>
               <MDBox pt={3} pb={3} px={2}>
@@ -202,7 +211,6 @@ function AddEmployee({ selectedEmployee }) {
                       <MenuItem value="student">Student</MenuItem>
                       <MenuItem value="dean">Dean</MenuItem>
                       <MenuItem value="instructor">Instructor</MenuItem>
-                      <MenuItem value="registrar">Registrar</MenuItem>
                     </Select>
                   </FormControl>
 
@@ -221,8 +229,12 @@ function AddEmployee({ selectedEmployee }) {
                   />
 
                   <MDBox mt={4} mb={1} textAlign="center">
-                    <MDButton color="primary" onClick={handleRegister}>
-                      add
+                    <MDButton
+                      color="primary"
+                      onClick={handleRegister}
+                      disabled={loading}
+                    >
+                      {loading ? <CircularLoader /> : "Add"}
                     </MDButton>
                   </MDBox>
                 </MDBox>

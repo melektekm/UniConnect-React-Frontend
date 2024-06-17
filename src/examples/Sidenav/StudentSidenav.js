@@ -12,8 +12,10 @@ import sidenavLogoLabel from "./styles/sidenav";
 import Dashboard from "../../layouts/dashboard";
 import Tables from "../../layouts/tables";
 
+import CourseMaterialsList from "../../layouts/courseMaterialStudent";
 import ScheduleRequest from "../../layouts/schedulePost";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
+import SubmittedAssignments from "../../layouts/viewSubmittedAssignment";
 
 import InventoryList from "../../layouts/assignmentView";
 import { Icon } from "semantic-ui-react";
@@ -34,7 +36,7 @@ import {
 } from "@mui/icons-material";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import KitchenIcon from "@mui/icons-material/Kitchen";
-
+import ViewCoursesStudent from "../../layouts/courseListstudent";
 import DisplaySchedule from "../../layouts/scheduleView";
 // import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import {
@@ -44,7 +46,10 @@ import {
   setWhiteSidenav,
 } from "../../context";
 import ReportList from "../../layouts/courseList";
+import SubmitAssignment from "../../layouts/submitAssignment";
+import ViewAssignments from "../../layouts/assignmentView";
 
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import {
   Dialog,
   DialogTitle,
@@ -54,6 +59,7 @@ import {
   Button,
 } from "@mui/material";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import ViewAnnouncement from "../../layouts/viewAnnouncement";
 
 import colors from "../../assets/theme/base/colors";
 
@@ -105,72 +111,54 @@ function StudentSidenav({ brand, brandName, selectedMenu, ...rest }) {
       route: "/dashboard",
       component: <Dashboard />,
     },
+
+    {
+      type: "collapse",
+      name: "Announcement View",
+      key: "Announcement_view",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/viewAnnouncement",
+      component: <ViewAnnouncement />,
+    },
     // {
     //   type: "collapse",
-    //   name: "orders",
-    //   key: "orders",
-    //   icon: <TableViewOutlinedIcon fontSize="small" />,
-    //   route: "/tables",
-    //   component: <Tables />,
+    //   name: "Submit Assignment",
+    //   key: "submitAssignment",
+    //   icon: <AttachMoneyIcon fontSize="small" />,
+    //   route: "/submit-assignment",
+    //   component: <SubmitAssignment />,
     // },
-    //
     {
       type: "collapse",
-      name: "stock_Approval",
-      key: "stock_Approval",
+      name: "View Assignment",
+      key: "assignmentView",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleView",
-      component: <DisplaySchedule />,
-    },
-    {
-      type: "collapse",
-      name: "assignmentView",
-      key: "list",
-      icon: <ShoppingCartIcon fontSize="small" />,
       route: "/assignmentView",
-      component: <InventoryList />,
-    },
-
-    {
-      type: "collapse",
-      name: "schedule_post",
-      key: "schedule_post",
-      icon: <KitchenIcon fontSize="small" />,
-      route: "/schedulePost",
-      component: <ScheduleRequest />,
-    },
-    {
-      type: "collapse",
-      name: "schedule_Approval",
-      key: "ingredient_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleApproval",
-      component: <ApproveScheduleRequest />,
+      component: <ViewAssignments />,
     },
     // {
     //   type: "collapse",
-    //   name: "Add-employee",
-    //   key: "Add-employee",
-    //   icon: <AddIcon fontSize="small" />,
-    //   route: "/addEmployee",
-    //   component: <AddEmployee />,
+    //   name: "Display Schedule",
+    //   key: "stock_Approval",
+    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
+    //   route: "/scheduleView",
+    //   component: <DisplaySchedule />,
     // },
-    // {
-    //   type: "collapse",
-    //   name: "report",
-    //   key: "report",
-    //   icon: <AssessmentIcon fontSize="small" />,
-    //   route: "/report",
-    //   component: <ReportList />,
-    // },
-
     {
       type: "collapse",
-      name: "Display Schedule",
-      key: "stock_Approval",
+      name: "Course Material List",
+      key: "courseMaterialList",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleView",
-      component: <DisplaySchedule />,
+      route: "/courseMaterialStudent",
+      component: <CourseMaterialsList />,
+    },
+    {
+      type: "collapse",
+      name: "Course List",
+      key: "report",
+      icon: <AssignmentTurnedInIcon fontSize="small" />,
+      route: "/courseListstudent",
+      component: <ViewCoursesStudent />,
     },
   ];
 
@@ -313,7 +301,7 @@ function StudentSidenav({ brand, brandName, selectedMenu, ...rest }) {
       <List>{renderRoutes}</List>
       <Link to="#" onClick={handleOpenLogoutDialog}>
         <SidenavCollapse
-          name="ውጣ"
+          name="Logout"
           icon={
             <LogoutIcon fontSize="small" style={iconStyle}>
               person
@@ -328,10 +316,10 @@ function StudentSidenav({ brand, brandName, selectedMenu, ...rest }) {
         aria-describedby="alert-dialog-description"
         PaperProps={{ style: { padding: "15px" } }}
       >
-        <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Notification</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
+            እርግጠኛ ነዎት መLogoutት ይፈልጋሉ?
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{ justifyContent: "space-between" }}>
@@ -340,14 +328,14 @@ function StudentSidenav({ brand, brandName, selectedMenu, ...rest }) {
             color="info"
             style={{ borderRadius: "15%" }}
           >
-            አይ
+            No
           </MDButton>
           <MDButton
             onClick={handleLogoutConfirmed}
             color="error"
             style={{ borderRadius: "15%" }}
           >
-            ውጣ
+            Logout
           </MDButton>
         </DialogActions>
       </Dialog>

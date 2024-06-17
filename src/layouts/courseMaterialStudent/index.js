@@ -9,110 +9,64 @@ import {
   Typography,
   Grid,
   Button,
+  Modal,
   Card,
   Box,
+  CardContent,
+  FormControl,
   TextField,
   InputLabel,
   Select,
   MenuItem,
-  FormControl,
 } from "@mui/material";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import StudentSidenav from "../../examples/Sidenav/StudentSidenav";
+import Sidenav from "../../examples/Sidenav/AdminSidenav";
 import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
-import { useNavigate } from "react-router-dom";
-import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 
-function ViewAssignments() {
+import StudentSidenav from "../../examples/Sidenav/StudentSidenav";
+function CourseMaterialsList() {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
-  const [assignments, setAssignments] = useState([]);
+  const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
   const userData = ipcRenderer.sendSync("get-user");
 
+  const [open, setOpen] = useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [fileContent, setFileContent] = useState(null);
   const [courses, setCourses] = useState([]);
 
-  const accessToken = userData.accessToken;
-
-  const navigate = useNavigate();
-
-  const fetchAssignments = async () => {
+  const fetchMaterials = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `${BASE_URL}/getallassignments`
-        // , {
-        //   headers: {
-        //     Authorization: `Bearer ${accessToken}`,
-        //   },
-        // }
-      );
-      console.log("API Response:", response.data); // Log the API response
-      if (response.data && response.data.assignments) {
-        setAssignments(response.data.assignments);
+      const response = await axios.get(`${BASE_URL}/getallmaterials`);
+      if (response.data && response.data.materials) {
+        setMaterials(response.data.materials);
         const uniqueCourses = [
           ...new Set(
-            response.data.assignments.map(
-              (assignment) => assignment.course_name
-            )
+            response.data.materials.map((material) => material.course_name)
           ),
         ];
         setCourses(uniqueCourses);
       }
     } catch (error) {
-      console.error("Error fetching assignments:", error);
+      console.error("Error fetching materials:", error);
     }
     setLoading(false);
   };
 
-  const filterAssignments = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/filterassignments`,
-        {
-          course_name: selectedCourse,
-          searchTerm: searchTerm,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log("Filtered API Response:", response.data); // Log the filtered API response
-      if (response.data && response.data.filteredAssignments) {
-        setAssignments(response.data.filteredAssignments);
-      }
-    } catch (error) {
-      console.error("Error filtering assignments:", error);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchAssignments();
-  }, []);
-
-  useEffect(() => {
-    if (selectedCourse || searchTerm) {
-      filterAssignments();
-    } else {
-      fetchAssignments();
-    }
-  }, [selectedCourse, searchTerm]);
-
-  const fetchFileContent = async (assignmentId) => {
+  const fetchFileContent = async (materialId) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/getassignmentcontent/${assignmentId}`,
+        `${BASE_URL}/getmaterialcontent/${materialId}`,
         {
           responseType: "blob",
         }
@@ -124,8 +78,36 @@ function ViewAssignments() {
     }
   };
 
-  const handleAssignmentClick = async (assignment) => {
-    const fileContent = await fetchFileContent(assignment.id);
+  const filterMaterials = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`${BASE_URL}/filtermaterials`, {
+        course_name: selectedCourse,
+        searchTerm: searchTerm,
+      });
+      if (response.data && response.data.filteredMaterials) {
+        setMaterials(response.data.filteredMaterials);
+      }
+    } catch (error) {
+      console.error("Error filtering materials:", error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchMaterials();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCourse || searchTerm) {
+      filterMaterials();
+    } else {
+      fetchMaterials();
+    }
+  }, [selectedCourse, searchTerm]);
+
+  const handleViewDetail = async (material) => {
+    const fileContent = await fetchFileContent(material.id);
     if (fileContent) {
       const fileURL = URL.createObjectURL(
         new Blob([fileContent], { type: "application/pdf" })
@@ -135,11 +117,11 @@ function ViewAssignments() {
         newWindow.document.write(`
           <html>
             <head>
-              <title>${assignment.assignmentName}</title>
+              <title>${material.material_title}</title>
             </head>
             <body>
               <embed width="100%" height="100%" src="${fileURL}" type="application/pdf">
-              <a href="${fileURL}" download="${assignment.assignmentName}.pdf">
+              <a href="${fileURL}" download="${material.material_title}.pdf">
                 <button>Download</button>
               </a>
             </body>
@@ -152,6 +134,12 @@ function ViewAssignments() {
     }
   };
 
+  const handleCloseModal = () => {
+    setOpen(false);
+    setSelectedMaterial(null);
+    setFileContent(null);
+  };
+
   const handleChangeCourse = (event) => {
     setSelectedCourse(event.target.value);
   };
@@ -160,20 +148,12 @@ function ViewAssignments() {
     setSearchTerm(event.target.value);
   };
 
-  function handleSubmitAssignment(assignment) {
-    navigate("/submit-assignment", {
-      state: {
-        assignmentName: assignment.assignmentName,
-        courseName: assignment.course_name,
-      },
-    });
-  }
-
   return (
-    <DashboardLayout>
+    <div style={{ display: "flex" }}>
       <StudentSidenav />
       <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
         <DashboardNavbar />
+
         <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -188,7 +168,7 @@ function ViewAssignments() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h4" color="white">
-                  Assignment List
+                  Course Material List
                 </MDTypography>
               </MDBox>
               <Card style={{ marginTop: "20px" }}>
@@ -235,58 +215,46 @@ function ViewAssignments() {
                     <TableBody>
                       <TableRow sx={{ backgroundColor: "#" }}>
                         <TableCell align="center">
-                          <strong>Assignment Id</strong>
+                          <strong>Id</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Assignment Name</strong>
-                        </TableCell>
-                        <TableCell align="center">
-                          <strong>Assignment Description</strong>
+                          <strong>Title</strong>
                         </TableCell>
                         <TableCell align="center">
                           <strong>Course Name</strong>
                         </TableCell>
                         <TableCell align="center">
-                          <strong>Due Date</strong>
-                        </TableCell>
-                        <TableCell align="center">
                           <strong>Actions</strong>
                         </TableCell>
                       </TableRow>
-                      {assignments.map((assignment) => (
-                        <TableRow key={assignment.id}>
-                          <TableCell align="center">{assignment.id}</TableCell>
-                          <TableCell align="center">
-                            {assignment.assignmentName}
-                          </TableCell>
-                          <TableCell align="center">
-                            {assignment.assignmentDescription}
-                          </TableCell>
-                          <TableCell align="center">
-                            {assignment.course_name}
-                          </TableCell>
-                          <TableCell align="center">
-                            {assignment.dueDate}
-                          </TableCell>
-                          <TableCell align="center">
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={() => handleAssignmentClick(assignment)}
-                            >
-                              View Assignment
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="white"
-                              onClick={() => handleSubmitAssignment(assignment)}
-                              style={{ marginLeft: "10px" }}
-                            >
-                              Submit
-                            </Button>
+                      {loading ? (
+                        <TableRow>
+                          <TableCell colSpan={4} align="center">
+                            <Typography>Loading...</Typography>
                           </TableCell>
                         </TableRow>
-                      ))}
+                      ) : (
+                        materials.map((material) => (
+                          <TableRow key={material.id}>
+                            <TableCell align="center">{material.id}</TableCell>
+                            <TableCell align="center">
+                              {material.material_title}
+                            </TableCell>
+                            <TableCell align="center">
+                              {material.course_name}
+                            </TableCell>
+                            <TableCell align="center">
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleViewDetail(material)}
+                              >
+                                View Material
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -296,8 +264,8 @@ function ViewAssignments() {
           </Grid>
         </MDBox>
       </div>
-    </DashboardLayout>
+    </div>
   );
 }
 
-export default ViewAssignments;
+export default CourseMaterialsList;

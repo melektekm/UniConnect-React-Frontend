@@ -18,10 +18,11 @@ import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
+import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 
 function SubmittedAssignments() {
   const electron = window.require("electron");
@@ -68,11 +69,12 @@ function SubmittedAssignments() {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <Sidenav />
+    <DashboardLayout>
+      <InstructorSidenav />
+
       <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
         <DashboardNavbar />
-        <MainDashboard />
+
         <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -206,7 +208,7 @@ function SubmittedAssignments() {
           </Grid>
         </MDBox>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
 

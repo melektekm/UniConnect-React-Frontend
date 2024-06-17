@@ -12,7 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { BASE_URL } from "../../appconfig";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import StudentSidenav from "../../examples/Sidenav/StudentSidenav";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import MDInput from "../../components/MDInput";
@@ -130,7 +130,7 @@ function SubmitAssignment() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Sidenav />
+      <StudentSidenav />
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogTitle>{successMessage ? "Success" : "Error"}</DialogTitle>
         <DialogContent>

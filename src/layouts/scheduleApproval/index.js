@@ -26,7 +26,7 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import AdminNavbar from "../../examples/Navbars/AdminNavbar";
 import Footer from "../../examples/Footer";
 import axios from "axios";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import DeanSidenav from "../../examples/Sidenav/DeanSidenav";
 import { BASE_URL } from "../../appconfig";
 
 function ApproveScheduleRequest() {
@@ -138,7 +138,7 @@ function ApproveScheduleRequest() {
 
       <DashboardNavbar />
       {/* <AdminNavbar /> */}
-      <Sidenav />
+      <DeanSidenav />
 
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>

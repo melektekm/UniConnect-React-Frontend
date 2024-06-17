@@ -92,86 +92,11 @@ function DeanSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const routes = [
     {
       type: "collapse",
-      name: "dashboard",
-      key: "dashboard",
-      icon: <DashboardIcon fontSize="small" />,
-      route: "/dashboard",
-      component: <Dashboard />,
-    },
-    {
-      type: "collapse",
-      name: "orders",
-      key: "orders",
-      icon: <TableViewOutlinedIcon fontSize="small" />,
-      route: "/tables",
-      component: <Tables />,
-    },
-
-    {
-      type: "collapse",
-      name: "stock_Approval",
-      key: "stock_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleView",
-      component: <DisplaySchedule />,
-    },
-
-    {
-      type: "collapse",
-      name: "menu entry",
-      key: "add_food",
-      icon: <RestaurantMenuIcon fontSize="small" />,
-      route: "/addfood",
-      component: <AddMenuItem />,
-    },
-    {
-      type: "collapse",
-      name: "ingredient_Request",
-      key: "schedule_post",
-      icon: <KitchenIcon fontSize="small" />,
-      route: "/schedulePost",
-      component: <ScheduleRequest />,
-    },
-    {
-      type: "collapse",
-      name: "ingredient_Approval",
+      name: "schedule approval",
       key: "ingredient_Approval",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
       route: "/scheduleApproval",
       component: <ApproveScheduleRequest />,
-    },
-    // {
-    //   type: "collapse",
-    //   name: "Add-employee",
-    //   key: "Add-employee",
-    //   icon: <AddIcon fontSize="small" />,
-    //   route: "/addEmployee",
-    //   component: <AddEmployee />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "employee list",
-    //   key: "profile",
-    //   icon: <PersonIcon fontSize="small" />,
-    //   route: "/profile",
-    //   component: <EmployeeList />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "report",
-    //   key: "report",
-    //   icon: <AssessmentIcon fontSize="small" />,
-    //   route: "/report",
-    //   component: <ReportList />,
-    // },
-
-    {
-      type: "collapse",
-      name: "Display Schedule",
-      key: "stock_Approval",
-      icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleView",
-      component: <DisplaySchedule />,
     },
   ];
   let textColor = "white";
@@ -313,7 +238,7 @@ function DeanSidenav({ brand, brandName, selectedMenu, ...rest }) {
       <List>{renderRoutes}</List>
       <Link to="#" onClick={handleOpenLogoutDialog}>
         <SidenavCollapse
-          name="ውጣ"
+          name="Logout"
           icon={
             <LogoutIcon fontSize="small" style={iconStyle}>
               person

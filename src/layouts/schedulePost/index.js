@@ -27,7 +27,7 @@ import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
 import axios from "axios";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
 import { BASE_URL } from "../../appconfig";
 
 function ScheduleRequest() {
@@ -201,7 +201,7 @@ function ScheduleRequest() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Sidenav />
+      <CoordinatorSidenav />
 
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>

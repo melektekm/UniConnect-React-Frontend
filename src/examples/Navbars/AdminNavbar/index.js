@@ -204,7 +204,7 @@ function AdminNavbar({ absolute, light, isMini }) {
                   navigate("/addfood");
                 }}
               >
-                ፈልግ
+                Search
               </MDButton>
             </MDBox>
             <MDBox color={light ? "white" : "dark"} textAlign="center">

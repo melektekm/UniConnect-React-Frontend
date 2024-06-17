@@ -256,10 +256,10 @@ function StudentNavBar({ absolute, light, isMini }) {
         aria-describedby="alert-dialog-description"
         PaperProps={{ style: { padding: "15px" } }}
       >
-        <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Notification</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
+            እርግጠኛ ነዎት መLogoutት ይፈልጋሉ?
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{ justifyContent: "space-between" }}>
@@ -268,14 +268,14 @@ function StudentNavBar({ absolute, light, isMini }) {
             color="info"
             style={{ borderRadius: "15%" }}
           >
-            አይ
+            No
           </MDButton>
           <MDButton
             onClick={handleLogout}
             color="error"
             style={{ borderRadius: "15%" }}
           >
-            ውጣ
+            Logout
           </MDButton>
         </DialogActions>
       </Dialog>

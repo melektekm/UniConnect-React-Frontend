@@ -24,23 +24,13 @@ import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 import MDBox from "../../components/MDBox";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 import MainDashboard from "../../layouts/MainDashboard";
 import Footer from "../../examples/Footer";
 import MDTypography from "../../components/MDTypography";
 import { CheckCircle, Cancel, Edit, Delete } from "@mui/icons-material";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-
-const tabStyles = {
-  root: {
-    '&:hover': {
-      backgroundColor: 'rgba(0, 0, 255, 0.1)',
-    },
-    '&.Mui-selected': {
-      backgroundColor: 'rgba(0, 0, 255, 0.2)',
-    },
-  },
-};
+import { useNavigate } from "react-router-dom";
 
 function AssignmentsPage() {
   const electron = window.require("electron");
@@ -52,11 +42,14 @@ function AssignmentsPage() {
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const itemsPerPage = 20;
-  const [current_page, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
+
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [courses, setCourses] = useState([]);
+
   const userData = ipcRenderer.sendSync("get-user");
   const accessToken = userData.accessToken;
+  const navigate = useNavigate();
 
   const fetchAssignments = async () => {
     setLoading(true);
@@ -67,65 +60,81 @@ function AssignmentsPage() {
           "Content-Type": "application/json",
         },
       });
+      console.log("API Response:", response.data); // Log the API response
       if (response.data && response.data.assignments) {
-        setAssignments(response.data["assignments"]);
-        setCurrentPage(response.data.current_page);
-        setLastPage(response.data.last_page);
+        setAssignments(response.data.assignments);
+        const uniqueCourses = [
+          ...new Set(
+            response.data.assignments.map(
+              (assignment) => assignment.course_name
+            )
+          ),
+        ];
+        setCourses(uniqueCourses);
       }
     } catch (error) {
       console.error("Error fetching assignments:", error);
-      setErrorMessage("Error fetching assignments");
+    }
+    setLoading(false);
+  };
+
+  const filterAssignments = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/filterassignments`,
+        {
+          course_name: selectedCourse,
+          searchTerm: searchTerm,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("Filtered API Response:", response.data); // Log the filtered API response
+      if (response.data && response.data.filteredAssignments) {
+        setAssignments(response.data.filteredAssignments);
+      }
+      0;
+    } catch (error) {
+      console.error("Error filtering assignments:", error);
     }
     setLoading(false);
   };
 
   useEffect(() => {
     fetchAssignments();
-  }, [current_page]);
+  }, []);
 
-  const handleFilterChange = (event, newValue) => {
-    setFilterStatus(newValue);
-  };
+  useEffect(() => {
+    if (selectedCourse || searchTerm) {
+      filterAssignments();
+    } else {
+      fetchAssignments();
+    }
+  }, [selectedCourse, searchTerm]);
 
-  const handleStatusChange = async (id, newStatus) => {
+  const fetchFileContent = async (assignmentId) => {
     try {
-      await axios.post(
-        `${BASE_URL}/assignments/${id}/status`,
-        { status: newStatus },
+      const response = await axios.get(
+        `${BASE_URL}/getassignmentcontent/${assignmentId}`,
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
+          responseType: "blob",
         }
       );
-      setAssignments((prevAssignments) =>
-        prevAssignments.map((assignment) =>
-          assignment.id === id ? { ...assignment, status: newStatus } : assignment
-        )
-      );
+      return response.data;
     } catch (error) {
-      console.error("Error updating assignment status:", error);
-      setErrorMessage("Error updating assignment status");
+      console.error("Error fetching file content:", error);
+      return null;
     }
   };
 
-  function handleEditAssignment(updatedAssignment) {
-    if (!selectedAssignment) {
-      setAssignments([...assignments, updatedAssignment]);
-    } else {
-      setAssignments(
-        assignments.map((assignment) =>
-          assignment.id === updatedAssignment.id ? updatedAssignment : assignment
-        )
-      );
-      setSelectedAssignment(null);
-    }
-    Navigate("/assignmentUpload", { state: { selectedAssignment: updatedAssignment } });
-  }
-
   function handleDeleteDialogOpen(id) {
-    const assignmentItem = assignments.find((assignmentItem) => assignmentItem.id === id);
+    const assignmentItem = assignments.find(
+      (assignmentItem) => assignmentItem.id === id
+    );
     setItemToDelete(assignmentItem);
     setDeleteDialogOpen(true);
   }
@@ -133,7 +142,14 @@ function AssignmentsPage() {
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
   };
-
+  function handleEditAssignment(assignment) {
+    navigate("/notify-students", {
+      state: {
+        assignmentName: assignment.assignmentName,
+        courseName: assignment.course_name,
+      },
+    });
+  }
   const handleDeleteAssignment = async (id) => {
     try {
       await axios.delete(`${BASE_URL}/deleteAssignment/${id}`, {
@@ -149,169 +165,194 @@ function AssignmentsPage() {
       setErrorMessage("Error deleting assignment");
     }
   };
-
-  const filteredAssignments = assignments.filter((assignment) => {
-    if (filterStatus === "all") {
-      return true;
+  const handleAssignmentClick = async (assignment) => {
+    const fileContent = await fetchFileContent(assignment.id);
+    if (fileContent) {
+      const fileURL = URL.createObjectURL(
+        new Blob([fileContent], { type: "application/pdf" })
+      );
+      const newWindow = window.open();
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>${assignment.assignmentName}</title>
+            </head>
+            <body>
+              <embed width="100%" height="100%" src="${fileURL}" type="application/pdf">
+              <a href="${fileURL}" download="${assignment.assignmentName}.pdf">
+                <button>Download</button>
+              </a>
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      } else {
+        console.error("Failed to open new window");
+      }
     }
-    return assignment.status === filterStatus;
-  });
+  };
+
+  const handleChangeCourse = (event) => {
+    setSelectedCourse(event.target.value);
+  };
+
+  const handleChangeSearchTerm = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
   return (
     <DashboardLayout>
-      <div style={{ display: "flex" }}>
-        <Sidenav />
-        <div style={{ flex: "1" }}>
-          <DashboardNavbar />
-          <MainDashboard />
-          <MDBox pt={6} pb={3}>
-            <Grid container spacing={6}>
-              <Grid item xs={12}>
-                <MDBox
-                  mx={2}
-                  mt={2}
-                  py={3}
-                  px={2}
-                  variant="gradient"
-                  bgColor="dark"
-                  borderRadius="lg"
-                  coloredShadow="info"
-                >
-                  <MDTypography variant="h4" color="white"   textAlign="center">
-                    Assignment List
-                  <MDBox p={3}  variant="gradient"
-                  bgColor="dark"
-                  borderRadius="lg"
-                  coloredShadow="info" >
-                    <Tabs
-                      value={filterStatus}
-                      onChange={handleFilterChange}
-                      indicatorColor="primary"
-                      textColor="primary"
-                      centered
-                    >
-                      <Tab
-                        label={<MDTypography variant="h6" color="primary">All</MDTypography>}
-                        value="all"
-                        sx={tabStyles.root}
-                      />
-                      <Tab
-                        label={<MDTypography variant="h6" color="primary">Sent</MDTypography>}
-                        value="sent"
-                        sx={tabStyles.root}
-                      />
-                      <Tab
-                        label={<MDTypography variant="h6" color="primary">Unsent</MDTypography>}
-                        value="unsent"
-                        sx={tabStyles.root}
-                      />
-                    </Tabs>
-                  </MDBox>
-                  </MDTypography>
-                </MDBox>
-                  <Card style={{ marginTop: "20px", padding: "20px" }}>
-                  <TableContainer component={Paper}>
-                    <Table>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell><strong>Assignment Name</strong></TableCell>
-                          <TableCell><strong>Course Name</strong></TableCell>
-                          <TableCell><strong>Assignment Description</strong></TableCell>
-                          <TableCell><strong>Due Date</strong></TableCell>
-                          <TableCell><strong>Status</strong></TableCell>
-                          <TableCell><strong>Actions</strong></TableCell>
-                        </TableRow>
-                        {filteredAssignments.map((assignment) => (
-                          <TableRow key={assignment.id}>
-                            <TableCell>{assignment.ass_name}</TableCell>
-                            <TableCell>{assignment.course_name}</TableCell>
-                            <TableCell>{assignment.Add_description}</TableCell>
-                            <TableCell>{assignment.due_date}</TableCell>
-                            <TableCell>{assignment.status}</TableCell>
-                            <TableCell>
-                              <Box display="flex" gap={1}>
-                                <Button
-                                  variant="contained"
-                                  style={{
-                                    borderRadius: "20px",
-                                    padding: "5px 15px",
-                                    minWidth: "120px",
-                                  }}
-                                  startIcon={<Edit />}
-                                  onClick={() => handleEditAssignment(assignment)}
-                                >
-                                  Edit
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  style={{
-                                    backgroundColor: "#ff9800",
-                                    color: "white",
-                                    borderRadius: "20px",
-                                    padding: "5px 15px",
-                                    minWidth: "120px",
-                                  }}
-                                  startIcon={<Delete />}
-                                  onClick={() => handleDeleteDialogOpen(assignment.id)}
-                                >
-                                  Delete
-                                </Button>
-                                <Box minWidth="120px">
-                                  <Select
-                                    value={assignment.status}
-                                    onChange={(e) => handleStatusChange(assignment.id, e.target.value)}
-                                  >
-                                    <MenuItem value="sent">Sent</MenuItem>
-                                    <MenuItem value="unsent">Unsent</MenuItem>
-                                  </Select>
-                                </Box>
-                              </Box>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  {loading && (
-                    <Box display="flex" justifyContent="center" alignItems="center" p={3}>
-                      <CircularProgress />
-                    </Box>
-                  )}
-                  {errorMessage && (
-                    <Box display="flex" justifyContent="center" alignItems="center" p={3}>
-                      <MDTypography variant="body1" color="error">
-                        {errorMessage}
-                      </MDTypography>
-                    </Box>
-                  )}
-                </Card>
-              </Grid>
-            </Grid>
-          </MDBox>
-          <Footer />
-          <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogContent>
-              {itemToDelete && (
-                <MDTypography variant="body1">
-                  Are you sure you want to delete{" "}
-                  <strong>{itemToDelete.ass_name}</strong>?
-                </MDTypography>
-              )}
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDeleteDialogClose}>Cancel</Button>
-              <Button
-                onClick={() =>
-                  handleDeleteAssignment(itemToDelete ? itemToDelete.id : null)
-                }
-                color="error"
+      <InstructorSidenav />
+      <div style={{ flex: "1" }}>
+        <DashboardNavbar />
+
+        <MDBox pt={6} pb={3}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <MDBox
+                mx={2}
+                mt={2}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="dark"
+                borderRadius="lg"
+                coloredShadow="info"
               >
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
+                <MDTypography variant="h4" color="white" textAlign="center">
+                  Assignment List
+                </MDTypography>
+              </MDBox>
+
+              <Card style={{ marginTop: "20px", padding: "20px" }}>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Assignment Name</strong>
+                        </TableCell>
+                        <TableCell>
+                          <strong>Course Name</strong>
+                        </TableCell>
+                        <TableCell>
+                          <strong>Assignment Description</strong>
+                        </TableCell>
+                        <TableCell>
+                          <strong>Due Date</strong>
+                        </TableCell>
+                        <TableCell>
+                          <strong>Actions</strong>
+                        </TableCell>
+                      </TableRow>
+                      {assignments.map((assignment) => (
+                        <TableRow key={assignment.id}>
+                          <TableCell>{assignment.assignmentName}</TableCell>
+                          <TableCell>{assignment.course_name}</TableCell>
+                          <TableCell>
+                            {assignment.assignmentDescription}
+                          </TableCell>
+                          <TableCell>{assignment.dueDate}</TableCell>
+
+                          <TableCell>
+                            <Box display="flex" gap={1}>
+                              <Button
+                                variant="contained"
+                                style={{
+                                  borderRadius: "20px",
+                                  padding: "5px 15px",
+                                  minWidth: "120px",
+                                }}
+                                onClick={() =>
+                                  handleAssignmentClick(assignment)
+                                }
+                              >
+                                View Assignment
+                              </Button>
+                              <Button
+                                variant="contained"
+                                style={{
+                                  backgroundColor: "#ff9800",
+                                  color: "white",
+                                  borderRadius: "20px",
+                                  padding: "5px 15px",
+                                  minWidth: "120px",
+                                }}
+                                startIcon={<Delete />}
+                                onClick={() =>
+                                  handleDeleteDialogOpen(assignment.id)
+                                }
+                              >
+                                Delete
+                              </Button>
+                              <Button
+                                variant="contained"
+                                style={{
+                                  borderRadius: "20px",
+                                  padding: "5px 15px",
+                                  minWidth: "120px",
+                                }}
+                                onClick={() => handleEditAssignment(assignment)}
+                              >
+                                Notify students about changes
+                              </Button>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                {loading && (
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    p={3}
+                  >
+                    <CircularProgress />
+                  </Box>
+                )}
+                {errorMessage && (
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    p={3}
+                  >
+                    <MDTypography variant="body1" color="error">
+                      {errorMessage}
+                    </MDTypography>
+                  </Box>
+                )}
+              </Card>
+            </Grid>
+          </Grid>
+        </MDBox>
+        <Footer />
+        <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            {itemToDelete && (
+              <MDTypography variant="body1">
+                Are you sure you want to delete{" "}
+                <strong>{itemToDelete.ass_name}</strong>?
+              </MDTypography>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteDialogClose}>Cancel</Button>
+            <Button
+              onClick={() =>
+                handleDeleteAssignment(itemToDelete ? itemToDelete.id : null)
+              }
+              color="error"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </DashboardLayout>
   );

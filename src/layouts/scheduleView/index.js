@@ -14,7 +14,7 @@ import MDTypography from "../../components/MDTypography";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import StudentSidenav from "../../examples/Sidenav/StudentSidenav";
 import axios from "axios";
 import { BASE_URL } from "../../appconfig";
 

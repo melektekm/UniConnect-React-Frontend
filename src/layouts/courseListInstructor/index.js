@@ -31,8 +31,9 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
+import InstructorSidenav from "../../examples/Sidenav/InstructorSidenav";
 
-function ViewCourses() {
+function ViewCoursesInstructor() {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const [courses, setCourses] = useState([]);
@@ -150,9 +151,9 @@ function ViewCourses() {
 
   return (
     <div style={{ display: "flex" }}>
-      <Sidenav />
       <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
         <DashboardNavbar />
+        <InstructorSidenav />
         <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -410,4 +411,4 @@ function ViewCourses() {
   );
 }
 
-export default ViewCourses;
+export default ViewCoursesInstructor;

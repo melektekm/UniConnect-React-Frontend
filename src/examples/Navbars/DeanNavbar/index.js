@@ -87,7 +87,7 @@ function DeanNavBar({ absolute, light, isMini }) {
 
   const navigate = useNavigate();
   const location = useLocation();
-  let routeName = '';
+  let routeName = "";
 
   routes.forEach((route) => {
     if (useLocation().pathname === route.route) {
@@ -135,9 +135,7 @@ function DeanNavBar({ absolute, light, isMini }) {
     try {
       await ipcRenderer.invoke("clear-user");
       navigate("/authentication/sign-in");
-    } catch (error) {
-     
-    }
+    } catch (error) {}
   };
 
   const handleOpenLogoutDialog = () => {
@@ -229,7 +227,6 @@ function DeanNavBar({ absolute, light, isMini }) {
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox pr={1}>
               <MDButton
-               
                 color="secondary"
                 onClick={async () => {
                   const currentRoute = location.pathname; // Get the current route
@@ -238,7 +235,7 @@ function DeanNavBar({ absolute, light, isMini }) {
                   navigate("/search");
                 }}
               >
-                ፈልግ
+                Search
               </MDButton>
             </MDBox>
             <MDBox color={light ? "white" : "inherit"} textAlign="center">
@@ -268,40 +265,46 @@ function DeanNavBar({ absolute, light, isMini }) {
                 <NotificationsNoneIcon sx={iconsStyle} />
               </IconButton>
               {renderMenu()}
-              <MDTypography style = {{fontSize: "0.67em"}}>Hello,{userData.user.name}</MDTypography>
+              <MDTypography style={{ fontSize: "0.67em" }}>
+                Hello,{userData.user.name}
+              </MDTypography>
             </MDBox>
           </MDBox>
         )}
       </Toolbar>
 
       <Dialog
-  open={openLogoutDialog}
-  onClose={handleCloseLogoutDialog}
-  aria-labelledby="alert-dialog-title"
-  aria-describedby="alert-dialog-description"
-  PaperProps={{ style: { padding: "15px" } }}
->
-  <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
-  <DialogContent>
-    <DialogContentText id="alert-dialog-description">
-      እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
-    </DialogContentText>
-  </DialogContent>
-  <DialogActions style={{ justifyContent: "space-between" }}>
-    <MDButton onClick={handleCloseLogoutDialog} color="info" style={{ borderRadius: "15%" }}>
-      አይ
-    </MDButton>
-    <MDButton onClick={handleLogout} color="error" style={{ borderRadius: "15%" }}>
-      ውጣ
-    </MDButton>
-  </DialogActions>
-</Dialog>
+        open={openLogoutDialog}
+        onClose={handleCloseLogoutDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{ style: { padding: "15px" } }}
+      >
+        <DialogTitle id="alert-dialog-title">Notification</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to logout?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ justifyContent: "space-between" }}>
+          <MDButton
+            onClick={handleCloseLogoutDialog}
+            color="info"
+            style={{ borderRadius: "15%" }}
+          >
+            No
+          </MDButton>
+          <MDButton
+            onClick={handleLogout}
+            color="error"
+            style={{ borderRadius: "15%" }}
+          >
+            Logout
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </AppBar>
-
-    
   );
-
-
 }
 
 // Setting default values for the props of DashboardNavbar

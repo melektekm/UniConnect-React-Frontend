@@ -31,8 +31,9 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
+import StudentSidenav from "../../examples/Sidenav/StudentSidenav";
 
-function ViewCourses() {
+function ViewCoursesStudent() {
   const electron = window.require("electron");
   const ipcRenderer = electron.ipcRenderer;
   const [courses, setCourses] = useState([]);
@@ -150,7 +151,7 @@ function ViewCourses() {
 
   return (
     <div style={{ display: "flex" }}>
-      <Sidenav />
+      <StudentSidenav />
       <div style={{ marginLeft: "280px", width: "100%", paddingLeft: "20px" }}>
         <DashboardNavbar />
         <MDBox pt={6} pb={3}>
@@ -410,4 +411,4 @@ function ViewCourses() {
   );
 }
 
-export default ViewCourses;
+export default ViewCoursesStudent;

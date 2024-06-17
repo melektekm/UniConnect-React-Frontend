@@ -9,9 +9,26 @@ import MDTypography from "../../components/MDTypography";
 import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
-import ScheduleRequest from "../../layouts/schedulePost";
-import DeanDashboard from "../../layouts/dashboard/deanDashboard";
-import { Icon } from "semantic-ui-react";
+import InstructorDashboard from "../../layouts/dashboard/instructorDashboard";
+import AssignmentsPage from "../../layouts/assignmentList";
+// import EmployeeList from "../../layouts/profile";
+import AddEmployee from "../../layouts/addEmployee";
+
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+
+import ViewCourses from "../../layouts/courseList";
+
+import ViewCoursesInstructor from "../../layouts/courseListInstructor";
+import UploadCourse from "../../layouts/courseUpload";
+import UploadAnnouncement from "../../layouts/announcements";
+import UploadAssignment from "../../layouts/assignmentUpload";
+import AddCourseMaterial from "../../layouts/courseMaterial";
+import CourseMaterialsPage from "../../layouts/CourseMaterialList";
+import SubmitAssignment from "../../layouts/submitAssignment";
+import ViewAssignments from "../../layouts/assignmentView";
+import ViewAnnouncement from "../../layouts/viewAnnouncement";
+
+import SubmittedAssignments from "../../layouts/viewSubmittedAssignment";
 
 import {
   Dashboard as DashboardIcon,
@@ -28,8 +45,6 @@ import {
   Assessment as AssessmentIcon,
   Approval,
 } from "@mui/icons-material";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import KitchenIcon from "@mui/icons-material/Kitchen";
 
 import DisplaySchedule from "../../layouts/scheduleView";
 import {
@@ -38,8 +53,6 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "../../context";
-import InventoryList from "../../layouts/assignmentView";
-import InventoryEntry from "../../layouts/inventory";
 import StoreIcon from "@mui/icons-material/Store";
 import ListIcon from "@mui/icons-material/List";
 import colors from "../../assets/theme/base/colors";
@@ -52,10 +65,10 @@ import {
   Button,
 } from "@mui/material";
 import ApproveScheduleRequest from "../../layouts/scheduleApproval";
-
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import MDButton from "../../components/MDButton";
 
-function storeKeeperSidenav({ brand, brandName, selectedMenu, ...rest }) {
+function InstructorSidenav({ brand, brandName, selectedMenu, ...rest }) {
   const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } =
@@ -98,84 +111,58 @@ function storeKeeperSidenav({ brand, brandName, selectedMenu, ...rest }) {
       name: "dashboard",
       key: "dashboard",
       icon: <DashboardIcon fontSize="small" />,
-      route: "/dashboard",
-      component: <Dashboard />,
+      route: "/instructorDashboard",
+      component: <InstructorDashboard />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "orders",
-    //   key: "orders",
-    //   icon: <TableViewOutlinedIcon fontSize="small" />,
-    //   route: "/tables",
-    //   component: <Tables />,
-    // },
+    {
+      type: "collapse",
+      name: "Course List",
+      key: "report",
+      icon: <AssessmentIcon fontSize="small" />,
+      route: "/courseListInstructor",
+      component: <ViewCoursesInstructor />,
+    },
+    {
+      type: "collapse",
+      name: "Upload Assignment",
+      key: "assignmentUpload",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/assignmentUpload",
+      component: <UploadAssignment />,
+    },
 
     {
       type: "collapse",
-      name: "assignmentView",
-      key: "list",
-      icon: <ShoppingCartIcon fontSize="small" />,
-      route: "/assignmentView",
-      component: <InventoryList />,
-    },
-
-    {
-      type: "collapse",
-      name: "schedule_post",
-      key: "schedule_post",
-      icon: <KitchenIcon fontSize="small" />,
-      route: "/schedulePost",
-      component: <ScheduleRequest />,
-    },
-    {
-      type: "collapse",
-      name: "schedule_Approval",
-      key: "schedule_Approval",
+      name: "Assignment List",
+      key: "assignment-list",
       icon: <AssignmentTurnedInIcon fontSize="small" />,
-      route: "/scheduleApproval",
-      component: <ApproveScheduleRequest />,
+      route: "/assignmentList",
+      component: <AssignmentsPage />,
     },
     {
       type: "collapse",
-      name: "Add-employee",
-      key: "Add-employee",
-      icon: <AddIcon fontSize="small" />,
-      route: "/addEmployee",
-      component: <AddEmployee />,
+      name: "Submitted Assignment",
+      key: "submittedAssignment",
+      icon: <RestaurantMenuIcon fontSize="small" />,
+      route: "/viewSubmittedAssignment",
+      component: <SubmittedAssignments />,
     },
     {
       type: "collapse",
-      name: "employee list",
-      key: "profile",
-      icon: <PersonIcon fontSize="small" />,
-      route: "/profile",
-      component: <EmployeeList />,
+      name: "Upload Course Material",
+      key: "courseMaterial",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/courseMaterial",
+      component: <AddCourseMaterial />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "report",
-    //   key: "report",
-    //   icon: <AssessmentIcon fontSize="small" />,
-    //   route: "/report",
-    //   component: <ReportList />,
-    // },
-
-    // {
-    //   type: "collapse",
-    //   name: "የመተግበሪያ ገጽታ",
-    //   key: "stock_Approval",
-    //   icon: <AssignmentTurnedInIcon fontSize="small" />,
-    //   route: "/scheduleView",
-    //   component: <DisplaySchedule />,
-    // },
-    // {
-    //   type: "collapse",
-    //   name: "የገንዘብ አያያዝ",
-    //   key: "deposit",
-    //   icon: <AttachMoneyIcon fontSize="small" />,
-    //   route: "/deposit",
-    //   component: <Deposit />,
-    // },
+    {
+      type: "collapse",
+      name: "Course Material List",
+      key: "courseMaterialList",
+      icon: <AttachMoneyIcon fontSize="small" />,
+      route: "/CourseMaterialList",
+      component: <CourseMaterialsPage />,
+    },
   ];
 
   let textColor = "white";
@@ -317,7 +304,7 @@ function storeKeeperSidenav({ brand, brandName, selectedMenu, ...rest }) {
       <List>{renderRoutes}</List>
       <Link to="#" onClick={handleOpenLogoutDialog}>
         <SidenavCollapse
-          name="ውጣ"
+          name="Logout"
           icon={
             <LogoutIcon fontSize="small" style={iconStyle}>
               person
@@ -332,10 +319,10 @@ function storeKeeperSidenav({ brand, brandName, selectedMenu, ...rest }) {
         aria-describedby="alert-dialog-description"
         PaperProps={{ style: { padding: "15px" } }}
       >
-        <DialogTitle id="alert-dialog-title">ማረጋገጫ</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Notification</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            እርግጠኛ ነዎት መውጣት ይፈልጋሉ?
+            Are you sure you want to logout?
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{ justifyContent: "space-between" }}>
@@ -344,14 +331,14 @@ function storeKeeperSidenav({ brand, brandName, selectedMenu, ...rest }) {
             color="info"
             style={{ borderRadius: "15%" }}
           >
-            አይ
+            No
           </MDButton>
           <MDButton
             onClick={handleLogoutConfirmed}
             color="error"
             style={{ borderRadius: "15%" }}
           >
-            ውጣ
+            Logout
           </MDButton>
         </DialogActions>
       </Dialog>
@@ -359,12 +346,12 @@ function storeKeeperSidenav({ brand, brandName, selectedMenu, ...rest }) {
   );
 }
 
-storeKeeperSidenav.defaultProps = {
+InstructorSidenav.defaultProps = {
   color: "info",
   brand: "",
 };
 
-storeKeeperSidenav.propTypes = {
+InstructorSidenav.propTypes = {
   color: PropTypes.oneOf([
     "primary",
     "secondary",
@@ -378,4 +365,4 @@ storeKeeperSidenav.propTypes = {
   brandName: PropTypes.string.isRequired,
 };
 
-export default storeKeeperSidenav;
+export default InstructorSidenav;

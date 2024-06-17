@@ -53,8 +53,8 @@ import UploadAnnouncement from "./layouts/announcements";
 import ViewAnnouncement from "./layouts/viewAnnouncement";
 import ViewAssignments from "./layouts/assignmentView";
 import DisplaySchedule from "./layouts/scheduleView";
-
-//
+import NotifyStudents from "./layouts/notifyStudents";
+import InstructorDashboard from "./layouts/dashboard/instructorDashboard";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import SearchMenu from "./layouts/search/searchForCafeManager";
@@ -67,13 +67,17 @@ import SearchMenuForCashier from "./layouts/search/searchForCashier";
 import UploadAssignment from "./layouts/assignmentUpload";
 import AddCourseMaterial from "./layouts/courseMaterial";
 import CourseMaterialsPage from "./layouts/CourseMaterialList";
+import CourseMaterialsList from "./layouts/courseMaterialStudent";
 // import SubmitAssignment from "./layouts/submitAssignment";
 import SubmittedAssignments from "./layouts/viewSubmittedAssignment";
 import ScheduleRequest from "./layouts/schedulePost";
+import EmployeeList from "./layouts/employeeList";
+import ViewCoursesStudent from "./layouts/courseListstudent";
+import ViewCoursesInstructor from "./layouts/courseListInstructor";
 const routes = [
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "dashboard",
     key: "mainDashboard",
     icon: <Icon fontSize="small">Main dashboard</Icon>,
     route: "/mainDashboard",
@@ -81,7 +85,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
@@ -89,7 +93,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/StudentDashboard",
@@ -97,7 +101,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "dashboard",
     key: "CoordinatorDashboard",
     icon: <Icon fontSize="small">coordinator dashboard</Icon>,
     route: "/CoordinatorDashboard",
@@ -105,15 +109,15 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
-    key: "storeKeeperDashboard",
+    name: "dashboard",
+    key: "instructorDashboard",
     icon: <Icon fontSize="small">coordinator dashboard</Icon>,
     route: "/instructorDashboard",
-    component: <storeKeeperDashboard />,
+    component: <InstructorDashboard />,
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "dashboard",
     key: "StudentDashboard",
     icon: <Icon fontSize="small">coordinator dashboard</Icon>,
     route: "/StudentDashboard",
@@ -121,7 +125,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ዳሽቦርድ",
+    name: "dashboard",
     key: "cafeMangerDashboard",
     icon: <Icon fontSize="small" />,
     route: "/deanDashboard",
@@ -202,7 +206,7 @@ const routes = [
   {
     type: "collapse",
     name: "View Assignment",
-    key: "list",
+    key: "assignmentView",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/assignmentView",
     component: <ViewAssignments />,
@@ -214,6 +218,15 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/submit-assignment",
     component: <SubmitAssignment />,
+  },
+
+  {
+    type: "collapse",
+    name: "Notify students",
+    key: "list",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/notify-students",
+    component: <NotifyStudents />,
   },
   // {
   //   type: "collapse",
@@ -250,7 +263,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ፈልግ",
+    name: "Search",
     key: "search",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/search",
@@ -258,7 +271,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ፈልግ",
+    name: "Search",
     key: "searchInventory",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/searchForInventory",
@@ -266,7 +279,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ፈልግ",
+    name: "Search",
     key: "search_For_cashier",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/searchForCashier",
@@ -274,7 +287,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "ፈልግ",
+    name: "Search",
     key: "searchAdmin",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/searchForAdmin",
@@ -288,7 +301,22 @@ const routes = [
     route: "/report",
     component: <ViewCourses />,
   },
-
+  {
+    type: "collapse",
+    name: "Course List",
+    key: "report",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/courseListInstructor",
+    component: <ViewCoursesInstructor />,
+  },
+  {
+    type: "collapse",
+    name: "Course List",
+    key: "report",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/courseListstudent",
+    component: <ViewCoursesStudent />,
+  },
   {
     type: "collapse",
     name: "Upload Assignment",
@@ -315,6 +343,14 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Course Material List",
+    key: "courseMaterialList",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/courseMaterialStudent",
+    component: <CourseMaterialsList />,
+  },
+  {
+    type: "collapse",
     name: "Submit Assignment",
     key: "submitAssignment",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -328,6 +364,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/viewSubmittedAssignment",
     component: <SubmittedAssignments />,
+  },
+  {
+    type: "collapse",
+    name: "view-employee",
+    key: "view-employee",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/viewEmployee",
+    component: <EmployeeList />,
   },
 ];
 

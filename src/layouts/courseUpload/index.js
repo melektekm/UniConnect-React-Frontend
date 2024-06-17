@@ -24,7 +24,7 @@ import Footer from "../../examples/Footer";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
 import { BASE_URL } from "../../appconfig";
-import Sidenav from "../../examples/Sidenav/AdminSidenav";
+import CoordinatorSidenav from "../../examples/Sidenav/CoordinatorSidenav";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import colors from "../../assets/theme/base/colors";
 
@@ -115,8 +115,8 @@ function UploadCourse() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Sidenav />
-      <MainDashboard />
+      <CoordinatorSidenav />
+
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
