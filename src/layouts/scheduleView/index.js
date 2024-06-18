@@ -91,7 +91,7 @@ function DisplaySchedule() {
         {schedules.length > 0 ? (
           <TableContainer>
             <Table>
-              <TableHead>
+              {/* <TableHead> */}
                 <TableRow>
                   <TableCell>Course Code</TableCell>
                   <TableCell>Course Name</TableCell>
@@ -115,7 +115,7 @@ function DisplaySchedule() {
                   <TableCell>Status</TableCell>
                   <TableCell>Year</TableCell>
                 </TableRow>
-              </TableHead>
+              {/* </TableHead> */}
               <TableBody>
                 {schedules
                   .filter((schedule) =>

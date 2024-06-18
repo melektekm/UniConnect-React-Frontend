@@ -196,57 +196,57 @@ function ScheduleRequest() {
 
   const submitForms = async () => {
     setLoading(true);
+
     const payload = {
-      scheduleRequests: formList.items.map((item) => {
-        const filteredItem = { ...item };
-        if (filteredItem.schedule_type === "Class") {
-          delete filteredItem.examDate;
-          delete filteredItem.examTime;
-          delete filteredItem.examRoom;
-          delete filteredItem.examiner;
-        } else if (filteredItem.schedule_type === "Exam") {
-          delete filteredItem.classroom;
-          delete filteredItem.labroom;
-          delete filteredItem.classDays;
-          delete filteredItem.labDays;
-          delete filteredItem.labInstructor;
-          delete filteredItem.classInstructor;
-        }
-        return filteredItem;
-      }),
+        scheduleRequests: formList.items.map((item) => {
+            const filteredItem = { ...item };
+            if (filteredItem.schedule_type === "Class") {
+                delete filteredItem.examDate;
+                delete filteredItem.examTime;
+                delete filteredItem.examRoom;
+                delete filteredItem.examiner;
+            } else if (filteredItem.schedule_type === "Exam") {
+                delete filteredItem.classroom;
+                delete filteredItem.labroom;
+                delete filteredItem.classDays;
+                delete filteredItem.labDays;
+                delete filteredItem.labInstructor;
+                delete filteredItem.classInstructor;
+            }
+            return filteredItem;
+        }),
     };
 
-    console.log("Payload:", JSON.stringify(payload, null, 2));
-
     try {
-      const response = await axios.post(
-        `${BASE_URL}/schedule-requests`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        const response = await axios.post(
+            `${BASE_URL}/schedule-requests`,
+            payload,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
 
-      if (response.data) {
-        setLoading(false);
-        setErrorMessage("Schedule has been sent successfully");
-      } else {
-        setErrorMessage("Failed to post Schedule. Please try again.");
-        setLoading(false);
-      }
+        if (response.data) {
+            setLoading(false);
+            setErrorMessage("Schedule has been sent successfully");
+        } else {
+            setErrorMessage("Failed to post Schedule. Please try again.");
+            setLoading(false);
+        }
     } catch (error) {
-      if (error.response && error.response.data.errors) {
-        console.error("Validation Errors:", error.response.data.errors);
-      } else {
-        console.error("Error:", error.message);
-      }
-      setErrorMessage("Error while sending schedule " + error.message);
-      setLoading(false);
+        if (error.response && error.response.data.errors) {
+            console.error("Validation Errors:", error.response.data.errors);
+        } else {
+            console.error("Error:", error.message);
+        }
+        setErrorMessage("Error while sending schedule " + error.message);
+        setLoading(false);
     }
-  };
+};
+
 
   const openConfirmationDialog = () => setConfirmationOpen(true);
   const closeConfirmationDialog = () => setConfirmationOpen(false);

@@ -191,6 +191,7 @@ function ApproveScheduleRequest() {
                               <TableCell>{request.labroom}</TableCell>
                               <TableCell>{request.labInstructor}</TableCell>
                               <TableCell>{request.classInstructor}</TableCell>
+                              <TableCell>{request.schedule_type}</TableCell>
                               <TableCell>
                                 <Button
                                   color="primary"
